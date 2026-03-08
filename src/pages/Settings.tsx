@@ -12,6 +12,7 @@ import {
   setVibrationIntensity,
   isHapticsAvailable,
 } from "@/lib/haptics";
+import { useCitySync, REGIONAL_THEMES } from "@/components/CitySync";
 
 const HAPTIC_DEMOS: { name: string; pattern: Parameters<typeof haptic>[0]; label: string }[] = [
   { name: "Success", pattern: "success", label: "Double tap" },
