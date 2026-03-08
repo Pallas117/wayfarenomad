@@ -150,6 +150,7 @@ function SafetyContent() {
       if (error) throw error;
     },
     onSuccess: () => {
+      haptic("sosAlert");
       toast({ title: "🚨 Emergency Beacon Activated", description: "Nearby Stewards have been alerted. Stay safe." });
       setSosMessage("");
       setShowSosConfirm(false);
