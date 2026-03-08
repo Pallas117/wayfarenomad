@@ -177,8 +177,8 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
           className="flex-1 text-xs"
           onClick={() => setOpen(!open)}
         >
-          <MapPin className="h-3.5 w-3.5 mr-1.5" />
-          {hasPin ? `📍 ${lat!.toFixed(4)}, ${lng!.toFixed(4)}` : "Pin on Map"}
+          {reversing ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <MapPin className="h-3.5 w-3.5 mr-1.5" />}
+          {reversing ? "Resolving…" : hasPin ? `📍 ${lat!.toFixed(4)}, ${lng!.toFixed(4)}` : "Pin on Map"}
         </Button>
         <Button
           type="button"
