@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { Radio, MapPin, Calendar, ExternalLink, Music, Code, PartyPopper, CheckCircle, Loader2, RefreshCw, Globe, Map as MapIcon } from "lucide-react";
 import { WeatherSunIcon, PlaneIcon, FloatingTravelBadges, WavesDivider } from "@/components/animations/TravelIcons";
@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CulturalEar } from "@/components/CulturalEar";
-import { MapView, type MapPin as MapPinType } from "@/components/MapView";
+import type { MapPin as MapPinType } from "@/components/MapView.types";
+
+const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -171,7 +173,9 @@ export default function Pulse() {
             exit={{ height: 0, opacity: 0 }}
             className="mb-6 rounded-xl overflow-hidden"
           >
-            <MapView pins={mapPins} className="h-60" />
+            <Suspense fallback={<div className="h-60 bg-secondary/30 animate-pulse rounded-xl" />}>
+              <LazyMapView pins={mapPins} className="h-60" />
+            </Suspense>
           </motion.div>
         )}
       </AnimatePresence>
