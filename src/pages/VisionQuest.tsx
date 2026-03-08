@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Compass, Scroll, CheckCircle, ArrowRight } from "lucide-react";
+import { StarfieldBackground } from "@/components/animations/StarfieldBackground";
+import { TypewriterText } from "@/components/animations/TypewriterText";
+import { StardustParticles } from "@/components/animations/StardustParticles";
+import { ConstellationBadge } from "@/components/animations/ConstellationBadge";
 
 const INTEGRITY_QUESTIONS = [
   {
@@ -55,9 +60,252 @@ const INTEGRITY_QUESTIONS = [
   },
 ];
 
+const PROMPTS = [
+  "Welcome, traveler. This is your Vision Quest.",
+  "Tell us why you belong among the stars...",
+  "What values guide your journey? How will you lift others?",
+];
+
+function VisionStep({
+  visionText,
+  setVisionText,
+  wordCount,
+  onSubmit,
+  submitting,
+}: {
+  visionText: string;
+  setVisionText: (v: string) => void;
+  wordCount: number;
+  onSubmit: () => void;
+  submitting: boolean;
+}) {
+  const submitRef = useRef<HTMLButtonElement>(null);
+  const [promptIndex, setPromptIndex] = useState(0);
+  const intensity = Math.min(wordCount / 200, 1);
+  const showParticles = wordCount >= 200;
+
+  const handlePromptComplete = useCallback(() => {
+    if (promptIndex < PROMPTS.length - 1) {
+      setTimeout(() => setPromptIndex((p) => p + 1), 800);
+    }
+  }, [promptIndex]);
+
+  return (
+    <>
+      <StarfieldBackground intensity={intensity} />
+
+      <div className="relative z-10 space-y-6">
+        {/* Typewriter prompts */}
+        <div className="min-h-[80px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={promptIndex}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="font-vision text-xl text-primary/90 italic"
+            >
+              <TypewriterText
+                text={PROMPTS[promptIndex]}
+                speed={50}
+                onComplete={handlePromptComplete}
+              />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <motion.div
+          className="glass-card rounded-xl p-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+        >
+          <h2 className="font-display font-semibold text-lg mb-2">Your Vision Statement</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Minimum 200 words — as you write, the cosmos awakens.
+          </p>
+          <Textarea
+            value={visionText}
+            onChange={(e) => setVisionText(e.target.value)}
+            placeholder="I believe in building genuine connections across cultures..."
+            className="min-h-[200px] bg-secondary/50 border-border transition-shadow duration-500"
+            style={{
+              boxShadow: wordCount >= 200
+                ? "0 0 20px hsla(43, 72%, 52%, 0.2)"
+                : "none",
+            }}
+          />
+          <div className="flex items-center justify-between mt-3">
+            <motion.span
+              className="text-xs font-medium"
+              animate={{
+                color: wordCount >= 200
+                  ? "hsl(43 72% 52%)"
+                  : "hsl(225 15% 55%)",
+              }}
+            >
+              {wordCount}/200 words
+            </motion.span>
+
+            {/* Progress bar */}
+            <div className="flex-1 mx-4 h-1 rounded-full bg-secondary overflow-hidden">
+              <motion.div
+                className="h-full gradient-gold rounded-full"
+                animate={{ width: `${Math.min((wordCount / 200) * 100, 100)}%` }}
+                transition={{ type: "spring", stiffness: 80 }}
+              />
+            </div>
+
+            <Button
+              ref={submitRef}
+              onClick={onSubmit}
+              disabled={wordCount < 200 || submitting}
+              className="gradient-gold text-primary-foreground relative overflow-hidden"
+            >
+              {submitting ? "Saving..." : "Continue to Quiz"}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+
+      <StardustParticles
+        active={showParticles}
+        targetRef={submitRef as React.RefObject<HTMLElement>}
+        count={16}
+      />
+    </>
+  );
+}
+
+function QuizStep({
+  quizAnswers,
+  setQuizAnswers,
+  onSubmit,
+  submitting,
+}: {
+  quizAnswers: (number | null)[];
+  setQuizAnswers: (a: (number | null)[]) => void;
+  onSubmit: () => void;
+  submitting: boolean;
+}) {
+  return (
+    <motion.div
+      className="space-y-6"
+      initial={{ opacity: 0, x: 40 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <p className="text-sm text-muted-foreground">
+        Answer all 5 scenario questions correctly to unlock Steward access. 100% accuracy required.
+      </p>
+
+      {INTEGRITY_QUESTIONS.map((q, qi) => (
+        <motion.div
+          key={qi}
+          className="glass-card rounded-xl p-5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: qi * 0.1 }}
+        >
+          <p className="font-medium text-sm mb-3">
+            {qi + 1}. {q.question}
+          </p>
+          <div className="space-y-2">
+            {q.options.map((opt, oi) => (
+              <motion.button
+                key={oi}
+                onClick={() => {
+                  const newAnswers = [...quizAnswers];
+                  newAnswers[qi] = oi;
+                  setQuizAnswers(newAnswers);
+                }}
+                whileTap={{ scale: 0.98 }}
+                className={`w-full text-left text-sm p-3 rounded-lg transition-all ${
+                  quizAnswers[qi] === oi
+                    ? "bg-primary/20 border border-primary text-foreground"
+                    : "bg-secondary/30 border border-border hover:bg-secondary/50 text-muted-foreground"
+                }`}
+              >
+                {opt}
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+      ))}
+
+      <Button
+        onClick={onSubmit}
+        disabled={quizAnswers.includes(null) || submitting}
+        className="w-full gradient-gold text-primary-foreground"
+      >
+        {submitting ? "Checking..." : "Submit Quiz"}
+      </Button>
+    </motion.div>
+  );
+}
+
+function CompleteStep({ visionText }: { visionText: string }) {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <motion.div
+        className="text-center space-y-6 max-w-sm"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 100 }}
+      >
+        {/* Constellation badge morphed from vision text */}
+        <div className="flex justify-center">
+          <ConstellationBadge seed={visionText.slice(0, 100)} size={100} animate />
+        </div>
+
+        <motion.div
+          className="inline-flex items-center justify-center h-20 w-20 rounded-2xl gradient-gold glow-gold-strong mx-auto"
+          initial={{ rotate: -180, scale: 0 }}
+          animate={{ rotate: 0, scale: 1 }}
+          transition={{ delay: 0.5, type: "spring" }}
+        >
+          <CheckCircle className="h-10 w-10 text-primary-foreground" />
+        </motion.div>
+
+        <motion.h1
+          className="text-3xl font-display font-bold"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          You're a Steward!
+        </motion.h1>
+
+        <motion.p
+          className="text-muted-foreground"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          Your constellation is forged. Social Discovery, Beacons, and Event Verification are now unlocked.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+        >
+          <Button onClick={() => navigate("/social")} className="gradient-gold text-primary-foreground">
+            Enter the Community <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </motion.div>
+      </motion.div>
+
+      <StarfieldBackground intensity={1} />
+    </div>
+  );
+}
+
 export default function VisionQuest() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   const [step, setStep] = useState<"vision" | "quiz" | "complete">("vision");
@@ -74,7 +322,6 @@ export default function VisionQuest() {
       toast({ title: "Too short", description: `You need at least 200 words (currently ${wordCount}).`, variant: "destructive" });
       return;
     }
-
     if (!user) return;
     setSubmitting(true);
 
@@ -88,22 +335,19 @@ export default function VisionQuest() {
       toast({ title: "Error", description: error.message, variant: "destructive" });
       return;
     }
-
     setStep("quiz");
   };
 
   const handleQuizSubmit = async () => {
     const allCorrect = INTEGRITY_QUESTIONS.every((q, i) => quizAnswers[i] === q.correct);
-
     if (!allCorrect) {
       toast({
         title: "Not quite right",
-        description: "You must answer all questions correctly. Review and try again — the Nomad way is about integrity.",
+        description: "You must answer all questions correctly. Review and try again.",
         variant: "destructive",
       });
       return;
     }
-
     if (!user) return;
     setSubmitting(true);
 
@@ -112,7 +356,6 @@ export default function VisionQuest() {
       .update({ quiz_completed: true })
       .eq("user_id", user.id);
 
-    // Trigger promotion to steward
     await supabase.rpc("promote_to_steward", { _user_id: user.id });
 
     setSubmitting(false);
@@ -120,27 +363,16 @@ export default function VisionQuest() {
   };
 
   if (step === "complete") {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="text-center space-y-6 max-w-sm">
-          <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl gradient-coral glow-coral">
-            <CheckCircle className="h-10 w-10 text-primary-foreground" />
-          </div>
-          <h1 className="text-3xl font-display font-bold">You're a Steward!</h1>
-          <p className="text-muted-foreground">
-            You've proven your integrity. Social Discovery, Beacons, and Event Verification are now unlocked.
-          </p>
-          <Button onClick={() => navigate("/social")} className="gradient-coral text-primary-foreground">
-            Enter the Community <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    );
+    return <CompleteStep visionText={visionText} />;
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-lg mx-auto">
-      <div className="flex items-center gap-3 mb-8">
+    <div className="min-h-screen p-6 max-w-lg mx-auto relative">
+      <motion.div
+        className="flex items-center gap-3 mb-8"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         {step === "vision" ? (
           <Scroll className="h-6 w-6 text-primary" />
         ) : (
@@ -149,80 +381,29 @@ export default function VisionQuest() {
         <h1 className="text-2xl font-display font-bold">
           {step === "vision" ? "Vision Quest" : "Integrity Quiz"}
         </h1>
-      </div>
+      </motion.div>
 
-      {step === "vision" && (
-        <div className="space-y-6">
-          <div className="glass-card rounded-xl p-6">
-            <h2 className="font-display font-semibold text-lg mb-2">Write Your Vision Statement</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              Tell us why you want to be part of this community. What values drive you? How will you contribute? (Minimum 200 words)
-            </p>
-            <Textarea
-              value={visionText}
-              onChange={(e) => setVisionText(e.target.value)}
-              placeholder="I believe in building genuine connections across cultures..."
-              className="min-h-[200px] bg-secondary/50 border-border"
-            />
-            <div className="flex items-center justify-between mt-3">
-              <span className={`text-xs ${wordCount >= 200 ? "text-primary" : "text-muted-foreground"}`}>
-                {wordCount}/200 words
-              </span>
-              <Button
-                onClick={handleVisionSubmit}
-                disabled={wordCount < 200 || submitting}
-                className="gradient-coral text-primary-foreground"
-              >
-                {submitting ? "Saving..." : "Continue to Quiz"}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {step === "quiz" && (
-        <div className="space-y-6">
-          <p className="text-sm text-muted-foreground">
-            Answer all 5 scenario questions correctly to unlock Steward access. 100% accuracy required.
-          </p>
-
-          {INTEGRITY_QUESTIONS.map((q, qi) => (
-            <div key={qi} className="glass-card rounded-xl p-5">
-              <p className="font-medium text-sm mb-3">
-                {qi + 1}. {q.question}
-              </p>
-              <div className="space-y-2">
-                {q.options.map((opt, oi) => (
-                  <button
-                    key={oi}
-                    onClick={() => {
-                      const newAnswers = [...quizAnswers];
-                      newAnswers[qi] = oi;
-                      setQuizAnswers(newAnswers);
-                    }}
-                    className={`w-full text-left text-sm p-3 rounded-lg transition-all ${
-                      quizAnswers[qi] === oi
-                        ? "bg-primary/20 border border-primary text-foreground"
-                        : "bg-secondary/30 border border-border hover:bg-secondary/50 text-muted-foreground"
-                    }`}
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-
-          <Button
-            onClick={handleQuizSubmit}
-            disabled={quizAnswers.includes(null) || submitting}
-            className="w-full gradient-coral text-primary-foreground"
-          >
-            {submitting ? "Checking..." : "Submit Quiz"}
-          </Button>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {step === "vision" && (
+          <VisionStep
+            key="vision"
+            visionText={visionText}
+            setVisionText={setVisionText}
+            wordCount={wordCount}
+            onSubmit={handleVisionSubmit}
+            submitting={submitting}
+          />
+        )}
+        {step === "quiz" && (
+          <QuizStep
+            key="quiz"
+            quizAnswers={quizAnswers}
+            setQuizAnswers={setQuizAnswers}
+            onSubmit={handleQuizSubmit}
+            submitting={submitting}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
