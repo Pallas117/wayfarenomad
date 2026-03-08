@@ -269,6 +269,42 @@ export type Database = {
         }
         Relationships: []
       }
+      music_identifications: {
+        Row: {
+          created_at: string
+          genre: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          origin: string | null
+          track_artist: string
+          track_title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          genre?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          origin?: string | null
+          track_artist: string
+          track_title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          genre?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          origin?: string | null
+          track_artist?: string
+          track_title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
