@@ -112,6 +112,38 @@ export type Database = {
           },
         ]
       }
+      event_reactions: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          reaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          reaction_type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          reaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_reactions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           category: string
@@ -123,10 +155,12 @@ export type Database = {
           id: string
           is_user_submitted: boolean
           lat: number | null
+          like_count: number
           lng: number | null
           pulse_rank: number | null
           scraped_from: string | null
           source_url: string | null
+          star_count: number
           submitted_by: string | null
           title: string
           venue: string | null
@@ -143,10 +177,12 @@ export type Database = {
           id?: string
           is_user_submitted?: boolean
           lat?: number | null
+          like_count?: number
           lng?: number | null
           pulse_rank?: number | null
           scraped_from?: string | null
           source_url?: string | null
+          star_count?: number
           submitted_by?: string | null
           title: string
           venue?: string | null
@@ -163,10 +199,12 @@ export type Database = {
           id?: string
           is_user_submitted?: boolean
           lat?: number | null
+          like_count?: number
           lng?: number | null
           pulse_rank?: number | null
           scraped_from?: string | null
           source_url?: string | null
+          star_count?: number
           submitted_by?: string | null
           title?: string
           venue?: string | null
