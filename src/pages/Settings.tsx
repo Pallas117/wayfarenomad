@@ -88,6 +88,7 @@ function PowerSection() {
   );
 }
 
+export default function SettingsPage() {
   const { user, signOut } = useAuth();
   const [intensity, setIntensity] = useState(getVibrationIntensity());
   const hapticsSupported = isHapticsAvailable();
