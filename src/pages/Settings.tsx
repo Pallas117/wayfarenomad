@@ -34,6 +34,23 @@ export default function SettingsPage() {
   const hapticsSupported = isHapticsAvailable();
   const citySyncCtx = useCitySync();
   const push = usePushNotifications();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState("Traveler");
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("avatar_url, display_name, full_name")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) {
+          setAvatarUrl(data.avatar_url);
+          setDisplayName(data.display_name || data.full_name || "Traveler");
+        }
+      });
+  }, [user]);
 
   const handleIntensityChange = (value: number[]) => {
     const v = value[0];
