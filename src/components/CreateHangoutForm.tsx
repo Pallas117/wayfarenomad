@@ -114,6 +114,12 @@ export function CreateHangoutForm({ onClose }: CreateHangoutFormProps) {
         onChange={(e) => setLocationName(e.target.value)}
       />
 
+      <LocationPicker
+        lat={lat}
+        lng={lng}
+        onChange={(newLat, newLng) => { setLat(newLat); setLng(newLng); }}
+      />
+
       <div className="flex gap-3">
         <Input
           type="datetime-local"
