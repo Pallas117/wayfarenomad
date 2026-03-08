@@ -355,30 +355,51 @@ export default function Profile() {
       {/* Action Buttons */}
       {!isOwnProfile && (
         <motion.div
-          className="flex gap-3"
+          className="space-y-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
         >
-          <Button
-            className="flex-1 gradient-gold text-primary-foreground min-h-[48px]"
-            onClick={() => {
-              navigate(`/messages?to=${userId}&name=${encodeURIComponent(name)}`);
-              haptic("tap");
-            }}
-          >
-            <Send className="h-4 w-4 mr-2" /> Message
-          </Button>
-          <Button
-            variant="outline"
-            className="flex-1 min-h-[48px]"
-            onClick={() => {
-              navigate("/social");
-              haptic("tap");
-            }}
-          >
-            <MessageCircle className="h-4 w-4 mr-2" /> Meet
-          </Button>
+          {!isCompassLocked && (
+            <Button
+              className="w-full gradient-gold text-primary-foreground min-h-[48px] gap-2"
+              onClick={() => {
+                setShowCompassVerify(true);
+                haptic("tap");
+              }}
+            >
+              <Compass className="h-4 w-4" /> Compass Lock — Verify In Person
+            </Button>
+          )}
+          <div className="flex gap-3">
+            <Button
+              className={`flex-1 min-h-[48px] ${isCompassLocked ? "gradient-gold text-primary-foreground" : ""}`}
+              variant={isCompassLocked ? "default" : "outline"}
+              disabled={!isCompassLocked}
+              onClick={() => {
+                navigate(`/messages?to=${userId}&name=${encodeURIComponent(name)}`);
+                haptic("tap");
+              }}
+            >
+              <Send className="h-4 w-4 mr-2" /> {isCompassLocked ? "Message" : "🔒 Message"}
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 min-h-[48px]"
+              onClick={() => {
+                navigate("/social");
+                haptic("tap");
+              }}
+            >
+              <MessageCircle className="h-4 w-4 mr-2" /> Meet
+            </Button>
+          </div>
+          <CompassVerifySheet
+            open={showCompassVerify}
+            onOpenChange={setShowCompassVerify}
+            targetUserId={userId}
+            targetName={name}
+          />
         </motion.div>
       )}
 
