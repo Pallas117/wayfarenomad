@@ -139,10 +139,12 @@ describe("City-Sync Theme Engine (The Pulse)", () => {
       expect(REGIONAL_THEMES.london.background).not.toBe(REGIONAL_THEMES.dubai.background);
     });
 
-    it("Dubai theme has warmer (higher hue) primary than London", () => {
+    it("Dubai theme has warmer (amber/gold) hue than London's cool slate", () => {
       const dubaiHue = parseInt(REGIONAL_THEMES.dubai.primary.split(" ")[0]);
       const londonHue = parseInt(REGIONAL_THEMES.london.primary.split(" ")[0]);
-      expect(dubaiHue).toBeGreaterThan(londonHue);
+      // Dubai = warm amber (~38°), London = cool blue (~210°)
+      expect(dubaiHue).toBeLessThan(60); // Warm amber range
+      expect(londonHue).toBeGreaterThan(180); // Cool blue range
     });
   });
 });
