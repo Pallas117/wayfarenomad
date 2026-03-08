@@ -117,9 +117,9 @@ function SocialContent() {
       {/* Loading skeletons */}
       {isLoading ? (
         <div className="space-y-4">
-          <GoldProfileSkeleton />
-          <GoldProfileSkeleton />
-          <GoldProfileSkeleton />
+          <GoldCardSkeleton />
+          <GoldCardSkeleton />
+          <GoldCardSkeleton />
         </div>
       ) : (
         /* User Cards */
