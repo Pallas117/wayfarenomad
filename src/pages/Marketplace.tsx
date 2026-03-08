@@ -1,7 +1,10 @@
+import { motion } from "framer-motion";
 import { Store, Shield, Plus, Wifi, Smartphone, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUserRank } from "@/hooks/useUserRank";
+import { GoldEventSkeleton } from "@/components/animations/GoldSkeleton";
+import { useState, useEffect } from "react";
 
 const esimProviders = [
   {
@@ -26,10 +29,21 @@ const esimProviders = [
 
 function MarketplaceContent() {
   const { isCaptain } = useUserRank();
+  const [loading, setLoading] = useState(true);
+
+  // Simulate data fetch for skeleton demo
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <div className="p-6 max-w-lg mx-auto pb-24">
-      <div className="flex items-center justify-between mb-6">
+      <motion.div
+        className="flex items-center justify-between mb-6"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <div className="flex items-center gap-3">
           <Store className="h-6 w-6 text-primary" />
           <h1 className="text-2xl font-display font-bold">Marketplace</h1>
@@ -39,21 +53,37 @@ function MarketplaceContent() {
             <Plus className="h-4 w-4 mr-1" /> Host Expedition
           </Button>
         )}
-      </div>
+      </motion.div>
 
       {!isCaptain && (
-        <div className="glass-card rounded-xl p-4 mb-6 flex items-center gap-3">
+        <motion.div
+          className="glass-card rounded-xl p-4 mb-6 flex items-center gap-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+        >
           <Shield className="h-5 w-5 text-primary shrink-0" />
           <p className="text-xs text-muted-foreground">
-            Reach <strong className="text-foreground">Captain</strong> rank to host Expeditions. Lead 3 trips & earn 500+ Stardust.
+            Reach <strong className="text-foreground">Captain</strong> rank to host Expeditions.
           </p>
-        </div>
+        </motion.div>
       )}
 
-      {/* Expeditions placeholder */}
-      <div className="glass-card rounded-xl p-8 text-center mb-8">
-        <p className="text-muted-foreground">Expeditions coming soon</p>
-      </div>
+      {/* Expeditions with gold skeletons */}
+      {loading ? (
+        <div className="space-y-4 mb-8">
+          <GoldEventSkeleton />
+          <GoldEventSkeleton />
+        </div>
+      ) : (
+        <motion.div
+          className="glass-card rounded-xl p-8 text-center mb-8"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <p className="text-muted-foreground">Expeditions coming soon</p>
+        </motion.div>
+      )}
 
       {/* eSIM Marketplace */}
       <div className="space-y-4">
@@ -66,13 +96,16 @@ function MarketplaceContent() {
         </p>
 
         {esimProviders.map((provider, i) => (
-          <a
+          <motion.a
             key={provider.name}
             href={provider.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="glass-card rounded-xl p-4 block hover:border-primary/50 transition-colors animate-slide-up"
-            style={{ animationDelay: `${i * 80}ms` }}
+            className="glass-card rounded-xl p-4 block hover:border-primary/50 transition-colors"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + i * 0.1, type: "spring", stiffness: 150 }}
+            whileHover={{ y: -2, transition: { duration: 0.2 } }}
           >
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-2">
@@ -84,12 +117,10 @@ function MarketplaceContent() {
             <p className="text-sm text-muted-foreground mb-2">{provider.description}</p>
             <div className="flex flex-wrap gap-1.5">
               {provider.regions.map((r) => (
-                <Badge key={r} variant="secondary" className="text-xs">
-                  {r}
-                </Badge>
+                <Badge key={r} variant="secondary" className="text-xs">{r}</Badge>
               ))}
             </div>
-          </a>
+          </motion.a>
         ))}
       </div>
     </div>
