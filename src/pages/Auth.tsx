@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Mail, Lock, User } from "lucide-react";
-import nomadLogo from "@/assets/nomad-logo.png"; // TODO: replace with Wayfare logo
+import wayfareLogo from "@/assets/wayfare-logo.png";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -89,7 +89,7 @@ export default function Auth() {
             transition={{ type: "spring", stiffness: 100, damping: 12 }}
           >
             <motion.img
-              src={nomadLogo}
+              src={wayfareLogo}
               alt="Wayfare"
               className="h-20 w-20 mx-auto drop-shadow-[0_0_15px_hsla(43,72%,52%,0.4)]"
               animate={{ rotate: [0, 5, -5, 0] }}
