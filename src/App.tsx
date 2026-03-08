@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Social from "./pages/Social";
 import Pulse from "./pages/Pulse";
 import Marketplace from "./pages/Marketplace";
+import Safety from "./pages/Safety";
 import Leaderboard from "./pages/Leaderboard";
 import VisionQuest from "./pages/VisionQuest";
 import NotFound from "./pages/NotFound";
