@@ -233,14 +233,26 @@ function SocialContent() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="flex-1 min-h-[44px]"
+                    className="min-h-[44px]"
                     onClick={() => {
                       setMeetSyncUser(meetSyncUser?.userId === user.userId ? null : user);
                       haptic("tap");
                     }}
                   >
                     <MessageCircle className="h-4 w-4 mr-1" />
-                    {meetSyncUser?.userId === user.userId ? "Cancel" : "Meet"}
+                    Meet
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="min-h-[44px]"
+                    onClick={() => {
+                      navigate(`/messages?to=${user.userId}&name=${encodeURIComponent(user.displayName)}`);
+                      haptic("tap");
+                    }}
+                  >
+                    <Send className="h-4 w-4 mr-1" />
+                    Chat
                   </Button>
                 </div>
               </motion.div>
