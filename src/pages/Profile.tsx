@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft, Star, Shield, ShieldCheck, MapPin, Calendar,
   MessageCircle, Send, Instagram, ExternalLink, CheckCircle2, Compass,
+  Heart, Zap, Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +14,7 @@ import { TravelLoader } from "@/components/animations/TravelLoader";
 import { haptic } from "@/lib/haptics";
 import { useIsCompassLocked } from "@/hooks/useCompassLock";
 import { CompassVerifySheet } from "@/components/CompassLock";
+import { formatDistanceToNow } from "date-fns";
 
 interface ProfileData {
   user_id: string;
