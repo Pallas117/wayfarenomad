@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Settings, Vibrate, Volume2, VolumeX, Shield, Info } from "lucide-react";
+import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   setVibrationIntensity,
   isHapticsAvailable,
 } from "@/lib/haptics";
+import { useCitySync, REGIONAL_THEMES } from "@/components/CitySync";
 
 const HAPTIC_DEMOS: { name: string; pattern: Parameters<typeof haptic>[0]; label: string }[] = [
   { name: "Success", pattern: "success", label: "Double tap" },
@@ -27,6 +28,7 @@ export default function SettingsPage() {
   const { user, signOut } = useAuth();
   const [intensity, setIntensity] = useState(getVibrationIntensity());
   const hapticsSupported = isHapticsAvailable();
+  const citySyncCtx = useCitySync();
 
   const handleIntensityChange = (value: number[]) => {
     const v = value[0];
@@ -114,6 +116,45 @@ export default function SettingsPage() {
               </Button>
             ))}
           </div>
+        </div>
+      </motion.div>
+
+      {/* City-Sync Hub Section */}
+      <motion.div
+        className="glass-card rounded-xl p-5 mb-6 space-y-4"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <MapPin className="h-5 w-5 text-primary" />
+            <h2 className="font-display font-semibold text-lg">Regional Hub</h2>
+          </div>
+          <Button size="sm" variant="ghost" onClick={() => citySyncCtx.rescan()} className="h-8 w-8 p-0">
+            <RotateCw className="h-4 w-4" />
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          {citySyncCtx.currentCity
+            ? `Detected: ${citySyncCtx.currentCity}`
+            : "Select your hub to change the celestial theme"}
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {Object.values(REGIONAL_THEMES).map((t) => (
+            <Button
+              key={t.id}
+              variant="outline"
+              size="sm"
+              className={`min-h-[44px] text-xs justify-start gap-2 ${
+                citySyncCtx.currentHub === t.id ? "border-primary bg-primary/10" : ""
+              }`}
+              onClick={() => citySyncCtx.setHubManually(t.id)}
+            >
+              <span>{t.emoji}</span>
+              <span className="truncate">{t.name.split("—")[1]?.trim() || t.name}</span>
+            </Button>
+          ))}
         </div>
       </motion.div>
 
