@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Heart, Handshake, MapPin, Calendar, Sparkles, MessageCircle, Plus } from "lucide-react";
+import { Users, Heart, Handshake, MapPin, Calendar, Sparkles, MessageCircle, Send, Plus } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,7 @@ function SocialContent() {
   const [expandedMatch, setExpandedMatch] = useState<string | null>(null);
   const [meetSyncUser, setMeetSyncUser] = useState<ItineraryMatch | null>(null);
   const { data: realMatches, isLoading } = useItineraryMatches();
+  const navigate = useNavigate();
 
   const matches: ItineraryMatch[] = (realMatches && realMatches.length > 0)
     ? realMatches
@@ -231,14 +233,26 @@ function SocialContent() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="flex-1 min-h-[44px]"
+                    className="min-h-[44px]"
                     onClick={() => {
                       setMeetSyncUser(meetSyncUser?.userId === user.userId ? null : user);
                       haptic("tap");
                     }}
                   >
                     <MessageCircle className="h-4 w-4 mr-1" />
-                    {meetSyncUser?.userId === user.userId ? "Cancel" : "Meet"}
+                    Meet
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="min-h-[44px]"
+                    onClick={() => {
+                      navigate(`/messages?to=${user.userId}&name=${encodeURIComponent(user.displayName)}`);
+                      haptic("tap");
+                    }}
+                  >
+                    <Send className="h-4 w-4 mr-1" />
+                    Chat
                   </Button>
                 </div>
               </motion.div>

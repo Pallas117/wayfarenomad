@@ -1,14 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
-import { Flame, Compass, Radio, ShieldCheck, Crown, Settings } from "lucide-react";
+import { Flame, Compass, Radio, ShieldCheck, Crown, MessageSquare, Settings } from "lucide-react";
 
 const tabs = [
   { to: "/marketplace", icon: Flame, label: "Market" },
   { to: "/social", icon: Compass, label: "Social" },
+  { to: "/messages", icon: MessageSquare, label: "Chat" },
   { to: "/pulse", icon: Radio, label: "Pulse" },
   { to: "/safety", icon: ShieldCheck, label: "Safety" },
-  { to: "/leaderboard", icon: Crown, label: "Board" },
 ];
 
 export function BottomNav() {

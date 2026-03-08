@@ -15,6 +15,7 @@ import Safety from "./pages/Safety";
 import Leaderboard from "./pages/Leaderboard";
 import VisionQuest from "./pages/VisionQuest";
 import SettingsPage from "./pages/Settings";
+import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="marketplace" element={<Marketplace />} />
               <Route path="safety" element={<Safety />} />
               <Route path="leaderboard" element={<Leaderboard />} />
+              <Route path="messages" element={<Messages />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
