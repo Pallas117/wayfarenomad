@@ -142,12 +142,31 @@ export default function Pulse() {
     setScraping(false);
   };
 
-  const handleVerify = async (eventId: string) => {
+  const handleCommunityVerify = async (eventId: string) => {
     if (!user) return;
-    const { error } = await supabase.from("events").update({ verified: true, verified_by: user.id }).eq("id", eventId);
+    const { error } = await supabase.from("community_verifications" as any).insert({ event_id: eventId, user_id: user.id, is_accurate: true });
     if (!error) {
-      setEvents(prev => prev.map(e => e.id === eventId ? { ...e, verified: true } : e));
-      toast({ title: "Event Verified ✓" });
+      setEvents(prev => prev.map(e => {
+        if (e.id !== eventId) return e;
+        const newCount = (e.community_verify_count ?? 0) + 1;
+        return {
+          ...e,
+          community_verify_count: newCount,
+          verification_status: newCount >= 3 ? "community_verified" : e.verification_status,
+        };
+      }));
+      toast({ title: "Verified! +5 ✨", description: "Thanks for keeping Pulse accurate." });
+    } else if (error.code === "23505") {
+      toast({ title: "Already Verified", description: "You've already verified this event.", variant: "destructive" });
+    }
+  };
+
+  const handleAdminVerify = async (eventId: string) => {
+    if (!user) return;
+    const { error } = await supabase.from("events").update({ verified: true, verified_by: user.id, verification_status: "admin_verified" } as any).eq("id", eventId);
+    if (!error) {
+      setEvents(prev => prev.map(e => e.id === eventId ? { ...e, verified: true, verification_status: "admin_verified" } : e));
+      toast({ title: "Admin Verified ✓" });
     }
   };
 
