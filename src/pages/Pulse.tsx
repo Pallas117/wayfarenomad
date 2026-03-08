@@ -313,7 +313,9 @@ export default function Pulse() {
                         <CatIcon className="h-3.5 w-3.5 text-primary" />
                         <Badge variant="secondary" className="text-[10px] capitalize">{event.category}</Badge>
                         <Badge variant="outline" className="text-[10px]">{event.city === "Kuala Lumpur" ? "KL" : event.city}</Badge>
-                        {event.verified ? (
+                        {event.is_user_submitted ? (
+                          <Badge className="text-[10px] bg-accent/20 text-accent-foreground border-accent/30">👽 Community Pick</Badge>
+                        ) : event.verified ? (
                           <Badge className="text-[10px] bg-primary/20 text-primary border-primary/30"><CheckCircle className="h-2.5 w-2.5 mr-0.5" />Verified</Badge>
                         ) : (
                           <>
