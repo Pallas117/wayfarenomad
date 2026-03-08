@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
+import { SocialProfileLinks } from "@/components/SocialProfileLinks";
 import {
   haptic,
   getVibrationIntensity,
@@ -48,6 +49,11 @@ export default function SettingsPage() {
         <h1 className="text-2xl font-display font-bold">Settings</h1>
       </motion.div>
 
+      {/* Social Profile Links */}
+      <div className="mb-6">
+        <SocialProfileLinks />
+      </div>
+
       {/* Haptic Identity Section */}
       <motion.div
         className="glass-card rounded-xl p-5 mb-6 space-y-5"
@@ -67,7 +73,6 @@ export default function SettingsPage() {
           Adjust vibration strength for haptic feedback. All sound cues are replaced with tactile patterns.
         </p>
 
-        {/* Vibration Strength Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Vibration Strength</span>
@@ -98,7 +103,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Pattern Preview */}
         <div>
           <p className="text-xs text-muted-foreground mb-3">Tap to preview each pattern:</p>
           <div className="grid grid-cols-2 gap-2">

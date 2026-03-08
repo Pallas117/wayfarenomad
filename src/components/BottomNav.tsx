@@ -1,7 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
-import { Flame, Compass, Radio, ShieldCheck, Crown, MessageSquare, Settings } from "lucide-react";
+import { Flame, Compass, Radio, ShieldCheck, MessageSquare, Settings } from "lucide-react";
+import { useUnreadCount } from "@/hooks/useUnreadCount";
 
 const tabs = [
   { to: "/marketplace", icon: Flame, label: "Market" },
@@ -12,6 +13,8 @@ const tabs = [
 ];
 
 export function BottomNav() {
+  const unreadCount = useUnreadCount();
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 glass-nav">
       <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
@@ -33,6 +36,11 @@ export function BottomNav() {
               <>
                 <div className={cn("relative", isActive && "glow-gold rounded-full")}>
                   <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.8} />
+                  {to === "/messages" && unreadCount > 0 && (
+                    <span className="absolute -top-1.5 -right-2 h-4 min-w-[16px] px-1 rounded-full bg-destructive flex items-center justify-center text-[9px] font-bold text-destructive-foreground">
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
                 </div>
                 <span className="text-[10px] font-medium">{label}</span>
               </>
