@@ -173,7 +173,9 @@ export default function Pulse() {
             exit={{ height: 0, opacity: 0 }}
             className="mb-6 rounded-xl overflow-hidden"
           >
-            <MapView pins={mapPins} className="h-60" />
+            <Suspense fallback={<div className="h-60 bg-secondary/30 animate-pulse rounded-xl" />}>
+              <LazyMapView pins={mapPins} className="h-60" />
+            </Suspense>
           </motion.div>
         )}
       </AnimatePresence>
