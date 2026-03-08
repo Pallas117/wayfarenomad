@@ -52,6 +52,7 @@ export default function SettingsPage() {
         if (data) {
           setAvatarUrl(data.avatar_url);
           setDisplayName(data.display_name || data.full_name || "Traveler");
+          setNameInput(data.display_name || data.full_name || "");
         }
       });
   }, [user]);
