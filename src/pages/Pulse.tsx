@@ -297,8 +297,26 @@ export default function Pulse() {
       {/* Bottom drawer for event list */}
       <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
         <DrawerContent className="max-h-[70vh]">
-          <DrawerHeader>
+          <DrawerHeader className="flex flex-row items-center justify-between pb-2">
             <DrawerTitle className="font-display text-sm">Community Events</DrawerTitle>
+            <div className="flex items-center gap-1">
+              <Button
+                variant={sortMode === "trending" ? "default" : "outline"}
+                size="sm"
+                className="h-7 text-[10px] px-2"
+                onClick={() => setSortMode("trending")}
+              >
+                <TrendingUp className="h-3 w-3 mr-0.5" />Trending
+              </Button>
+              <Button
+                variant={sortMode === "newest" ? "default" : "outline"}
+                size="sm"
+                className="h-7 text-[10px] px-2"
+                onClick={() => setSortMode("newest")}
+              >
+                <Clock className="h-3 w-3 mr-0.5" />Newest
+              </Button>
+            </div>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-3 overflow-y-auto max-h-[55vh]">
             {loading ? (
