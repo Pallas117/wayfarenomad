@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Users, Heart, Handshake, MapPin, Calendar, Sparkles, MessageCircle, Send, Plus, Coffee } from "lucide-react";
+import { CompassRose, FloatingTravelBadges, WavesDivider } from "@/components/animations/TravelIcons";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
