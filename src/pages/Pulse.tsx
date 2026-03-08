@@ -80,6 +80,8 @@ interface PulseEvent {
   flag_count?: number;
   is_user_submitted?: boolean;
   submitted_by?: string | null;
+  verification_status?: string;
+  community_verify_count?: number;
 }
 
 interface FunctionalPoint {
