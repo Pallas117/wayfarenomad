@@ -90,6 +90,7 @@ function isJunkEntry(title: string, description: string): boolean {
   return false;
 }
 
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
