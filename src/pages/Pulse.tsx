@@ -369,8 +369,18 @@ export default function Pulse() {
         pins.push({ id: r.id, lat: r.lat, lng: r.lng, title: r.name, subtitle: r.description || r.category, type: "resource", category: r.category });
       });
     }
+    if (activeResources.includes("safe_spaces")) {
+      safeSpaces.filter(s => s.lat && s.lng).forEach(s => {
+        pins.push({ id: s.id, lat: s.lat, lng: s.lng, title: s.name, subtitle: s.address || s.category, type: "resource", category: "secure_nook" });
+      });
+    }
+    if (activeResources.includes("expeditions")) {
+      expeditions.filter(e => e.lat && e.lng).forEach(e => {
+        pins.push({ id: e.id, lat: e.lat, lng: e.lng, title: e.title, subtitle: e.location_name || "Expedition", type: "event", category: "adventure" });
+      });
+    }
     return pins;
-  }, [filtered, hangouts, resources, activeResources]);
+  }, [filtered, hangouts, resources, activeResources, safeSpaces, expeditions]);
 
   return (
     <div className="relative h-[calc(100vh-4rem)] w-full overflow-hidden">

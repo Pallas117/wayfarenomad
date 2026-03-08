@@ -105,6 +105,19 @@ export function HangoutCard({ hangout, onJoin, onLeave, onOpenChat, isJoining, i
             {isFull ? "Full" : "Join"}
           </Button>
         )}
+        {hasLocation && (
+          <Button
+            size="sm"
+            variant="outline"
+            className="min-h-[44px] px-3"
+            onClick={() => {
+              navigate(`/pulse?focus=${hangout.id}`);
+              haptic("tap");
+            }}
+          >
+            <Map className="h-4 w-4" />
+          </Button>
+        )}
       </div>
     </motion.div>
   );

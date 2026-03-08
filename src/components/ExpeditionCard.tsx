@@ -104,6 +104,11 @@ export function ExpeditionCard({ expedition, isHost, onBook, onCancel, onComplet
             <CheckCircle className="h-3.5 w-3.5 mr-1" /> Complete +50⭐
           </Button>
         )}
+        {hasLocation && (
+          <Button size="sm" variant="outline" className="min-h-[36px] px-2" onClick={() => navigate(`/pulse?focus=${expedition.id}`)}>
+            <Map className="h-3.5 w-3.5" />
+          </Button>
+        )}
       </div>
     </motion.div>
   );
