@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      emergency_beacons: {
+        Row: {
+          created_at: string
+          id: string
+          lat: number
+          lng: number
+          message: string | null
+          resolved_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lat: number
+          lng: number
+          message?: string | null
+          resolved_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lat?: number
+          lng?: number
+          message?: string | null
+          resolved_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           category: string
@@ -320,6 +353,54 @@ export type Database = {
           fuzzed_lng?: number | null
           id?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      safe_spaces: {
+        Row: {
+          address: string | null
+          category: string
+          city: string
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          name: string
+          phone: string | null
+          verified: boolean
+          verified_by: string | null
+        }
+        Insert: {
+          address?: string | null
+          category?: string
+          city: string
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name: string
+          phone?: string | null
+          verified?: boolean
+          verified_by?: string | null
+        }
+        Update: {
+          address?: string | null
+          category?: string
+          city?: string
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          phone?: string | null
+          verified?: boolean
+          verified_by?: string | null
         }
         Relationships: []
       }
