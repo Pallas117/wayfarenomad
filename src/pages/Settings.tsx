@@ -13,6 +13,7 @@ import { SocialProfileLinks } from "@/components/SocialProfileLinks";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { AvatarUpload } from "@/components/AvatarUpload";
 import { supabase } from "@/integrations/supabase/client";
+import { usePower } from "@/components/PowerProvider";
 import {
   haptic,
   getVibrationIntensity,
