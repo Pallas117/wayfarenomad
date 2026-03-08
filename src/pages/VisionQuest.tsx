@@ -82,7 +82,7 @@ function VisionStep({
 }) {
   const submitRef = useRef<HTMLButtonElement>(null);
   const [promptIndex, setPromptIndex] = useState(0);
-  const intensity = Math.min(wordCount / 200, 1);
+  const intensity = Math.min(wordCount / 100, 1);
   const showParticles = wordCount >= 200;
 
   const handlePromptComplete = useCallback(() => {
