@@ -36,6 +36,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
+import { CommunityPhotoBoard } from "@/components/CommunityPhotoBoard";
 
 const safeSpaceCategories = [
   { id: "all", label: "All", icon: Shield },
