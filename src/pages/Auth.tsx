@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, User } from "lucide-react";
-import nomadLogo from "@/assets/nomad-logo.png";
+import nomadLogo from "@/assets/nomad-logo.png"; // TODO: replace with Wayfare logo
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
