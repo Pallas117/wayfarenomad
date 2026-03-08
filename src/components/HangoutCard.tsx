@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Coffee, Laptop, PartyPopper, Bike, MapPin, Clock, Users, UserPlus, UserMinus, MessageCircle } from "lucide-react";
+import { Coffee, Laptop, PartyPopper, Bike, MapPin, Clock, Users, UserPlus, UserMinus, MessageCircle, Navigation } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
