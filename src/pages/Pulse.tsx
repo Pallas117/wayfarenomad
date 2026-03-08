@@ -234,6 +234,8 @@ export default function Pulse() {
   const [sortMode, setSortMode] = useState<"trending" | "newest">("trending");
   const [focusedEventId, setFocusedEventId] = useState<string | null>(null);
   const [hangoutPrefill, setHangoutPrefill] = useState<any>(null);
+  const [safeSpaces, setSafeSpaces] = useState<any[]>([]);
+  const [expeditions, setExpeditions] = useState<any[]>([]);
   const { data: hangouts } = useHangouts();
   const filteredIds = useMemo(() => events.map(e => e.id), [events]);
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
