@@ -145,6 +145,16 @@ function MarketplaceContent() {
         ))}
       </div>
 
+      {/* Commission transparency */}
+      <motion.p
+        className="text-center text-xs text-muted-foreground mt-8 px-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        Wayfare earns a small commission on bookings to keep the platform free.
+      </motion.p>
+
       <CreateExpeditionForm
         visible={showForm}
         onClose={() => setShowForm(false)}

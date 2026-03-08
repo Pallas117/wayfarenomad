@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radio, MapPin, Calendar, ExternalLink, Music, Code, PartyPopper, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield } from "lucide-react";
+import { Radio, MapPin, Calendar, ExternalLink, Music, Code, PartyPopper, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle } from "lucide-react";
 import { WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,6 +52,7 @@ interface PulseEvent {
   scraped_from: string | null;
   lat: number | null;
   lng: number | null;
+  flag_count?: number;
 }
 
 interface FunctionalPoint {
@@ -118,6 +119,17 @@ export default function Pulse() {
     }
   };
 
+  const handleFlag = async (eventId: string) => {
+    if (!user) return;
+    const { error } = await supabase.from("event_flags" as any).insert({ event_id: eventId, user_id: user.id });
+    if (!error) {
+      setEvents(prev => prev.map(e => e.id === eventId ? { ...e, flag_count: (e.flag_count ?? 0) + 1 } : e));
+      toast({ title: "Event Flagged", description: "Thanks for helping keep Pulse accurate." });
+    } else if (error.code === "23505") {
+      toast({ title: "Already Flagged", description: "You've already flagged this event.", variant: "destructive" });
+    }
+  };
+
   const toggleIntrepid = useCallback(() => {
     setIntrepidMode(prev => {
       const next = !prev;
@@ -133,7 +145,8 @@ export default function Pulse() {
   const filtered = events.filter(e => {
     const catMatch = activeCategory === "all" || e.category === activeCategory;
     const cityMatch = activeCity === "all" || e.city === activeCity;
-    return catMatch && cityMatch;
+    const notHidden = (e.flag_count ?? 0) < 3;
+    return catMatch && cityMatch && notHidden;
   });
 
   const mapPins: MapPinType[] = useMemo(() => {
@@ -279,8 +292,14 @@ export default function Pulse() {
                         {event.verified ? (
                           <Badge className="text-[10px] bg-primary/20 text-primary border-primary/30"><CheckCircle className="h-2.5 w-2.5 mr-0.5" />Verified</Badge>
                         ) : (
-                          <Button variant="ghost" size="sm" className="h-5 text-[10px] text-primary px-1" onClick={() => handleVerify(event.id)}>Verify</Button>
+                          <>
+                            <Badge variant="outline" className="text-[10px] text-muted-foreground border-muted"><AlertTriangle className="h-2.5 w-2.5 mr-0.5" />Auto-scraped</Badge>
+                            {isSteward && <Button variant="ghost" size="sm" className="h-5 text-[10px] text-primary px-1" onClick={() => handleVerify(event.id)}>Verify</Button>}
+                          </>
                         )}
+                        <Button variant="ghost" size="sm" className="h-5 text-[10px] text-destructive/70 px-1" onClick={() => handleFlag(event.id)}>
+                          <Flag className="h-2.5 w-2.5" />
+                        </Button>
                       </div>
                       {event.source_url && (
                         <a href={event.source_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">

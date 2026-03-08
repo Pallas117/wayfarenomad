@@ -52,8 +52,22 @@ export function SocialProfileLinks() {
   const filledCount = Object.values(values).filter(v => v.trim().length > 0).length;
   const isVerifiable = filledCount >= 2;
 
+  const validate = (): string | null => {
+    const v = values;
+    if (v.instagram_handle && !v.instagram_handle.startsWith("@")) return "Instagram handle must start with @";
+    if (v.telegram_handle && !v.telegram_handle.startsWith("@")) return "Telegram handle must start with @";
+    if (v.whatsapp_number && !/^\+\d{7,15}$/.test(v.whatsapp_number)) return "WhatsApp must be + followed by digits";
+    if (v.substack_url && !v.substack_url.includes(".substack.com")) return "Substack URL must contain .substack.com";
+    return null;
+  };
+
   const handleSave = async () => {
     if (!user?.id) return;
+    const err = validate();
+    if (err) {
+      toast({ title: "Validation Error", description: err, variant: "destructive" });
+      return;
+    }
     setSaving(true);
     const shouldVerify = isVerifiable && !verified;
     const { error } = await supabase
