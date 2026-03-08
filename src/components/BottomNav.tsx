@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { Store, Users, Radio, Trophy, Shield } from "lucide-react";
+import { Store, Users, Radio, Trophy, Shield, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { haptic } from "@/lib/haptics";
 
 const tabs = [
   { to: "/marketplace", icon: Store, label: "Market" },
@@ -18,6 +19,7 @@ export function BottomNav() {
           <NavLink
             key={to}
             to={to}
+            onClick={() => haptic("tap")}
             className={({ isActive }) =>
               cn(
                 "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200 min-w-[44px] min-h-[44px] justify-center",
@@ -37,6 +39,26 @@ export function BottomNav() {
             )}
           </NavLink>
         ))}
+        {/* Settings icon */}
+        <NavLink
+          to="/settings"
+          onClick={() => haptic("tap")}
+          className={({ isActive }) =>
+            cn(
+              "flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-200 min-w-[36px] min-h-[44px] justify-center",
+              isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            )
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <div className={cn("relative", isActive && "glow-gold rounded-full")}>
+                <Settings className="h-4 w-4" />
+              </div>
+              <span className="text-[9px] font-medium">Settings</span>
+            </>
+          )}
+        </NavLink>
       </div>
     </nav>
   );

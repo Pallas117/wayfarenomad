@@ -4,6 +4,7 @@ import { Radio, MapPin, Calendar, ExternalLink, Music, Code, PartyPopper } from 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CulturalEar } from "@/components/CulturalEar";
 
 const categories = [
   { id: "all", label: "All", icon: Radio },
@@ -68,12 +69,16 @@ export default function Pulse() {
   return (
     <div className="p-6 max-w-lg mx-auto pb-24">
       <motion.div
-        className="flex items-center gap-3 mb-6"
+        className="flex items-center justify-between mb-6"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Radio className="h-6 w-6 text-primary animate-pulse-glow" />
-        <h1 className="text-2xl font-display font-bold">Community Pulse</h1>
+        <div className="flex items-center gap-3">
+          <Radio className="h-6 w-6 text-primary animate-pulse-glow" />
+          <h1 className="text-2xl font-display font-bold">Community Pulse</h1>
+        </div>
+        {/* Cultural Ear floating button */}
+        <CulturalEar />
       </motion.div>
 
       {/* Map with satellite zoom feel */}

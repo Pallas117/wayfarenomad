@@ -11,6 +11,7 @@ import { StarfieldBackground } from "@/components/animations/StarfieldBackground
 import { TypewriterText } from "@/components/animations/TypewriterText";
 import { StardustParticles } from "@/components/animations/StardustParticles";
 import { ConstellationBadge } from "@/components/animations/ConstellationBadge";
+import { haptic } from "@/lib/haptics";
 
 const INTEGRITY_QUESTIONS = [
   {
@@ -335,6 +336,7 @@ export default function VisionQuest() {
       toast({ title: "Error", description: error.message, variant: "destructive" });
       return;
     }
+    haptic("success");
     setStep("quiz");
   };
 
@@ -359,6 +361,7 @@ export default function VisionQuest() {
     await supabase.rpc("promote_to_steward", { _user_id: user.id });
 
     setSubmitting(false);
+    haptic("shimmer");
     setStep("complete");
   };
 

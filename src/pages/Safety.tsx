@@ -34,6 +34,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { haptic } from "@/lib/haptics";
 
 const safeSpaceCategories = [
   { id: "all", label: "All", icon: Shield },
@@ -149,6 +150,7 @@ function SafetyContent() {
       if (error) throw error;
     },
     onSuccess: () => {
+      haptic("sosAlert");
       toast({ title: "🚨 Emergency Beacon Activated", description: "Nearby Stewards have been alerted. Stay safe." });
       setSosMessage("");
       setShowSosConfirm(false);
@@ -197,6 +199,7 @@ function SafetyContent() {
       }
     },
     onSuccess: () => {
+      haptic("success");
       toast({ title: "✨ Response sent", description: "The member has been notified you're on your way." });
       setRespondMsg("");
       setRespondEta("15");

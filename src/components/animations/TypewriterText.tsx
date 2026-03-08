@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { haptic } from "@/lib/haptics";
 
 interface TypewriterTextProps {
   text: string;
@@ -19,6 +20,8 @@ export function TypewriterText({ text, speed = 40, className = "", onComplete }:
     const interval = setInterval(() => {
       i++;
       setDisplayed(text.slice(0, i));
+      // Haptic tick every 3rd character for subtle feedback
+      if (i % 3 === 0) haptic("typewriterTick");
       if (i >= text.length) {
         clearInterval(interval);
         setDone(true);
