@@ -74,6 +74,8 @@ interface PulseEvent {
   scraped_from: string | null;
   lat: number | null;
   lng: number | null;
+  star_count?: number;
+  like_count?: number;
   flag_count?: number;
   is_user_submitted?: boolean;
   submitted_by?: string | null;
