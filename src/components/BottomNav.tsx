@@ -1,14 +1,14 @@
 import { NavLink } from "react-router-dom";
-import { Store, Users, Radio, Trophy, Shield, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
+import { Flame, Compass, Radio, ShieldCheck, Crown, Settings } from "lucide-react";
 
 const tabs = [
-  { to: "/marketplace", icon: Store, label: "Market" },
-  { to: "/social", icon: Users, label: "Social" },
+  { to: "/marketplace", icon: Flame, label: "Market" },
+  { to: "/social", icon: Compass, label: "Social" },
   { to: "/pulse", icon: Radio, label: "Pulse" },
-  { to: "/safety", icon: Shield, label: "Safety" },
-  { to: "/leaderboard", icon: Trophy, label: "Board" },
+  { to: "/safety", icon: ShieldCheck, label: "Safety" },
+  { to: "/leaderboard", icon: Crown, label: "Board" },
 ];
 
 export function BottomNav() {
@@ -32,7 +32,7 @@ export function BottomNav() {
             {({ isActive }) => (
               <>
                 <div className={cn("relative", isActive && "glow-gold rounded-full")}>
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.8} />
                 </div>
                 <span className="text-[10px] font-medium">{label}</span>
               </>
@@ -53,7 +53,7 @@ export function BottomNav() {
           {({ isActive }) => (
             <>
               <div className={cn("relative", isActive && "glow-gold rounded-full")}>
-                <Settings className="h-4 w-4" />
+                <Settings className="h-4 w-4" strokeWidth={isActive ? 2.5 : 1.8} />
               </div>
               <span className="text-[9px] font-medium">Settings</span>
             </>
