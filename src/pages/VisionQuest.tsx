@@ -358,6 +358,7 @@ export default function VisionQuest() {
 
   const [step, setStep] = useState<"vision" | "quiz" | "complete">("vision");
   const [visionText, setVisionText] = useState("");
+  const [jokeText, setJokeText] = useState("");
   const [quizAnswers, setQuizAnswers] = useState<(number | null)[]>(
     new Array(INTEGRITY_QUESTIONS.length).fill(null)
   );
