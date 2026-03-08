@@ -57,6 +57,7 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const reverseGeocode = useCallback(async (rlat: number, rlng: number) => {
+    setReversing(true);
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${rlat}&lon=${rlng}&zoom=18&addressdetails=0`,
@@ -69,6 +70,7 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
         setQuery(shortName);
       }
     } catch { /* silent */ }
+    setReversing(false);
   }, [onChange]);
 
   const handleGeolocate = useCallback(() => {
