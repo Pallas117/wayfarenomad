@@ -1,34 +1,42 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Heart, Handshake, MapPin, Calendar, Sparkles } from "lucide-react";
+import { Users, Heart, Handshake, MapPin, Calendar, Sparkles, MessageCircle, Plus } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RoleGate } from "@/components/RoleGate";
 import { useUserRank } from "@/hooks/useUserRank";
+import { useItineraryMatches, type ItineraryMatch } from "@/hooks/useItineraryMatches";
 import { PathConvergence } from "@/components/animations/PathConvergence";
+import { MeetSync } from "@/components/MeetSync";
+import { GoldCardSkeleton } from "@/components/animations/GoldSkeleton";
 import { cn } from "@/lib/utils";
+import { haptic } from "@/lib/haptics";
 
 type SocialMode = "friendship" | "dating";
 
+// Fallback mock data when user has no itineraries
 const mockUsers = [
   {
-    id: "1", name: "Maya Chen", avatar: "MC", city: "Lisbon",
+    userId: "mock-1", displayName: "Maya Chen", avatar: "MC", city: "Lisbon",
     bio: "Full-stack dev & surf enthusiast",
     teaches: ["React", "TypeScript"], learns: ["Surfing", "Portuguese"],
-    travelDates: "Mar 1 – Apr 15", overlap: 12, score: 87,
+    arrivalDate: "2026-03-01", departureDate: "2026-04-15",
+    overlapDays: 12, visionScore: 87, stardustPoints: 340,
   },
   {
-    id: "2", name: "Jake Morrison", avatar: "JM", city: "Lisbon",
+    userId: "mock-2", displayName: "Jake Morrison", avatar: "JM", city: "Lisbon",
     bio: "Digital marketer exploring Europe",
     teaches: ["SEO", "Content Strategy"], learns: ["Coding", "Photography"],
-    travelDates: "Feb 20 – Mar 30", overlap: 22, score: 74,
+    arrivalDate: "2026-02-20", departureDate: "2026-03-30",
+    overlapDays: 22, visionScore: 74, stardustPoints: 180,
   },
   {
-    id: "3", name: "Aisha Patel", avatar: "AP", city: "Lisbon",
+    userId: "mock-3", displayName: "Aisha Patel", avatar: "AP", city: "Lisbon",
     bio: "UX designer & yoga teacher",
     teaches: ["Yoga", "Figma"], learns: ["Guitar", "Spanish"],
-    travelDates: "Mar 5 – May 1", overlap: 30, score: 92,
+    arrivalDate: "2026-03-05", departureDate: "2026-05-01",
+    overlapDays: 30, visionScore: 92, stardustPoints: 520,
   },
 ];
 
@@ -36,6 +44,12 @@ function SocialContent() {
   const [mode, setMode] = useState<SocialMode>("friendship");
   const { isSteward } = useUserRank();
   const [expandedMatch, setExpandedMatch] = useState<string | null>(null);
+  const [meetSyncUser, setMeetSyncUser] = useState<ItineraryMatch | null>(null);
+  const { data: realMatches, isLoading } = useItineraryMatches();
+
+  const matches: ItineraryMatch[] = (realMatches && realMatches.length > 0)
+    ? realMatches
+    : mockUsers;
 
   return (
     <div className="p-6 max-w-lg mx-auto pb-24">
@@ -69,6 +83,7 @@ function SocialContent() {
             onCheckedChange={(checked) => {
               if (checked && !isSteward) return;
               setMode(checked ? "dating" : "friendship");
+              haptic("tap");
             }}
             disabled={!isSteward && mode === "friendship"}
           />
@@ -86,98 +101,151 @@ function SocialContent() {
         )}
       </motion.div>
 
-      {/* User Cards with spring physics */}
-      <div className="space-y-4">
-        <AnimatePresence>
-          {mockUsers.map((user, i) => (
-            <motion.div
-              key={user.id}
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: i * 0.12, type: "spring", stiffness: 150, damping: 18 }}
-              whileHover={{ y: -2 }}
-              className="glass-card rounded-xl p-5"
-            >
-              <div className="flex items-start gap-4">
-                <motion.div
-                  className="h-14 w-14 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-lg shrink-0"
-                  whileTap={{ scale: 0.9 }}
-                >
-                  {user.avatar}
-                </motion.div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-display font-semibold text-lg">{user.name}</h3>
-                    <div className="flex items-center gap-1 text-primary">
-                      <Sparkles className="h-4 w-4" />
-                      <span className="text-sm font-bold">{user.score}%</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-3">{user.bio}</p>
-                  <div className="flex items-center gap-4 mb-3 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {user.city}</span>
-                    <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {user.overlap}d overlap</span>
-                  </div>
-                  {mode === "friendship" ? (
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap gap-1.5">
-                        <span className="text-xs text-muted-foreground mr-1">Teaches:</span>
-                        {user.teaches.map((s) => (
-                          <Badge key={s} variant="secondary" className="text-xs bg-secondary/50">{s}</Badge>
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        <span className="text-xs text-muted-foreground mr-1">Learns:</span>
-                        {user.learns.map((s) => (
-                          <Badge key={s} variant="outline" className="text-xs border-primary/30 text-primary">{s}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-sm text-muted-foreground">
-                      <Calendar className="h-3 w-3 inline mr-1" />
-                      {user.travelDates}
-                    </div>
-                  )}
-                </div>
-              </div>
+      {/* No itinerary hint */}
+      {realMatches && realMatches.length === 0 && (
+        <motion.div
+          className="glass-card rounded-xl p-4 mb-4 border-l-4 border-primary"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <p className="text-sm text-muted-foreground">
+            <strong className="text-foreground">No itinerary yet.</strong> Add your travel dates in your profile to find real matches. Showing sample profiles below.
+          </p>
+        </motion.div>
+      )}
 
-              {/* Path Convergence on connect */}
-              <AnimatePresence>
-                {expandedMatch === user.id && (
+      {/* Loading skeletons */}
+      {isLoading ? (
+        <div className="space-y-4">
+          <GoldCardSkeleton />
+          <GoldCardSkeleton />
+          <GoldCardSkeleton />
+        </div>
+      ) : (
+        /* User Cards */
+        <div className="space-y-4">
+          <AnimatePresence>
+            {matches.map((user, i) => (
+              <motion.div
+                key={user.userId}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: i * 0.12, type: "spring", stiffness: 150, damping: 18 }}
+                whileHover={{ y: -2 }}
+                className="glass-card rounded-xl p-5"
+              >
+                <div className="flex items-start gap-4">
                   <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden mt-4"
+                    className="h-14 w-14 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-lg shrink-0"
+                    whileTap={{ scale: 0.9 }}
                   >
-                    <PathConvergence
-                      userA="You"
-                      userB={user.name}
-                      city={user.city}
-                      overlapDays={user.overlap}
-                      sharedTags={user.teaches.slice(0, 2)}
-                    />
+                    {user.avatar}
                   </motion.div>
-                )}
-              </AnimatePresence>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-display font-semibold text-lg">{user.displayName}</h3>
+                      <div className="flex items-center gap-1 text-primary">
+                        <Sparkles className="h-4 w-4" />
+                        <span className="text-sm font-bold">{user.visionScore}%</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-3">{user.bio || "Fellow nomad"}</p>
+                    <div className="flex items-center gap-4 mb-3 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {user.city}</span>
+                      <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {user.overlapDays}d overlap</span>
+                      <span className="flex items-center gap-1"><Sparkles className="h-3 w-3" /> {user.stardustPoints} ✦</span>
+                    </div>
+                    {mode === "friendship" ? (
+                      <div className="space-y-2">
+                        {user.teaches.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5">
+                            <span className="text-xs text-muted-foreground mr-1">Teaches:</span>
+                            {user.teaches.map((s) => (
+                              <Badge key={s} variant="secondary" className="text-xs bg-secondary/50">{s}</Badge>
+                            ))}
+                          </div>
+                        )}
+                        {user.learns.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5">
+                            <span className="text-xs text-muted-foreground mr-1">Learns:</span>
+                            {user.learns.map((s) => (
+                              <Badge key={s} variant="outline" className="text-xs border-primary/30 text-primary">{s}</Badge>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-sm text-muted-foreground">
+                        <Calendar className="h-3 w-3 inline mr-1" />
+                        {user.arrivalDate} → {user.departureDate}
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-              <div className="flex gap-2 mt-4">
-                <Button
-                  size="sm"
-                  className="flex-1 gradient-gold text-primary-foreground hover:opacity-90 min-h-[44px]"
-                  onClick={() => setExpandedMatch(expandedMatch === user.id ? null : user.id)}
-                >
-                  {expandedMatch === user.id ? "Hide Path" : "Connect"}
-                </Button>
-                <Button size="sm" variant="outline" className="flex-1 min-h-[44px]">
-                  View Profile
-                </Button>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+                {/* Path Convergence */}
+                <AnimatePresence>
+                  {expandedMatch === user.userId && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden mt-4"
+                    >
+                      <PathConvergence
+                        userA="You"
+                        userB={user.displayName}
+                        city={user.city}
+                        overlapDays={user.overlapDays}
+                        sharedTags={user.teaches.slice(0, 2)}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Meet-Sync panel */}
+                <AnimatePresence>
+                  {meetSyncUser?.userId === user.userId && (
+                    <motion.div className="mt-4">
+                      <MeetSync
+                        recipientId={user.userId}
+                        recipientName={user.displayName}
+                        city={user.city}
+                        onClose={() => setMeetSyncUser(null)}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="flex gap-2 mt-4">
+                  <Button
+                    size="sm"
+                    className="flex-1 gradient-gold text-primary-foreground hover:opacity-90 min-h-[44px]"
+                    onClick={() => {
+                      setExpandedMatch(expandedMatch === user.userId ? null : user.userId);
+                      haptic("tap");
+                    }}
+                  >
+                    {expandedMatch === user.userId ? "Hide Path" : "Connect"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 min-h-[44px]"
+                    onClick={() => {
+                      setMeetSyncUser(meetSyncUser?.userId === user.userId ? null : user);
+                      haptic("tap");
+                    }}
+                  >
+                    <MessageCircle className="h-4 w-4 mr-1" />
+                    {meetSyncUser?.userId === user.userId ? "Cancel" : "Meet"}
+                  </Button>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
     </div>
   );
 }
