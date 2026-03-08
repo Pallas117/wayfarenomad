@@ -52,6 +52,7 @@ interface PulseEvent {
   scraped_from: string | null;
   lat: number | null;
   lng: number | null;
+  flag_count?: number;
 }
 
 interface FunctionalPoint {
