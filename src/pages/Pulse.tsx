@@ -145,7 +145,8 @@ export default function Pulse() {
   const filtered = events.filter(e => {
     const catMatch = activeCategory === "all" || e.category === activeCategory;
     const cityMatch = activeCity === "all" || e.city === activeCity;
-    return catMatch && cityMatch;
+    const notHidden = (e.flag_count ?? 0) < 3;
+    return catMatch && cityMatch && notHidden;
   });
 
   const mapPins: MapPinType[] = useMemo(() => {
