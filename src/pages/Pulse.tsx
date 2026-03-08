@@ -363,7 +363,20 @@ export default function Pulse() {
       {/* Full-screen map */}
       <div className="absolute inset-0 z-0">
         <Suspense fallback={<div className="h-full w-full bg-background animate-pulse" />}>
-          <LazyMapView pins={mapPins} intrepidMode={intrepidMode} className="!rounded-none" />
+          <LazyMapView
+            pins={mapPins}
+            intrepidMode={intrepidMode}
+            className="!rounded-none"
+            onPinClick={(pin) => {
+              setFocusedEventId(pin.id);
+              setDrawerOpen(true);
+              // Scroll to event after drawer opens
+              setTimeout(() => {
+                const el = document.getElementById(`event-card-${pin.id}`);
+                el?.scrollIntoView({ behavior: "smooth", block: "center" });
+              }, 300);
+            }}
+          />
         </Suspense>
       </div>
 
