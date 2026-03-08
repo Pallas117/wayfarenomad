@@ -114,9 +114,9 @@ describe("Wise Multi-Currency Escrow (Hardware Handshake)", () => {
 
   it("handles sub-cent rounding correctly", () => {
     // 333 * 0.05 = 16.65 commission, net = 316.35
-    // 316.35 * 1.2345 = 390.44
+    // 316.35 * 1.2345 = 390.5279...
     const result = calculateEscrow(333, "GBP", "USD", 1.2345, 0.05);
-    expect(result.recipientReceives).toBe(390.43); // rounded to 2 dp
+    expect(result.recipientReceives).toBe(390.53); // rounded to 2 dp
   });
 
   it("same-currency transfer has no exchange impact", () => {
