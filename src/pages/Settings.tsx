@@ -137,6 +137,44 @@ export default function SettingsPage() {
             </Button>
           </div>
         </div>
+
+        {/* Bio */}
+        <div className="w-full space-y-2">
+          <label className="text-xs text-muted-foreground uppercase tracking-wider">Bio</label>
+          <Textarea
+            value={bioInput}
+            onChange={(e) => setBioInput(e.target.value)}
+            placeholder="Tell the community about yourself..."
+            maxLength={300}
+            className="min-h-[80px] bg-secondary/50"
+          />
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">{bioInput.length}/300</span>
+            <Button
+              size="sm"
+              className="gradient-gold text-primary-foreground"
+              disabled={savingBio || bioInput.trim() === savedBio}
+              onClick={async () => {
+                if (!user) return;
+                setSavingBio(true);
+                const { error } = await supabase
+                  .from("profiles")
+                  .update({ bio: bioInput.trim() || null })
+                  .eq("user_id", user.id);
+                setSavingBio(false);
+                if (error) {
+                  toast({ title: "Error", description: error.message, variant: "destructive" });
+                } else {
+                  setSavedBio(bioInput.trim());
+                  haptic("success");
+                  toast({ title: "Bio updated ✦" });
+                }
+              }}
+            >
+              <Check className="h-3.5 w-3.5 mr-1" /> Save Bio
+            </Button>
+          </div>
+        </div>
       </motion.div>
 
       {/* Social Profile Links */}
