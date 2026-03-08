@@ -9,7 +9,6 @@ function getByText(container: HTMLElement, text: string) {
   }
   return null;
 }
-import { TravelLoader, TravelLoaderInline } from "@/components/animations/TravelLoader";
 
 describe("TravelLoader", () => {
   it("renders default message", () => {
