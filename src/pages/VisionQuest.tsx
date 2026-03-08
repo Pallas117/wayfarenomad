@@ -360,6 +360,7 @@ export default function VisionQuest() {
     await supabase.rpc("promote_to_steward", { _user_id: user.id });
 
     setSubmitting(false);
+    haptic("shimmer");
     setStep("complete");
   };
 
