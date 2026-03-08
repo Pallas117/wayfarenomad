@@ -56,6 +56,7 @@ export interface MapPin {
   title: string;
   subtitle?: string;
   type: "hangout" | "event" | "beacon";
+  category?: string;
 }
 
 interface MapViewProps {
