@@ -49,15 +49,8 @@ const beaconIcon = new L.DivIcon({
   iconAnchor: [12, 12],
 });
 
-export interface MapPin {
-  id: string;
-  lat: number;
-  lng: number;
-  title: string;
-  subtitle?: string;
-  type: "hangout" | "event" | "beacon";
-  category?: string;
-}
+export type { MapPin } from "./MapView.types";
+import type { MapPin } from "./MapView.types";
 
 interface MapViewProps {
   pins: MapPin[];

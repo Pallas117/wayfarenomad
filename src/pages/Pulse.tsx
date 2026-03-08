@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CulturalEar } from "@/components/CulturalEar";
-import type { MapPin as MapPinType } from "@/components/MapView";
+import type { MapPin as MapPinType } from "@/components/MapView.types";
 
 const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
 import { supabase } from "@/integrations/supabase/client";
