@@ -10,7 +10,7 @@ import { ChatView } from "@/components/ChatView";
 import { GroupChatView } from "@/components/GroupChatView";
 import { useGroupChats, useJoinGroupChat, type GroupChat } from "@/hooks/useGroupChat";
 import { useAuth } from "@/hooks/useAuth";
-import { GoldCardSkeleton } from "@/components/animations/GoldSkeleton";
+import { TravelLoaderInline } from "@/components/animations/TravelLoader";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 
