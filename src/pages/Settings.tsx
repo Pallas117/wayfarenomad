@@ -14,6 +14,7 @@ import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { AvatarUpload } from "@/components/AvatarUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { usePower } from "@/components/PowerProvider";
+import { useCompassLocks } from "@/hooks/useCompassLock";
 import {
   haptic,
   getVibrationIntensity,
