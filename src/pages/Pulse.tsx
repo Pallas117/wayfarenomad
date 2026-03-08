@@ -428,12 +428,25 @@ export default function Pulse() {
                         <Badge variant="outline" className="text-[10px]">{event.city === "Kuala Lumpur" ? "KL" : event.city}</Badge>
                         {event.is_user_submitted ? (
                           <Badge className="text-[10px]" style={{ backgroundColor: "hsl(var(--cat-alien) / 0.15)", color: "hsl(var(--cat-alien))", borderColor: "hsl(var(--cat-alien) / 0.3)" }}>👽 Community Pick</Badge>
-                        ) : event.verified ? (
-                          <Badge className="text-[10px] bg-primary/20 text-primary border-primary/30"><CheckCircle className="h-2.5 w-2.5 mr-0.5" />Verified</Badge>
+                        ) : event.verification_status === "admin_verified" ? (
+                          <Badge className="text-[10px] bg-primary/20 text-primary border-primary/30"><ShieldCheck className="h-2.5 w-2.5 mr-0.5" />Admin Verified</Badge>
+                        ) : event.verification_status === "community_verified" ? (
+                          <Badge className="text-[10px]" style={{ backgroundColor: "hsl(var(--cat-wellbeing) / 0.15)", color: "hsl(var(--cat-wellbeing))", borderColor: "hsl(var(--cat-wellbeing) / 0.3)" }}>
+                            <Users className="h-2.5 w-2.5 mr-0.5" />Community Verified
+                          </Badge>
                         ) : (
                           <>
-                            <Badge variant="outline" className="text-[10px] text-muted-foreground border-muted"><AlertTriangle className="h-2.5 w-2.5 mr-0.5" />Auto-scraped</Badge>
-                            {isSteward && <Button variant="ghost" size="sm" className="h-5 text-[10px] text-primary px-1" onClick={() => handleVerify(event.id)}>Verify</Button>}
+                            <Badge variant="outline" className="text-[10px] text-muted-foreground border-muted">
+                              <AlertTriangle className="h-2.5 w-2.5 mr-0.5" />Auto-scraped
+                              {(event.community_verify_count ?? 0) > 0 && (
+                                <span className="ml-1 text-primary">({event.community_verify_count}/3)</span>
+                              )}
+                            </Badge>
+                            {isSteward && (
+                              <Button variant="ghost" size="sm" className="h-5 text-[10px] text-primary px-1" onClick={() => handleCommunityVerify(event.id)}>
+                                <CheckCircle className="h-2.5 w-2.5 mr-0.5" />Verify +5✨
+                              </Button>
+                            )}
                           </>
                         )}
                         <Button variant="ghost" size="sm" className="h-5 text-[10px] text-destructive/70 px-1" onClick={() => handleFlag(event.id)}>
