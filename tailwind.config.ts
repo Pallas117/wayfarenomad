@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        display: ["Space Grotesk", "sans-serif"],
+        sans: ["Inter", "IBM Plex Sans", "sans-serif"],
+        display: ["Cinzel", "serif"],
         vision: ["Cormorant Garamond", "serif"],
       },
       colors: {
