@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock, Flame } from "lucide-react";
+import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock, Flame, Users, ShieldCheck } from "lucide-react";
 import { WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -80,6 +80,8 @@ interface PulseEvent {
   flag_count?: number;
   is_user_submitted?: boolean;
   submitted_by?: string | null;
+  verification_status?: string;
+  community_verify_count?: number;
 }
 
 interface FunctionalPoint {
@@ -140,12 +142,31 @@ export default function Pulse() {
     setScraping(false);
   };
 
-  const handleVerify = async (eventId: string) => {
+  const handleCommunityVerify = async (eventId: string) => {
     if (!user) return;
-    const { error } = await supabase.from("events").update({ verified: true, verified_by: user.id }).eq("id", eventId);
+    const { error } = await supabase.from("community_verifications" as any).insert({ event_id: eventId, user_id: user.id, is_accurate: true });
     if (!error) {
-      setEvents(prev => prev.map(e => e.id === eventId ? { ...e, verified: true } : e));
-      toast({ title: "Event Verified ✓" });
+      setEvents(prev => prev.map(e => {
+        if (e.id !== eventId) return e;
+        const newCount = (e.community_verify_count ?? 0) + 1;
+        return {
+          ...e,
+          community_verify_count: newCount,
+          verification_status: newCount >= 3 ? "community_verified" : e.verification_status,
+        };
+      }));
+      toast({ title: "Verified! +5 ✨", description: "Thanks for keeping Pulse accurate." });
+    } else if (error.code === "23505") {
+      toast({ title: "Already Verified", description: "You've already verified this event.", variant: "destructive" });
+    }
+  };
+
+  const handleAdminVerify = async (eventId: string) => {
+    if (!user) return;
+    const { error } = await supabase.from("events").update({ verified: true, verified_by: user.id, verification_status: "admin_verified" } as any).eq("id", eventId);
+    if (!error) {
+      setEvents(prev => prev.map(e => e.id === eventId ? { ...e, verified: true, verification_status: "admin_verified" } : e));
+      toast({ title: "Admin Verified ✓" });
     }
   };
 
@@ -407,12 +428,25 @@ export default function Pulse() {
                         <Badge variant="outline" className="text-[10px]">{event.city === "Kuala Lumpur" ? "KL" : event.city}</Badge>
                         {event.is_user_submitted ? (
                           <Badge className="text-[10px]" style={{ backgroundColor: "hsl(var(--cat-alien) / 0.15)", color: "hsl(var(--cat-alien))", borderColor: "hsl(var(--cat-alien) / 0.3)" }}>👽 Community Pick</Badge>
-                        ) : event.verified ? (
-                          <Badge className="text-[10px] bg-primary/20 text-primary border-primary/30"><CheckCircle className="h-2.5 w-2.5 mr-0.5" />Verified</Badge>
+                        ) : event.verification_status === "admin_verified" ? (
+                          <Badge className="text-[10px] bg-primary/20 text-primary border-primary/30"><ShieldCheck className="h-2.5 w-2.5 mr-0.5" />Admin Verified</Badge>
+                        ) : event.verification_status === "community_verified" ? (
+                          <Badge className="text-[10px]" style={{ backgroundColor: "hsl(var(--cat-wellbeing) / 0.15)", color: "hsl(var(--cat-wellbeing))", borderColor: "hsl(var(--cat-wellbeing) / 0.3)" }}>
+                            <Users className="h-2.5 w-2.5 mr-0.5" />Community Verified
+                          </Badge>
                         ) : (
                           <>
-                            <Badge variant="outline" className="text-[10px] text-muted-foreground border-muted"><AlertTriangle className="h-2.5 w-2.5 mr-0.5" />Auto-scraped</Badge>
-                            {isSteward && <Button variant="ghost" size="sm" className="h-5 text-[10px] text-primary px-1" onClick={() => handleVerify(event.id)}>Verify</Button>}
+                            <Badge variant="outline" className="text-[10px] text-muted-foreground border-muted">
+                              <AlertTriangle className="h-2.5 w-2.5 mr-0.5" />Auto-scraped
+                              {(event.community_verify_count ?? 0) > 0 && (
+                                <span className="ml-1 text-primary">({event.community_verify_count}/3)</span>
+                              )}
+                            </Badge>
+                            {isSteward && (
+                              <Button variant="ghost" size="sm" className="h-5 text-[10px] text-primary px-1" onClick={() => handleCommunityVerify(event.id)}>
+                                <CheckCircle className="h-2.5 w-2.5 mr-0.5" />Verify +5✨
+                              </Button>
+                            )}
                           </>
                         )}
                         <Button variant="ghost" size="sm" className="h-5 text-[10px] text-destructive/70 px-1" onClick={() => handleFlag(event.id)}>

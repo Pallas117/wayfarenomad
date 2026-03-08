@@ -44,6 +44,38 @@ export type Database = {
         }
         Relationships: []
       }
+      community_verifications: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          is_accurate: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          is_accurate?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          is_accurate?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_verifications_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compass_locks: {
         Row: {
           created_at: string
@@ -178,6 +210,7 @@ export type Database = {
         Row: {
           category: string
           city: string
+          community_verify_count: number
           created_at: string
           description: string | null
           event_date: string | null
@@ -194,12 +227,14 @@ export type Database = {
           submitted_by: string | null
           title: string
           venue: string | null
+          verification_status: string
           verified: boolean | null
           verified_by: string | null
         }
         Insert: {
           category: string
           city: string
+          community_verify_count?: number
           created_at?: string
           description?: string | null
           event_date?: string | null
@@ -216,12 +251,14 @@ export type Database = {
           submitted_by?: string | null
           title: string
           venue?: string | null
+          verification_status?: string
           verified?: boolean | null
           verified_by?: string | null
         }
         Update: {
           category?: string
           city?: string
+          community_verify_count?: number
           created_at?: string
           description?: string | null
           event_date?: string | null
@@ -238,6 +275,7 @@ export type Database = {
           submitted_by?: string | null
           title?: string
           venue?: string | null
+          verification_status?: string
           verified?: boolean | null
           verified_by?: string | null
         }
