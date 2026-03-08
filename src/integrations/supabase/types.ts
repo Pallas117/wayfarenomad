@@ -17,31 +17,37 @@ export type Database = {
       emergency_beacons: {
         Row: {
           created_at: string
+          escalation_level: number
           id: string
           lat: number
           lng: number
           message: string | null
           resolved_at: string | null
+          responder_count: number
           status: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          escalation_level?: number
           id?: string
           lat: number
           lng: number
           message?: string | null
           resolved_at?: string | null
+          responder_count?: number
           status?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          escalation_level?: number
           id?: string
           lat?: number
           lng?: number
           message?: string | null
           resolved_at?: string | null
+          responder_count?: number
           status?: string
           user_id?: string
         }
@@ -403,6 +409,47 @@ export type Database = {
           verified_by?: string | null
         }
         Relationships: []
+      }
+      sos_responses: {
+        Row: {
+          arrived_at: string | null
+          beacon_id: string
+          created_at: string
+          eta_minutes: number | null
+          id: string
+          message: string | null
+          responder_id: string
+          status: string
+        }
+        Insert: {
+          arrived_at?: string | null
+          beacon_id: string
+          created_at?: string
+          eta_minutes?: number | null
+          id?: string
+          message?: string | null
+          responder_id: string
+          status?: string
+        }
+        Update: {
+          arrived_at?: string | null
+          beacon_id?: string
+          created_at?: string
+          eta_minutes?: number | null
+          id?: string
+          message?: string | null
+          responder_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sos_responses_beacon_id_fkey"
+            columns: ["beacon_id"]
+            isOneToOne: false
+            referencedRelation: "emergency_beacons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       transactions: {
         Row: {
