@@ -89,8 +89,7 @@ export default function Profile() {
   if (loading) {
     return (
       <div className="p-6 max-w-lg mx-auto pb-24">
-        <GoldCardSkeleton />
-        <div className="mt-4"><GoldCardSkeleton /></div>
+        <TravelLoader message="Loading profile…" />
       </div>
     );
   }
