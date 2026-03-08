@@ -3,7 +3,7 @@
  * Verifies skeleton loaders, GoldSkeleton variants, and component rendering.
  */
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { GoldSkeleton, GoldCardSkeleton, GoldEventSkeleton } from "@/components/animations/GoldSkeleton";
 
 describe("Skeleton Loaders (Resilience)", () => {
