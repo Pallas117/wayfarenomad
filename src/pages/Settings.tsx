@@ -38,6 +38,8 @@ export default function SettingsPage() {
   const push = usePushNotifications();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState("Traveler");
+  const [nameInput, setNameInput] = useState("");
+  const [savingName, setSavingName] = useState(false);
 
   useEffect(() => {
     if (!user) return;
