@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { Coffee, Laptop, PartyPopper, Bike, MapPin, Clock, Users, UserPlus, UserMinus, MessageCircle, Navigation } from "lucide-react";
+import { Coffee, Laptop, PartyPopper, Bike, MapPin, Clock, Users, UserPlus, UserMinus, MessageCircle, Navigation, Map } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { haptic } from "@/lib/haptics";
+import { useNavigate } from "react-router-dom";
 import type { Hangout } from "@/hooks/useHangouts";
 
 const categoryConfig: Record<string, { icon: React.ElementType; label: string }> = {
