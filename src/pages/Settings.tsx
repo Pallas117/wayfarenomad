@@ -118,6 +118,45 @@ export default function SettingsPage() {
         </div>
       </motion.div>
 
+      {/* City-Sync Hub Section */}
+      <motion.div
+        className="glass-card rounded-xl p-5 mb-6 space-y-4"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <MapPin className="h-5 w-5 text-primary" />
+            <h2 className="font-display font-semibold text-lg">Regional Hub</h2>
+          </div>
+          <Button size="sm" variant="ghost" onClick={() => useCitySyncRef.rescan()} className="h-8 w-8 p-0">
+            <RotateCw className="h-4 w-4" />
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          {useCitySyncRef.currentCity
+            ? `Detected: ${useCitySyncRef.currentCity}`
+            : "Select your hub to change the celestial theme"}
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {Object.values(REGIONAL_THEMES).map((t) => (
+            <Button
+              key={t.id}
+              variant="outline"
+              size="sm"
+              className={`min-h-[44px] text-xs justify-start gap-2 ${
+                useCitySyncRef.currentHub === t.id ? "border-primary bg-primary/10" : ""
+              }`}
+              onClick={() => useCitySyncRef.setHubManually(t.id)}
+            >
+              <span>{t.emoji}</span>
+              <span className="truncate">{t.name.split("—")[1]?.trim() || t.name}</span>
+            </Button>
+          ))}
+        </div>
+      </motion.div>
+
       {/* Privacy Section */}
       <motion.div
         className="glass-card rounded-xl p-5 mb-6 space-y-4"
