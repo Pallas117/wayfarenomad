@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock, Flame, Users, ShieldCheck, Sparkles, EyeOff, Zap, CalendarPlus, Ticket, UserPlus } from "lucide-react";
 import { WeatherSunIcon } from "@/components/animations/TravelIcons";
