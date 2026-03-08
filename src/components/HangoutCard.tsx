@@ -25,9 +25,11 @@ export interface HangoutCardProps {
 }
 
 export function HangoutCard({ hangout, onJoin, onLeave, onOpenChat, isJoining, index = 0, distance }: HangoutCardProps) {
+  const navigate = useNavigate();
   const config = categoryConfig[hangout.category] ?? categoryConfig.coffee;
   const CatIcon = config.icon;
   const isFull = hangout.attendee_count >= hangout.max_attendees;
+  const hasLocation = hangout.lat && hangout.lng;
 
   return (
     <motion.div
