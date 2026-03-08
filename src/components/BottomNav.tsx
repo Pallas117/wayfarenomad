@@ -39,6 +39,26 @@ export function BottomNav() {
             )}
           </NavLink>
         ))}
+        {/* Settings icon */}
+        <NavLink
+          to="/settings"
+          onClick={() => haptic("tap")}
+          className={({ isActive }) =>
+            cn(
+              "flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-200 min-w-[36px] min-h-[44px] justify-center",
+              isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            )
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <div className={cn("relative", isActive && "glow-gold rounded-full")}>
+                <Settings className="h-4 w-4" />
+              </div>
+              <span className="text-[9px] font-medium">Settings</span>
+            </>
+          )}
+        </NavLink>
       </div>
     </nav>
   );
