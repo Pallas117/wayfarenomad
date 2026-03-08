@@ -5,7 +5,7 @@ import { WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { CulturalEar } from "@/components/CulturalEar";
 import { AddResourceForm } from "@/components/AddResourceForm";
 import type { MapPin as MapPinType } from "@/components/MapView.types";
