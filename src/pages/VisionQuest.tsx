@@ -140,12 +140,12 @@ function VisionStep({
             <motion.span
               className="text-xs font-medium"
               animate={{
-                color: wordCount >= 200
+                color: wordCount >= 100
                   ? "hsl(43 72% 52%)"
                   : "hsl(225 15% 55%)",
               }}
             >
-              {wordCount}/200 words
+              {wordCount}/100 words
             </motion.span>
 
             {/* Progress bar */}
