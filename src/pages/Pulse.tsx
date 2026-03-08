@@ -654,6 +654,11 @@ export default function Pulse() {
                         <CatIcon className="h-3.5 w-3.5" style={catIconStyle(event.category)} />
                         <Badge className="text-[10px] capitalize border" style={cStyle}>{event.category}</Badge>
                         <Badge variant="outline" className="text-[10px]">{event.city === "Kuala Lumpur" ? "KL" : event.city}</Badge>
+                        {(matchesByCity.get(event.city.toLowerCase()) ?? 0) > 0 && (
+                          <Badge className="text-[10px] bg-accent/20 text-accent-foreground border-accent/30">
+                            <Users className="h-2.5 w-2.5 mr-0.5" />{matchesByCity.get(event.city.toLowerCase())} matches nearby
+                          </Badge>
+                        )}
                         {event.is_user_submitted ? (
                           <Badge className="text-[10px]" style={{ backgroundColor: "hsl(var(--cat-alien) / 0.15)", color: "hsl(var(--cat-alien))", borderColor: "hsl(var(--cat-alien) / 0.3)" }}>👽 Community Pick</Badge>
                         ) : event.verification_status === "admin_verified" ? (
