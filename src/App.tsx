@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Social from "./pages/Social";
 import Pulse from "./pages/Pulse";
 import Marketplace from "./pages/Marketplace";
+import Safety from "./pages/Safety";
 import Leaderboard from "./pages/Leaderboard";
 import VisionQuest from "./pages/VisionQuest";
 import NotFound from "./pages/NotFound";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="social" element={<Social />} />
             <Route path="pulse" element={<Pulse />} />
             <Route path="marketplace" element={<Marketplace />} />
+            <Route path="safety" element={<Safety />} />
             <Route path="leaderboard" element={<Leaderboard />} />
           </Route>
           <Route path="*" element={<NotFound />} />
