@@ -400,7 +400,7 @@ function SafetyContent() {
                           {space.category}
                         </Badge>
                         {space.verified && (
-                          <Badge className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
+                          <Badge className="text-xs bg-primary/20 text-primary border-primary/30">
                             ✓ Verified
                           </Badge>
                         )}
