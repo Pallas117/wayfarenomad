@@ -48,7 +48,7 @@ export default function SettingsPage() {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("avatar_url, display_name, full_name")
+      .select("avatar_url, display_name, full_name, bio")
       .eq("user_id", user.id)
       .single()
       .then(({ data }) => {
