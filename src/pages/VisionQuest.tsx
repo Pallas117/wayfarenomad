@@ -152,7 +152,7 @@ function VisionStep({
             <div className="flex-1 mx-4 h-1 rounded-full bg-secondary overflow-hidden">
               <motion.div
                 className="h-full gradient-gold rounded-full"
-                animate={{ width: `${Math.min((wordCount / 200) * 100, 100)}%` }}
+                animate={{ width: `${Math.min((wordCount / 100) * 100, 100)}%` }}
                 transition={{ type: "spring", stiffness: 80 }}
               />
             </div>
