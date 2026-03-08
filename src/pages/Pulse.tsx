@@ -77,6 +77,7 @@ export default function Pulse() {
   const [loading, setLoading] = useState(true);
   const [scraping, setScraping] = useState(false);
   const [intrepidMode, setIntrepidMode] = useState(() => localStorage.getItem("intrepid") === "1");
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const { data: hangouts } = useHangouts();
 
   useEffect(() => { loadEvents(); loadResources(); }, []);
