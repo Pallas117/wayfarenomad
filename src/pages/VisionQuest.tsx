@@ -61,8 +61,19 @@ const INTEGRITY_QUESTIONS = [
   },
 ];
 
+const PHILOSOPHICAL_QUOTES = [
+  "\"The world is a book and those who do not travel read only one page.\" — Augustine of Hippo",
+  "\"Not all those who wander are lost.\" — J.R.R. Tolkien",
+  "\"The real voyage of discovery consists not in seeking new landscapes, but in having new eyes.\" — Marcel Proust",
+  "\"We travel not to escape life, but for life not to escape us.\" — Anonymous",
+  "\"One's destination is never a place, but a new way of seeing things.\" — Henry Miller",
+  "\"To move, to breathe, to fly, to float — to roam the roads of lands remote.\" — Willy Wonka",
+  "\"Travel makes one modest. You see what a tiny place you occupy in the world.\" — Gustave Flaubert",
+  "\"The journey of a thousand miles begins with a single step.\" — Lao Tzu",
+];
+
 const PROMPTS = [
-  "Welcome, traveler. This is your Vision Quest.",
+  "Welcome, traveler. Unlock the world.",
   "Tell us why you belong among the stars...",
   "What values guide your journey? How will you lift others?",
 ];
