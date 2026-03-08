@@ -93,7 +93,7 @@ export default function Auth() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            Wayfare 🛠️
+            Wayfare
           </motion.h1>
           <motion.p
             className="text-muted-foreground mt-1"

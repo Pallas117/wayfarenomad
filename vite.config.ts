@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "robots.txt"],
       manifest: {
-        name: "Wayfare 🛠️",
+        name: "Wayfare",
         short_name: "Wayfare",
         description: "The ultimate celestial travel community for digital nomads.",
         theme_color: "#0A142D",
