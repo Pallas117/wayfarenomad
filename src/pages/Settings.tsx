@@ -136,8 +136,8 @@ export default function SettingsPage() {
           </Button>
         </div>
         <p className="text-sm text-muted-foreground">
-          {useCitySyncRef.currentCity
-            ? `Detected: ${useCitySyncRef.currentCity}`
+          {citySyncCtx.currentCity
+            ? `Detected: ${citySyncCtx.currentCity}`
             : "Select your hub to change the celestial theme"}
         </p>
         <div className="grid grid-cols-2 gap-2">
