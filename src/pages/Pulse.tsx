@@ -43,6 +43,8 @@ const resourceFilters = [
   { id: "wet_market", label: "Markets", icon: ShoppingCart },
   { id: "water", label: "Water", icon: Droplets },
   { id: "secure_nook", label: "Nooks", icon: Shield },
+  { id: "safe_spaces", label: "Safe Spaces", icon: Heart },
+  { id: "expeditions", label: "Expeditions", icon: Compass },
 ];
 
 const CITIES = ["Kuala Lumpur", "Singapore", "Krabi"];
