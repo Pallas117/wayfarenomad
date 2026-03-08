@@ -81,19 +81,19 @@ export default function Auth() {
           >
             <motion.img
               src={nomadLogo}
-              alt="Nomad"
+              alt="Wayfare"
               className="h-20 w-20 mx-auto drop-shadow-[0_0_15px_hsla(43,72%,52%,0.4)]"
               animate={{ rotate: [0, 5, -5, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
           </motion.div>
           <motion.h1
-            className="text-3xl font-display font-bold"
+            className="text-3xl font-display font-bold text-glow-gold"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            Nomad
+            Wayfare 🛠️
           </motion.h1>
           <motion.p
             className="text-muted-foreground mt-1"
@@ -101,7 +101,7 @@ export default function Auth() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            Your global nomad community
+            Your global travel community
           </motion.p>
         </div>
 

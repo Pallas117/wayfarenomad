@@ -9,7 +9,7 @@ import { ChatView } from "@/components/ChatView";
 function MessagesContent() {
   const [searchParams] = useSearchParams();
   const initialRecipient = searchParams.get("to");
-  const initialName = searchParams.get("name") || "Nomad";
+  const initialName = searchParams.get("name") || "Traveler";
 
   const [activeChat, setActiveChat] = useState<{
     recipientId: string;
