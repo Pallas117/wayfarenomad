@@ -96,7 +96,7 @@ function DiscoverTab() {
       )}
 
       {isLoading ? (
-        <div className="space-y-4"><GoldCardSkeleton /><GoldCardSkeleton /><GoldCardSkeleton /></div>
+        <TravelLoaderInline message="Finding fellow nomads…" />
       ) : (
         <div className="space-y-4">
           <AnimatePresence>
