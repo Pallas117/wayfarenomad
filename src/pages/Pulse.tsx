@@ -9,6 +9,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/u
 import { CulturalEar } from "@/components/CulturalEar";
 import { AddResourceForm } from "@/components/AddResourceForm";
 import { SubmitEventForm } from "@/components/SubmitEventForm";
+import { CreateHangoutForm } from "@/components/CreateHangoutForm";
 import type { MapPin as MapPinType } from "@/components/MapView.types";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
