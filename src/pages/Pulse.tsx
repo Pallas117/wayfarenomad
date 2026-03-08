@@ -119,6 +119,17 @@ export default function Pulse() {
     }
   };
 
+  const handleFlag = async (eventId: string) => {
+    if (!user) return;
+    const { error } = await supabase.from("event_flags" as any).insert({ event_id: eventId, user_id: user.id });
+    if (!error) {
+      setEvents(prev => prev.map(e => e.id === eventId ? { ...e, flag_count: (e.flag_count ?? 0) + 1 } : e));
+      toast({ title: "Event Flagged", description: "Thanks for helping keep Pulse accurate." });
+    } else if (error.code === "23505") {
+      toast({ title: "Already Flagged", description: "You've already flagged this event.", variant: "destructive" });
+    }
+  };
+
   const toggleIntrepid = useCallback(() => {
     setIntrepidMode(prev => {
       const next = !prev;
