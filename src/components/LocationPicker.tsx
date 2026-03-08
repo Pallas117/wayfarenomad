@@ -84,8 +84,6 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
       { enableHighAccuracy: true, timeout: 8000 }
     );
   }, [onChange, reverseGeocode]);
-    );
-  }, [onChange]);
 
   const searchNominatim = useCallback(async (q: string) => {
     if (q.length < 3) {
