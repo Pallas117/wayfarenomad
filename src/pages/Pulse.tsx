@@ -171,12 +171,18 @@ export default function Pulse() {
     setActiveResources(prev => prev.includes(id) ? prev.filter(r => r !== id) : [...prev, id]);
   };
 
-  const filtered = events.filter(e => {
-    const catMatch = activeCategory === "all" || e.category === activeCategory;
-    const cityMatch = activeCity === "all" || e.city === activeCity;
-    const notHidden = (e.flag_count ?? 0) < 3;
-    return catMatch && cityMatch && notHidden;
-  });
+  const filtered = useMemo(() => {
+    const f = events.filter(e => {
+      const catMatch = activeCategory === "all" || e.category === activeCategory;
+      const cityMatch = activeCity === "all" || e.city === activeCity;
+      const notHidden = (e.flag_count ?? 0) < 3;
+      return catMatch && cityMatch && notHidden;
+    });
+    if (sortMode === "trending") {
+      f.sort((a, b) => (b.star_count ?? 0) - (a.star_count ?? 0));
+    }
+    return f;
+  }, [events, activeCategory, activeCity, sortMode]);
 
   const mapPins: MapPinType[] = useMemo(() => {
     const pins: MapPinType[] = [];
