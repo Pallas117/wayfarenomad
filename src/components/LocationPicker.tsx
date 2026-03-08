@@ -126,6 +126,14 @@ export function LocationPicker({ lat, lng, onChange, onClear }: LocationPickerPr
     setOpen(true);
   };
 
+  const handleClear = () => {
+    onClear?.();
+    setQuery("");
+    setResults([]);
+    setShowResults(false);
+    setOpen(false);
+  };
+
   const hasPin = lat !== null && lng !== null;
 
   return (
