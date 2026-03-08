@@ -107,6 +107,38 @@ export type Database = {
         }
         Relationships: []
       }
+      expedition_bookings: {
+        Row: {
+          created_at: string
+          expedition_id: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expedition_id: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expedition_id?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expedition_bookings_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       expeditions: {
         Row: {
           cost_usd: number | null
@@ -602,6 +634,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_stardust: {
+        Args: { _points: number; _user_id: string }
+        Returns: undefined
+      }
       get_user_rank: { Args: { _user_id: string }; Returns: number }
       has_min_rank: {
         Args: { _min_rank: number; _user_id: string }

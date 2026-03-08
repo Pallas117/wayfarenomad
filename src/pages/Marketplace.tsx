@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Store, Shield, Plus, Wifi, Smartphone, ExternalLink } from "lucide-react";
+import { Store, Shield, Plus, Wifi, Smartphone, ExternalLink, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUserRank } from "@/hooks/useUserRank";
+import { useExpeditions } from "@/hooks/useExpeditions";
+import { useAuth } from "@/hooks/useAuth";
 import { GoldEventSkeleton } from "@/components/animations/GoldSkeleton";
-import { useState, useEffect } from "react";
+import { ExpeditionCard } from "@/components/ExpeditionCard";
+import { CreateExpeditionForm } from "@/components/CreateExpeditionForm";
 
 const esimProviders = [
   {
@@ -29,13 +33,9 @@ const esimProviders = [
 
 function MarketplaceContent() {
   const { isCaptain } = useUserRank();
-  const [loading, setLoading] = useState(true);
-
-  // Simulate data fetch for skeleton demo
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(t);
-  }, []);
+  const { user } = useAuth();
+  const { expeditions, loading, createExpedition, bookExpedition, cancelBooking, updateExpedition, refresh } = useExpeditions();
+  const [showForm, setShowForm] = useState(false);
 
   return (
     <div className="p-6 max-w-lg mx-auto pb-24">
@@ -48,11 +48,16 @@ function MarketplaceContent() {
           <Store className="h-6 w-6 text-primary" />
           <h1 className="text-2xl font-display font-bold">Marketplace</h1>
         </div>
-        {isCaptain && (
-          <Button size="sm" className="gradient-gold text-primary-foreground min-h-[44px]">
-            <Plus className="h-4 w-4 mr-1" /> Host Expedition
+        <div className="flex gap-2">
+          <Button size="icon" variant="ghost" onClick={refresh} className="h-9 w-9">
+            <RefreshCw className="h-4 w-4" />
           </Button>
-        )}
+          {isCaptain && (
+            <Button size="sm" className="gradient-gold text-primary-foreground min-h-[44px]" onClick={() => setShowForm(true)}>
+              <Plus className="h-4 w-4 mr-1" /> Host
+            </Button>
+          )}
+        </div>
       </motion.div>
 
       {!isCaptain && (
@@ -69,21 +74,38 @@ function MarketplaceContent() {
         </motion.div>
       )}
 
-      {/* Expeditions with gold skeletons */}
-      {loading ? (
-        <div className="space-y-4 mb-8">
-          <GoldEventSkeleton />
-          <GoldEventSkeleton />
-        </div>
-      ) : (
-        <motion.div
-          className="glass-card rounded-xl p-8 text-center mb-8"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          <p className="text-muted-foreground">Expeditions coming soon</p>
-        </motion.div>
-      )}
+      {/* Expeditions */}
+      <div className="mb-8">
+        <h2 className="font-display font-bold text-lg mb-4">Expeditions</h2>
+        {loading ? (
+          <div className="space-y-4">
+            <GoldEventSkeleton />
+            <GoldEventSkeleton />
+          </div>
+        ) : expeditions.length === 0 ? (
+          <motion.div
+            className="glass-card rounded-xl p-8 text-center"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <p className="text-muted-foreground text-sm">No expeditions yet. Captains can host the first one!</p>
+          </motion.div>
+        ) : (
+          <div className="space-y-4">
+            {expeditions.map((exp, i) => (
+              <ExpeditionCard
+                key={exp.id}
+                expedition={exp}
+                isHost={exp.host_id === user?.id}
+                onBook={() => bookExpedition(exp.id)}
+                onCancel={() => cancelBooking(exp.id)}
+                onComplete={() => updateExpedition(exp.id, { status: "completed" })}
+                index={i}
+              />
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* eSIM Marketplace */}
       <div className="space-y-4">
@@ -123,6 +145,12 @@ function MarketplaceContent() {
           </motion.a>
         ))}
       </div>
+
+      <CreateExpeditionForm
+        visible={showForm}
+        onClose={() => setShowForm(false)}
+        onSubmit={createExpedition}
+      />
     </div>
   );
 }
