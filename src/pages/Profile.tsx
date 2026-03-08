@@ -162,6 +162,11 @@ export default function Profile() {
                   <CheckCircle2 className="h-3 w-3 mr-1" /> Verified
                 </Badge>
               )}
+              {isCompassLocked && (
+                <Badge className="text-xs bg-accent/20 text-accent-foreground">
+                  <Compass className="h-3 w-3 mr-1" /> Met IRL
+                </Badge>
+              )}
             </div>
           </div>
         </div>
