@@ -13,16 +13,17 @@ const categoryConfig: Record<string, { icon: React.ElementType; label: string }>
   activity: { icon: Bike, label: "Activity" },
 };
 
-interface HangoutCardProps {
+export interface HangoutCardProps {
   hangout: Hangout;
   onJoin: () => void;
   onLeave: () => void;
   onOpenChat: () => void;
   isJoining?: boolean;
   index?: number;
+  distance?: number;
 }
 
-export function HangoutCard({ hangout, onJoin, onLeave, onOpenChat, isJoining, index = 0 }: HangoutCardProps) {
+export function HangoutCard({ hangout, onJoin, onLeave, onOpenChat, isJoining, index = 0, distance }: HangoutCardProps) {
   const config = categoryConfig[hangout.category] ?? categoryConfig.coffee;
   const CatIcon = config.icon;
   const isFull = hangout.attendee_count >= hangout.max_attendees;
