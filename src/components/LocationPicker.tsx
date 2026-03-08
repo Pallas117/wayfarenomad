@@ -55,6 +55,21 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
   const [showResults, setShowResults] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
+  const reverseGeocode = useCallback(async (rlat: number, rlng: number) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${rlat}&lon=${rlng}&zoom=18&addressdetails=0`,
+        { headers: { "Accept-Language": "en" } }
+      );
+      const data = await res.json();
+      if (data?.display_name) {
+        const shortName = data.display_name.split(",").slice(0, 2).join(",").trim();
+        onChange(rlat, rlng, shortName);
+        setQuery(shortName);
+      }
+    } catch { /* silent */ }
+  }, [onChange]);
+
   const handleGeolocate = useCallback(() => {
     if (!navigator.geolocation) return;
     setLocating(true);
