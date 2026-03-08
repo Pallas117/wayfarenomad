@@ -4,6 +4,7 @@ import { X, Coffee, Laptop, PartyPopper, Bike } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { LocationPicker } from "@/components/LocationPicker";
 import { useAuth } from "@/hooks/useAuth";
 import { useCreateHangout } from "@/hooks/useHangouts";
 import { useToast } from "@/hooks/use-toast";
