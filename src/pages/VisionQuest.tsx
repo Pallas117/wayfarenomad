@@ -319,8 +319,8 @@ export default function VisionQuest() {
   const wordCount = visionText.trim().split(/\s+/).filter(Boolean).length;
 
   const handleVisionSubmit = async () => {
-    if (wordCount < 200) {
-      toast({ title: "Too short", description: `You need at least 200 words (currently ${wordCount}).`, variant: "destructive" });
+    if (wordCount < 100) {
+      toast({ title: "Too short", description: `You need at least 100 words (currently ${wordCount}).`, variant: "destructive" });
       return;
     }
     if (!user) return;
