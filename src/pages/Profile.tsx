@@ -65,6 +65,7 @@ export default function Profile() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [rankData, setRankData] = useState<UserRankData>({ rank: 0, label: "Initiate" });
   const [loading, setLoading] = useState(true);
+  const [karmaActivity, setKarmaActivity] = useState<any[]>([]);
   const isOwnProfile = user?.id === userId;
   const { data: isCompassLocked } = useIsCompassLocked(userId ?? null);
   const [showCompassVerify, setShowCompassVerify] = useState(false);
