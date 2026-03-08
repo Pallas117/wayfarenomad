@@ -183,6 +183,38 @@ function VisionStep({
             </Button>
           </div>
         </motion.div>
+
+        {/* Rotating philosophical quote */}
+        <motion.div
+          className="glass-card rounded-xl p-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+        >
+          <RotatingQuote />
+        </motion.div>
+
+        {/* Tell us a joke */}
+        <motion.div
+          className="glass-card rounded-xl p-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.6 }}
+        >
+          <h2 className="font-display font-semibold text-lg mb-2 flex items-center gap-2">
+            <span>😂</span> Tell Us a Joke
+          </h2>
+          <p className="text-sm text-muted-foreground mb-3">
+            Make us laugh! Show us your sense of humour — it's how we know you're human.
+          </p>
+          <Textarea
+            value={jokeText}
+            onChange={(e) => setJokeText(e.target.value)}
+            placeholder="A nomad walks into a café in Lisbon..."
+            className="min-h-[80px] bg-secondary/50 border-border"
+            maxLength={500}
+          />
+        </motion.div>
       </div>
 
       <StardustParticles
