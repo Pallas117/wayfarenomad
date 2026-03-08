@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft, Star, Shield, ShieldCheck, MapPin, Calendar,
   MessageCircle, Send, Instagram, ExternalLink, CheckCircle2, Compass,
+  Heart, Zap, Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +14,7 @@ import { TravelLoader } from "@/components/animations/TravelLoader";
 import { haptic } from "@/lib/haptics";
 import { useIsCompassLocked } from "@/hooks/useCompassLock";
 import { CompassVerifySheet } from "@/components/CompassLock";
+import { formatDistanceToNow } from "date-fns";
 
 interface ProfileData {
   user_id: string;
@@ -63,6 +65,7 @@ export default function Profile() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [rankData, setRankData] = useState<UserRankData>({ rank: 0, label: "Initiate" });
   const [loading, setLoading] = useState(true);
+  const [karmaActivity, setKarmaActivity] = useState<any[]>([]);
   const isOwnProfile = user?.id === userId;
   const { data: isCompassLocked } = useIsCompassLocked(userId ?? null);
   const [showCompassVerify, setShowCompassVerify] = useState(false);
@@ -84,6 +87,21 @@ export default function Profile() {
 
       const r = (rankRes.data as number) ?? 0;
       setRankData({ rank: r, label: RANK_LABELS[r] ?? "Initiate" });
+
+      // Load karma activity
+      const [verRes, sosRes, safeRes] = await Promise.all([
+        supabase.from("community_verifications").select("id, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(5),
+        supabase.from("sos_responses").select("id, created_at").eq("responder_id", userId).order("created_at", { ascending: false }).limit(5),
+        supabase.from("safe_spaces").select("id, created_at, name").eq("created_by", userId).order("created_at", { ascending: false }).limit(5),
+      ]);
+
+      const activity: any[] = [];
+      verRes.data?.forEach(v => activity.push({ id: v.id, type: "verify", label: "Verified an event", points: 5, time: v.created_at }));
+      sosRes.data?.forEach(s => activity.push({ id: s.id, type: "sos", label: "Responded to SOS", points: 10, time: s.created_at }));
+      safeRes.data?.forEach(s => activity.push({ id: s.id, type: "safe", label: `Added "${s.name}"`, points: 8, time: s.created_at }));
+      activity.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+      setKarmaActivity(activity.slice(0, 10));
+
       setLoading(false);
     };
 
@@ -352,7 +370,34 @@ export default function Profile() {
         </div>
       </motion.div>
 
-      {/* Action Buttons */}
+      {/* Karma Activity */}
+      {karmaActivity.length > 0 && (
+        <motion.div
+          className="glass-card rounded-xl p-5 mb-4 space-y-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.32 }}
+        >
+          <h3 className="text-sm font-display font-semibold subheading">Karma Activity</h3>
+          <div className="space-y-2">
+            {karmaActivity.map((a) => (
+              <div key={a.id} className="flex items-center gap-2 text-xs">
+                <div className="h-6 w-6 rounded-full flex items-center justify-center shrink-0 bg-primary/10">
+                  {a.type === "verify" ? <CheckCircle2 className="h-3 w-3 text-primary" /> :
+                   a.type === "sos" ? <Shield className="h-3 w-3 text-destructive" /> :
+                   <Heart className="h-3 w-3 text-primary" />}
+                </div>
+                <span className="flex-1 text-muted-foreground">{a.label}</span>
+                <span className="flex items-center gap-0.5 text-primary font-display font-bold">
+                  <Zap className="h-3 w-3" />+{a.points}
+                </span>
+                <span className="text-[10px] text-muted-foreground">{formatDistanceToNow(new Date(a.time), { addSuffix: true })}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
       {!isOwnProfile && (
         <motion.div
           className="space-y-3"

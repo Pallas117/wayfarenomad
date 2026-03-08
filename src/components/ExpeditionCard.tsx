@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { MapPin, Calendar, DollarSign, Users, CheckCircle, Loader2, XCircle } from "lucide-react";
+import { MapPin, Calendar, DollarSign, Users, CheckCircle, Loader2, XCircle, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import type { Expedition } from "@/hooks/useExpeditions";
 
 interface ExpeditionCardProps {
@@ -22,7 +23,9 @@ const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
 };
 
 export function ExpeditionCard({ expedition, isHost, onBook, onCancel, onComplete, index }: ExpeditionCardProps) {
+  const navigate = useNavigate();
   const status = STATUS_CONFIG[expedition.status ?? "planning"] ?? STATUS_CONFIG.planning;
+  const hasLocation = expedition.lat && expedition.lng;
   const isCompleted = expedition.status === "completed";
   const isCancelled = expedition.status === "cancelled";
   const canBook = !isHost && !expedition.is_booked && !isCompleted && !isCancelled;
@@ -99,6 +102,11 @@ export function ExpeditionCard({ expedition, isHost, onBook, onCancel, onComplet
         {canComplete && (
           <Button size="sm" variant="outline" className="min-h-[36px] border-primary/30 text-primary" onClick={onComplete}>
             <CheckCircle className="h-3.5 w-3.5 mr-1" /> Complete +50⭐
+          </Button>
+        )}
+        {hasLocation && (
+          <Button size="sm" variant="outline" className="min-h-[36px] px-2" onClick={() => navigate(`/pulse?focus=${expedition.id}`)}>
+            <Map className="h-3.5 w-3.5" />
           </Button>
         )}
       </div>

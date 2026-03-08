@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { Coffee, Laptop, PartyPopper, Bike, MapPin, Clock, Users, UserPlus, UserMinus, MessageCircle, Navigation } from "lucide-react";
+import { Coffee, Laptop, PartyPopper, Bike, MapPin, Clock, Users, UserPlus, UserMinus, MessageCircle, Navigation, Map } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { haptic } from "@/lib/haptics";
+import { useNavigate } from "react-router-dom";
 import type { Hangout } from "@/hooks/useHangouts";
 
 const categoryConfig: Record<string, { icon: React.ElementType; label: string }> = {
@@ -24,9 +25,11 @@ export interface HangoutCardProps {
 }
 
 export function HangoutCard({ hangout, onJoin, onLeave, onOpenChat, isJoining, index = 0, distance }: HangoutCardProps) {
+  const navigate = useNavigate();
   const config = categoryConfig[hangout.category] ?? categoryConfig.coffee;
   const CatIcon = config.icon;
   const isFull = hangout.attendee_count >= hangout.max_attendees;
+  const hasLocation = hangout.lat && hangout.lng;
 
   return (
     <motion.div
@@ -100,6 +103,19 @@ export function HangoutCard({ hangout, onJoin, onLeave, onOpenChat, isJoining, i
           >
             <UserPlus className="h-4 w-4 mr-1" />
             {isFull ? "Full" : "Join"}
+          </Button>
+        )}
+        {hasLocation && (
+          <Button
+            size="sm"
+            variant="outline"
+            className="min-h-[44px] px-3"
+            onClick={() => {
+              navigate(`/pulse?focus=${hangout.id}`);
+              haptic("tap");
+            }}
+          >
+            <Map className="h-4 w-4" />
           </Button>
         )}
       </div>

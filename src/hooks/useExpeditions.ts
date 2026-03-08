@@ -8,6 +8,8 @@ export interface Expedition {
   title: string;
   description: string | null;
   location_name: string | null;
+  lat: number | null;
+  lng: number | null;
   start_date: string;
   end_date: string;
   cost_usd: number | null;

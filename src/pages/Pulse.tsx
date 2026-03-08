@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock, Flame, Users, ShieldCheck, Sparkles, EyeOff, Zap, CalendarPlus, Ticket, UserPlus } from "lucide-react";
 import { WeatherSunIcon } from "@/components/animations/TravelIcons";
@@ -19,6 +20,7 @@ import { useHangouts } from "@/hooks/useHangouts";
 import { format, formatDistanceToNow } from "date-fns";
 import { useEventReactions } from "@/hooks/useEventReactions";
 import { catStyle, catIconStyle } from "@/lib/categoryColors";
+import { useItineraryMatches } from "@/hooks/useItineraryMatches";
 
 const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
 
@@ -43,6 +45,8 @@ const resourceFilters = [
   { id: "wet_market", label: "Markets", icon: ShoppingCart },
   { id: "water", label: "Water", icon: Droplets },
   { id: "secure_nook", label: "Nooks", icon: Shield },
+  { id: "safe_spaces", label: "Safe Spaces", icon: Heart },
+  { id: "expeditions", label: "Expeditions", icon: Compass },
 ];
 
 const CITIES = ["Kuala Lumpur", "Singapore", "Krabi"];
@@ -232,12 +236,49 @@ export default function Pulse() {
   const [sortMode, setSortMode] = useState<"trending" | "newest">("trending");
   const [focusedEventId, setFocusedEventId] = useState<string | null>(null);
   const [hangoutPrefill, setHangoutPrefill] = useState<any>(null);
+  const [safeSpaces, setSafeSpaces] = useState<any[]>([]);
+  const [expeditions, setExpeditions] = useState<any[]>([]);
   const { data: hangouts } = useHangouts();
   const filteredIds = useMemo(() => events.map(e => e.id), [events]);
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
   const { pulses: karmaPulses, loading: karmaPulsesLoading } = useKarmaPulses();
+  const { data: itineraryMatches } = useItineraryMatches();
 
-  useEffect(() => { loadEvents(); loadResources(); }, []);
+  // Count matches per city for event cards
+  const matchesByCity = useMemo(() => {
+    const map = new Map<string, number>();
+    itineraryMatches?.forEach(m => {
+      const key = m.city.toLowerCase();
+      map.set(key, (map.get(key) || 0) + 1);
+    });
+    return map;
+  }, [itineraryMatches]);
+
+  const [searchParams] = useSearchParams();
+
+  // Handle ?focus= query param from other pages
+  useEffect(() => {
+    const focusId = searchParams.get("focus");
+    if (focusId) {
+      setFocusedEventId(focusId);
+      setDrawerOpen(true);
+      setTimeout(() => {
+        document.getElementById(`event-card-${focusId}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 500);
+    }
+  }, [searchParams]);
+
+  useEffect(() => { loadEvents(); loadResources(); loadSafeSpaces(); loadExpeditions(); }, []);
+
+  const loadSafeSpaces = async () => {
+    const { data } = await supabase.from("safe_spaces").select("*");
+    if (data) setSafeSpaces(data);
+  };
+
+  const loadExpeditions = async () => {
+    const { data } = await supabase.from("expeditions").select("*").in("status", ["planning", "active"]);
+    if (data) setExpeditions(data);
+  };
 
   const loadEvents = async () => {
     setLoading(true);
@@ -355,8 +396,18 @@ export default function Pulse() {
         pins.push({ id: r.id, lat: r.lat, lng: r.lng, title: r.name, subtitle: r.description || r.category, type: "resource", category: r.category });
       });
     }
+    if (activeResources.includes("safe_spaces")) {
+      safeSpaces.filter(s => s.lat && s.lng).forEach(s => {
+        pins.push({ id: s.id, lat: s.lat, lng: s.lng, title: s.name, subtitle: s.address || s.category, type: "resource", category: "secure_nook" });
+      });
+    }
+    if (activeResources.includes("expeditions")) {
+      expeditions.filter(e => e.lat && e.lng).forEach(e => {
+        pins.push({ id: e.id, lat: e.lat, lng: e.lng, title: e.title, subtitle: e.location_name || "Expedition", type: "event", category: "adventure" });
+      });
+    }
     return pins;
-  }, [filtered, hangouts, resources, activeResources]);
+  }, [filtered, hangouts, resources, activeResources, safeSpaces, expeditions]);
 
   return (
     <div className="relative h-[calc(100vh-4rem)] w-full overflow-hidden">
@@ -603,6 +654,11 @@ export default function Pulse() {
                         <CatIcon className="h-3.5 w-3.5" style={catIconStyle(event.category)} />
                         <Badge className="text-[10px] capitalize border" style={cStyle}>{event.category}</Badge>
                         <Badge variant="outline" className="text-[10px]">{event.city === "Kuala Lumpur" ? "KL" : event.city}</Badge>
+                        {(matchesByCity.get(event.city.toLowerCase()) ?? 0) > 0 && (
+                          <Badge className="text-[10px] bg-accent/20 text-accent-foreground border-accent/30">
+                            <Users className="h-2.5 w-2.5 mr-0.5" />{matchesByCity.get(event.city.toLowerCase())} matches nearby
+                          </Badge>
+                        )}
                         {event.is_user_submitted ? (
                           <Badge className="text-[10px]" style={{ backgroundColor: "hsl(var(--cat-alien) / 0.15)", color: "hsl(var(--cat-alien))", borderColor: "hsl(var(--cat-alien) / 0.3)" }}>👽 Community Pick</Badge>
                         ) : event.verification_status === "admin_verified" ? (
