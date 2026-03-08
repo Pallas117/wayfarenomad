@@ -84,12 +84,16 @@ function VisionStep({
   wordCount,
   onSubmit,
   submitting,
+  jokeText,
+  setJokeText,
 }: {
   visionText: string;
   setVisionText: (v: string) => void;
   wordCount: number;
   onSubmit: () => void;
   submitting: boolean;
+  jokeText: string;
+  setJokeText: (v: string) => void;
 }) {
   const submitRef = useRef<HTMLButtonElement>(null);
   const [promptIndex, setPromptIndex] = useState(0);
