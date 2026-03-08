@@ -131,7 +131,7 @@ function VisionStep({
             placeholder="I believe in building genuine connections across cultures..."
             className="min-h-[200px] bg-secondary/50 border-border transition-shadow duration-500"
             style={{
-              boxShadow: wordCount >= 200
+              boxShadow: wordCount >= 100
                 ? "0 0 20px hsla(43, 72%, 52%, 0.2)"
                 : "none",
             }}
