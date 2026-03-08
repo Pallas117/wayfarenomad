@@ -179,6 +179,11 @@ export function useEncryptedChat(recipientId: string | null) {
         .select()
         .single();
 
+      // Trigger push notification for recipient (fire-and-forget)
+      supabase.functions.invoke("send-push", {
+        body: { receiver_id: recipientId, sender_name: "A nomad" },
+      }).catch(() => {});
+
       if (data) {
         // Replace optimistic message with real one
         setMessages((prev) =>
