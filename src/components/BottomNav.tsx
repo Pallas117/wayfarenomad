@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { Store, Users, Radio, Trophy } from "lucide-react";
+import { Store, Users, Radio, Trophy, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
   { to: "/marketplace", icon: Store, label: "Market" },
   { to: "/social", icon: Users, label: "Social" },
   { to: "/pulse", icon: Radio, label: "Pulse" },
+  { to: "/safety", icon: Shield, label: "Safety" },
   { to: "/leaderboard", icon: Trophy, label: "Board" },
 ];
 
