@@ -53,9 +53,11 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
   const [results, setResults] = useState<NominatimResult[]>([]);
   const [searching, setSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [reversing, setReversing] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const reverseGeocode = useCallback(async (rlat: number, rlng: number) => {
+    setReversing(true);
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${rlat}&lon=${rlng}&zoom=18&addressdetails=0`,
@@ -68,6 +70,7 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
         setQuery(shortName);
       }
     } catch { /* silent */ }
+    setReversing(false);
   }, [onChange]);
 
   const handleGeolocate = useCallback(() => {
@@ -174,8 +177,8 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
           className="flex-1 text-xs"
           onClick={() => setOpen(!open)}
         >
-          <MapPin className="h-3.5 w-3.5 mr-1.5" />
-          {hasPin ? `📍 ${lat!.toFixed(4)}, ${lng!.toFixed(4)}` : "Pin on Map"}
+          {reversing ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <MapPin className="h-3.5 w-3.5 mr-1.5" />}
+          {reversing ? "Resolving…" : hasPin ? `📍 ${lat!.toFixed(4)}, ${lng!.toFixed(4)}` : "Pin on Map"}
         </Button>
         <Button
           type="button"
