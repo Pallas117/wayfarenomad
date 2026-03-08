@@ -110,6 +110,28 @@ export default function SettingsPage() {
           onUploaded={(url) => setAvatarUrl(url)}
         />
         <p className="text-xs text-muted-foreground">Tap to change your photo</p>
+
+        {/* Display Name */}
+        <div className="w-full space-y-2">
+          <label className="text-xs text-muted-foreground uppercase tracking-wider">Display Name</label>
+          <div className="flex gap-2">
+            <Input
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              placeholder="Your display name"
+              maxLength={50}
+              className="flex-1"
+            />
+            <Button
+              size="icon"
+              className="gradient-gold text-primary-foreground shrink-0"
+              onClick={handleSaveName}
+              disabled={savingName || nameInput.trim().length < 2 || nameInput.trim() === displayName}
+            >
+              <Check className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </motion.div>
 
       {/* Social Profile Links */}
