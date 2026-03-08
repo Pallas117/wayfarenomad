@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radio, MapPin, Calendar, ExternalLink, Music, Code, PartyPopper, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle } from "lucide-react";
+import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull } from "lucide-react";
 import { WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,9 +20,19 @@ const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ defau
 
 const categories = [
   { id: "all", label: "All", icon: Radio },
-  { id: "music", label: "Music", icon: Music },
-  { id: "tech", label: "Tech", icon: Code },
+  { id: "wellbeing", label: "Wellbeing", icon: Heart },
+  { id: "culture", label: "Culture", icon: Landmark },
+  { id: "entertainment", label: "Entertainment", icon: Clapperboard },
+  { id: "shopping", label: "Shopping", icon: ShoppingBag },
+  { id: "nature", label: "Nature", icon: TreePine },
+  { id: "event", label: "Event", icon: CalendarDays },
   { id: "festival", label: "Festival", icon: PartyPopper },
+  { id: "nightlife", label: "Nightlife", icon: Moon },
+  { id: "fitness", label: "Fitness", icon: Dumbbell },
+  { id: "adventure", label: "Adventure", icon: Compass },
+  { id: "creative", label: "Creative", icon: Palette },
+  { id: "singles", label: "Singles", icon: HeartHandshake },
+  { id: "alien", label: "Alien", icon: Skull },
 ];
 
 const resourceFilters = [
@@ -34,9 +44,19 @@ const resourceFilters = [
 const CITIES = ["Kuala Lumpur", "Singapore", "Krabi"];
 
 const categoryIcon: Record<string, React.ElementType> = {
-  tech: Code,
-  music: Music,
+  wellbeing: Heart,
+  culture: Landmark,
+  entertainment: Clapperboard,
+  shopping: ShoppingBag,
+  nature: TreePine,
+  event: CalendarDays,
   festival: PartyPopper,
+  nightlife: Moon,
+  fitness: Dumbbell,
+  adventure: Compass,
+  creative: Palette,
+  singles: HeartHandshake,
+  alien: Skull,
 };
 
 interface PulseEvent {
@@ -217,7 +237,7 @@ export default function Pulse() {
         </Tabs>
 
         {/* Category + Resource filters */}
-        <div className="flex gap-1.5 flex-wrap">
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
           {categories.map((c) => (
             <Button
               key={c.id}
