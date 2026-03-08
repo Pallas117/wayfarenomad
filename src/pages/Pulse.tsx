@@ -16,6 +16,7 @@ import { useUserRank } from "@/hooks/useUserRank";
 import { useToast } from "@/hooks/use-toast";
 import { useHangouts } from "@/hooks/useHangouts";
 import { format } from "date-fns";
+import { useEventReactions } from "@/hooks/useEventReactions";
 
 const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
 
