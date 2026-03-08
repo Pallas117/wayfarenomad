@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { GoldCardSkeleton } from "@/components/animations/GoldSkeleton";
+import { TravelLoader } from "@/components/animations/TravelLoader";
 import { haptic } from "@/lib/haptics";
 
 interface ProfileData {
