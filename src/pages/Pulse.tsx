@@ -74,6 +74,8 @@ interface PulseEvent {
   lat: number | null;
   lng: number | null;
   flag_count?: number;
+  is_user_submitted?: boolean;
+  submitted_by?: string | null;
 }
 
 interface FunctionalPoint {
