@@ -44,6 +44,8 @@ export function CreateHangoutForm({ onClose }: CreateHangoutFormProps) {
         title,
         description: description || undefined,
         location_name: locationName || undefined,
+        lat: lat ?? undefined,
+        lng: lng ?? undefined,
         hangout_time: new Date(dateTime).toISOString(),
         max_attendees: parseInt(maxAttendees) || 10,
         category,
