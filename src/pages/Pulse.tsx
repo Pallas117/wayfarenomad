@@ -715,6 +715,20 @@ export default function Pulse() {
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Hangout creation overlay from event */}
+      <AnimatePresence>
+        {hangoutPrefill && (
+          <div className="absolute inset-0 z-[2000] bg-background/80 backdrop-blur-sm flex items-end justify-center p-4">
+            <div className="w-full max-w-lg">
+              <CreateHangoutForm
+                onClose={() => setHangoutPrefill(null)}
+                prefill={hangoutPrefill}
+              />
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
