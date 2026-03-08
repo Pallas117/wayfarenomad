@@ -70,6 +70,21 @@ export default function SettingsPage() {
         <h1 className="text-2xl font-display font-bold">Settings</h1>
       </motion.div>
 
+      {/* Avatar Upload */}
+      <motion.div
+        className="glass-card rounded-xl p-5 mb-6 flex flex-col items-center gap-3"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+      >
+        <AvatarUpload
+          currentUrl={avatarUrl}
+          displayName={displayName}
+          onUploaded={(url) => setAvatarUrl(url)}
+        />
+        <p className="text-xs text-muted-foreground">Tap to change your photo</p>
+      </motion.div>
+
       {/* Social Profile Links */}
       <div className="mb-6">
         <SocialProfileLinks />
