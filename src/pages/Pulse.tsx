@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock, Flame, Users, ShieldCheck, Sparkles, EyeOff, Zap } from "lucide-react";
+import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock, Flame, Users, ShieldCheck, Sparkles, EyeOff, Zap, CalendarPlus, Ticket, UserPlus } from "lucide-react";
 import { WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/u
 import { CulturalEar } from "@/components/CulturalEar";
 import { AddResourceForm } from "@/components/AddResourceForm";
 import { SubmitEventForm } from "@/components/SubmitEventForm";
+import { CreateHangoutForm } from "@/components/CreateHangoutForm";
 import type { MapPin as MapPinType } from "@/components/MapView.types";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -229,6 +230,8 @@ export default function Pulse() {
   const [intrepidMode, setIntrepidMode] = useState(() => localStorage.getItem("intrepid") === "1");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sortMode, setSortMode] = useState<"trending" | "newest">("trending");
+  const [focusedEventId, setFocusedEventId] = useState<string | null>(null);
+  const [hangoutPrefill, setHangoutPrefill] = useState<any>(null);
   const { data: hangouts } = useHangouts();
   const filteredIds = useMemo(() => events.map(e => e.id), [events]);
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
@@ -360,7 +363,20 @@ export default function Pulse() {
       {/* Full-screen map */}
       <div className="absolute inset-0 z-0">
         <Suspense fallback={<div className="h-full w-full bg-background animate-pulse" />}>
-          <LazyMapView pins={mapPins} intrepidMode={intrepidMode} className="!rounded-none" />
+          <LazyMapView
+            pins={mapPins}
+            intrepidMode={intrepidMode}
+            className="!rounded-none"
+            onPinClick={(pin) => {
+              setFocusedEventId(pin.id);
+              setDrawerOpen(true);
+              // Scroll to event after drawer opens
+              setTimeout(() => {
+                const el = document.getElementById(`event-card-${pin.id}`);
+                el?.scrollIntoView({ behavior: "smooth", block: "center" });
+              }, 300);
+            }}
+          />
         </Suspense>
       </div>
 
@@ -576,9 +592,10 @@ export default function Pulse() {
                 return (
                   <motion.div
                     key={event.id}
+                    id={`event-card-${event.id}`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="glass-card rounded-xl p-4 border-l-[3px]"
+                    className={`glass-card rounded-xl p-4 border-l-[3px] transition-all ${focusedEventId === event.id ? "ring-2 ring-primary/50" : ""}`}
                     style={{ borderLeftColor: cStyle.color }}
                   >
                     <div className="flex items-start justify-between mb-1.5">
@@ -643,6 +660,54 @@ export default function Pulse() {
                         </button>
                       </div>
                     </div>
+
+                    {/* Action buttons */}
+                    <div className="flex items-center gap-1.5 mt-2.5 pt-2.5 border-t border-border/50">
+                      {event.source_url && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-7 text-[10px] px-2 gap-1"
+                          onClick={() => window.open(event.source_url!, "_blank")}
+                        >
+                          <Ticket className="h-3 w-3" />Register
+                        </Button>
+                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 text-[10px] px-2 gap-1"
+                        onClick={() => {
+                          const title = event.title;
+                          const location = event.venue || event.city;
+                          const desc = event.description || "";
+                          const dateStr = event.event_date || "";
+                          // Generate Google Calendar link
+                          const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(desc)}&location=${encodeURIComponent(location)}${dateStr ? `&dates=${dateStr.replace(/[-:]/g, "")}/${dateStr.replace(/[-:]/g, "")}` : ""}`;
+                          window.open(gcalUrl, "_blank");
+                        }}
+                      >
+                        <CalendarPlus className="h-3 w-3" />Add to Cal
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 text-[10px] px-2 gap-1"
+                        onClick={() => {
+                          setHangoutPrefill({
+                            title: `${event.title} meetup`,
+                            description: `Meetup for: ${event.title}${event.venue ? ` at ${event.venue}` : ""}`,
+                            locationName: event.venue || "",
+                            lat: event.lat,
+                            lng: event.lng,
+                            category: ["nightlife", "festival"].includes(event.category) ? "nightlife" : "activity",
+                          });
+                          setDrawerOpen(false);
+                        }}
+                      >
+                        <UserPlus className="h-3 w-3" />Create Hangout
+                      </Button>
+                    </div>
                   </motion.div>
                 );
               })
@@ -650,6 +715,20 @@ export default function Pulse() {
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Hangout creation overlay from event */}
+      <AnimatePresence>
+        {hangoutPrefill && (
+          <div className="absolute inset-0 z-[2000] bg-background/80 backdrop-blur-sm flex items-end justify-center p-4">
+            <div className="w-full max-w-lg">
+              <CreateHangoutForm
+                onClose={() => setHangoutPrefill(null)}
+                prefill={hangoutPrefill}
+              />
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

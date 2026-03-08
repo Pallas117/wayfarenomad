@@ -20,20 +20,29 @@ const categories = [
 
 interface CreateHangoutFormProps {
   onClose: () => void;
+  prefill?: {
+    title?: string;
+    description?: string;
+    locationName?: string;
+    lat?: number | null;
+    lng?: number | null;
+    dateTime?: string;
+    category?: string;
+  };
 }
 
-export function CreateHangoutForm({ onClose }: CreateHangoutFormProps) {
+export function CreateHangoutForm({ onClose, prefill }: CreateHangoutFormProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const createHangout = useCreateHangout();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [locationName, setLocationName] = useState("");
-  const [category, setCategory] = useState("coffee");
-  const [dateTime, setDateTime] = useState("");
+  const [title, setTitle] = useState(prefill?.title || "");
+  const [description, setDescription] = useState(prefill?.description || "");
+  const [locationName, setLocationName] = useState(prefill?.locationName || "");
+  const [category, setCategory] = useState(prefill?.category || "coffee");
+  const [dateTime, setDateTime] = useState(prefill?.dateTime || "");
   const [maxAttendees, setMaxAttendees] = useState("10");
-  const [lat, setLat] = useState<number | null>(null);
-  const [lng, setLng] = useState<number | null>(null);
+  const [lat, setLat] = useState<number | null>(prefill?.lat ?? null);
+  const [lng, setLng] = useState<number | null>(prefill?.lng ?? null);
 
   const handleSubmit = async () => {
     if (!user || !title || !dateTime) return;
