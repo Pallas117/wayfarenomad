@@ -16,7 +16,7 @@ import { PathConvergence } from "@/components/animations/PathConvergence";
 import { MeetSync } from "@/components/MeetSync";
 import { HangoutCard } from "@/components/HangoutCard";
 import { CreateHangoutForm } from "@/components/CreateHangoutForm";
-import { GoldCardSkeleton } from "@/components/animations/GoldSkeleton";
+import { TravelLoaderInline } from "@/components/animations/TravelLoader";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
 import { useToast } from "@/hooks/use-toast";
