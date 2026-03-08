@@ -20,9 +20,19 @@ const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ defau
 
 const categories = [
   { id: "all", label: "All", icon: Radio },
-  { id: "music", label: "Music", icon: Music },
-  { id: "tech", label: "Tech", icon: Code },
+  { id: "wellbeing", label: "Wellbeing", icon: Heart },
+  { id: "culture", label: "Culture", icon: Landmark },
+  { id: "entertainment", label: "Entertainment", icon: Clapperboard },
+  { id: "shopping", label: "Shopping", icon: ShoppingBag },
+  { id: "nature", label: "Nature", icon: TreePine },
+  { id: "event", label: "Event", icon: CalendarDays },
   { id: "festival", label: "Festival", icon: PartyPopper },
+  { id: "nightlife", label: "Nightlife", icon: Moon },
+  { id: "fitness", label: "Fitness", icon: Dumbbell },
+  { id: "adventure", label: "Adventure", icon: Compass },
+  { id: "creative", label: "Creative", icon: Palette },
+  { id: "singles", label: "Singles", icon: HeartHandshake },
+  { id: "alien", label: "Alien", icon: Skull },
 ];
 
 const resourceFilters = [
