@@ -83,6 +83,8 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
       () => setLocating(false),
       { enableHighAccuracy: true, timeout: 8000 }
     );
+  }, [onChange, reverseGeocode]);
+    );
   }, [onChange]);
 
   const searchNominatim = useCallback(async (q: string) => {
