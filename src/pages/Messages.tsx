@@ -10,7 +10,7 @@ import { ChatView } from "@/components/ChatView";
 import { GroupChatView } from "@/components/GroupChatView";
 import { useGroupChats, useJoinGroupChat, type GroupChat } from "@/hooks/useGroupChat";
 import { useAuth } from "@/hooks/useAuth";
-import { GoldCardSkeleton } from "@/components/animations/GoldSkeleton";
+import { TravelLoaderInline } from "@/components/animations/TravelLoader";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +20,7 @@ function GroupChatList({ onSelect }: { onSelect: (gc: GroupChat) => void }) {
   const { data: groups, isLoading } = useGroupChats();
 
   if (isLoading) {
-    return <div className="space-y-3 p-4"><GoldCardSkeleton /><GoldCardSkeleton /></div>;
+    return <TravelLoaderInline message="Loading conversations…" />;
   }
 
   if (!groups?.length) {

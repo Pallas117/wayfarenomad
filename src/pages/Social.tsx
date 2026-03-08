@@ -16,7 +16,7 @@ import { PathConvergence } from "@/components/animations/PathConvergence";
 import { MeetSync } from "@/components/MeetSync";
 import { HangoutCard } from "@/components/HangoutCard";
 import { CreateHangoutForm } from "@/components/CreateHangoutForm";
-import { GoldCardSkeleton } from "@/components/animations/GoldSkeleton";
+import { TravelLoaderInline } from "@/components/animations/TravelLoader";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
 import { useToast } from "@/hooks/use-toast";
@@ -96,7 +96,7 @@ function DiscoverTab() {
       )}
 
       {isLoading ? (
-        <div className="space-y-4"><GoldCardSkeleton /><GoldCardSkeleton /><GoldCardSkeleton /></div>
+        <TravelLoaderInline message="Finding fellow nomads…" />
       ) : (
         <div className="space-y-4">
           <AnimatePresence>
@@ -311,7 +311,7 @@ function HangoutsTab() {
       </div>
 
       {isLoading ? (
-        <div className="space-y-4"><GoldCardSkeleton /><GoldCardSkeleton /></div>
+        <TravelLoaderInline message="Loading hangouts…" />
       ) : !sortedHangouts.length ? (
         <motion.div className="text-center py-12 text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <Coffee className="h-8 w-8 mx-auto mb-3 text-primary/40" />

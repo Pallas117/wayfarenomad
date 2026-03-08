@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useUserRank } from "@/hooks/useUserRank";
 import { useExpeditions } from "@/hooks/useExpeditions";
 import { useAuth } from "@/hooks/useAuth";
-import { GoldEventSkeleton } from "@/components/animations/GoldSkeleton";
+import { TravelLoaderInline } from "@/components/animations/TravelLoader";
 import { ExpeditionCard } from "@/components/ExpeditionCard";
 import { CreateExpeditionForm } from "@/components/CreateExpeditionForm";
 
@@ -80,10 +80,7 @@ function MarketplaceContent() {
       <div className="mb-8">
         <h2 className="font-display font-bold text-lg mb-4">Expeditions</h2>
         {loading ? (
-          <div className="space-y-4">
-            <GoldEventSkeleton />
-            <GoldEventSkeleton />
-          </div>
+          <TravelLoaderInline message="Loading expeditions…" />
         ) : expeditions.length === 0 ? (
           <motion.div
             className="glass-card rounded-xl p-8 text-center"
