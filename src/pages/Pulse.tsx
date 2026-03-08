@@ -16,7 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserRank } from "@/hooks/useUserRank";
 import { useToast } from "@/hooks/use-toast";
 import { useHangouts } from "@/hooks/useHangouts";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { useEventReactions } from "@/hooks/useEventReactions";
 import { catStyle, catIconStyle } from "@/lib/categoryColors";
 
