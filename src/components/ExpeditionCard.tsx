@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { MapPin, Calendar, DollarSign, Users, CheckCircle, Loader2, XCircle } from "lucide-react";
+import { MapPin, Calendar, DollarSign, Users, CheckCircle, Loader2, XCircle, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import type { Expedition } from "@/hooks/useExpeditions";
 
 interface ExpeditionCardProps {
