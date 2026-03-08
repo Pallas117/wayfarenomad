@@ -187,6 +187,180 @@ export type Database = {
         }
         Relationships: []
       }
+      group_chat_members: {
+        Row: {
+          group_chat_id: string
+          id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          group_chat_id: string
+          id?: string
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          group_chat_id?: string
+          id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_chat_members_group_chat_id_fkey"
+            columns: ["group_chat_id"]
+            isOneToOne: false
+            referencedRelation: "group_chats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_chats: {
+        Row: {
+          created_at: string
+          created_by: string
+          expedition_id: string | null
+          hangout_id: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          expedition_id?: string | null
+          hangout_id?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          expedition_id?: string | null
+          hangout_id?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_chats_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_chats_hangout_id_fkey"
+            columns: ["hangout_id"]
+            isOneToOne: false
+            referencedRelation: "hangouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_messages: {
+        Row: {
+          content: string
+          created_at: string
+          group_chat_id: string
+          id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          group_chat_id: string
+          id?: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          group_chat_id?: string
+          id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_messages_group_chat_id_fkey"
+            columns: ["group_chat_id"]
+            isOneToOne: false
+            referencedRelation: "group_chats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hangout_attendees: {
+        Row: {
+          created_at: string
+          hangout_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hangout_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hangout_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hangout_attendees_hangout_id_fkey"
+            columns: ["hangout_id"]
+            isOneToOne: false
+            referencedRelation: "hangouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hangouts: {
+        Row: {
+          category: string
+          created_at: string
+          creator_id: string
+          description: string | null
+          hangout_time: string
+          id: string
+          lat: number | null
+          lng: number | null
+          location_name: string | null
+          max_attendees: number | null
+          title: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          creator_id: string
+          description?: string | null
+          hangout_time: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location_name?: string | null
+          max_attendees?: number | null
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          creator_id?: string
+          description?: string | null
+          hangout_time?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location_name?: string | null
+          max_attendees?: number | null
+          title?: string
+        }
+        Relationships: []
+      }
       instant_meetups: {
         Row: {
           calendar_sync_status: boolean | null
@@ -648,6 +822,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_group_member: {
+        Args: { _group_chat_id: string; _user_id: string }
         Returns: boolean
       }
       promote_to_captain: { Args: { _user_id: string }; Returns: undefined }
