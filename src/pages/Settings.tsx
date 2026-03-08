@@ -617,6 +617,8 @@ export default function SettingsPage() {
           <h2 className="font-display font-semibold text-lg">Privacy</h2>
         </div>
 
+        <LeaderboardAnonymityToggle />
+
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium">Cultural Ear Microphone</p>
