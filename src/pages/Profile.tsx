@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, Star, Shield, ShieldCheck, MapPin, Calendar,
-  MessageCircle, Send, Instagram, ExternalLink, CheckCircle2,
+  MessageCircle, Send, Instagram, ExternalLink, CheckCircle2, Compass,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
