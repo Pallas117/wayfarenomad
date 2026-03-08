@@ -20,8 +20,8 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "robots.txt"],
       manifest: {
-        name: "Nomad Platform",
-        short_name: "Nomad",
+        name: "Wayfare 🛠️",
+        short_name: "Wayfare",
         description: "The ultimate celestial travel community for digital nomads.",
         theme_color: "#0A142D",
         background_color: "#0A142D",

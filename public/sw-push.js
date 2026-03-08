@@ -1,4 +1,4 @@
-// Push notification handler for Nomad Platform
+// Push notification handler for Wayfare
 // This runs alongside the vite-plugin-pwa service worker
 
 self.addEventListener("push", (event) => {

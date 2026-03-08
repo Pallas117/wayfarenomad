@@ -93,7 +93,7 @@ export function ConversationList({ onSelectConversation }: ConversationListProps
         .map((id) => {
           const conv = convMap.get(id)!;
           const profile = profileMap.get(id);
-          const name = profile?.display_name || "Nomad";
+          const name = profile?.display_name || "Traveler";
           return {
             recipientId: id,
             recipientName: name,
