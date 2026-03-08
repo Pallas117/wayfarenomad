@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
+import { CitySyncProvider } from "./components/CitySync";
+import { ScanningTheStars } from "./components/CitySync";
 import Auth from "./pages/Auth";
 import Social from "./pages/Social";
 import Pulse from "./pages/Pulse";
@@ -19,24 +21,27 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/vision-quest" element={<VisionQuest />} />
-          <Route path="/" element={<AppLayout />}>
-            <Route index element={<Navigate to="/social" replace />} />
-            <Route path="social" element={<Social />} />
-            <Route path="pulse" element={<Pulse />} />
-            <Route path="marketplace" element={<Marketplace />} />
-            <Route path="safety" element={<Safety />} />
-            <Route path="leaderboard" element={<Leaderboard />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <CitySyncProvider>
+        <Toaster />
+        <Sonner />
+        <ScanningTheStars />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/vision-quest" element={<VisionQuest />} />
+            <Route path="/" element={<AppLayout />}>
+              <Route index element={<Navigate to="/social" replace />} />
+              <Route path="social" element={<Social />} />
+              <Route path="pulse" element={<Pulse />} />
+              <Route path="marketplace" element={<Marketplace />} />
+              <Route path="safety" element={<Safety />} />
+              <Route path="leaderboard" element={<Leaderboard />} />
+              <Route path="settings" element={<SettingsPage />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </CitySyncProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
