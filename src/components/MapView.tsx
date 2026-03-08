@@ -97,7 +97,7 @@ export function MapView({ pins, center = [3.139, 101.6869], zoom = 10, className
         <Marker
           key={pin.id}
           position={[pin.lat, pin.lng]}
-          icon={pin.type === "beacon" ? beaconIcon : goldIcon}
+          icon={pin.type === "beacon" ? beaconIcon : makeCategoryIcon(pin.category)}
           eventHandlers={{
             click: () => onPinClick?.(pin),
           }}
