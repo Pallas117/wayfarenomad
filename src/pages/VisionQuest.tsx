@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -61,24 +61,66 @@ const INTEGRITY_QUESTIONS = [
   },
 ];
 
+const PHILOSOPHICAL_QUOTES = [
+  "\"The world is a book and those who do not travel read only one page.\" — Augustine of Hippo",
+  "\"Not all those who wander are lost.\" — J.R.R. Tolkien",
+  "\"The real voyage of discovery consists not in seeking new landscapes, but in having new eyes.\" — Marcel Proust",
+  "\"We travel not to escape life, but for life not to escape us.\" — Anonymous",
+  "\"One's destination is never a place, but a new way of seeing things.\" — Henry Miller",
+  "\"To move, to breathe, to fly, to float — to roam the roads of lands remote.\" — Willy Wonka",
+  "\"Travel makes one modest. You see what a tiny place you occupy in the world.\" — Gustave Flaubert",
+  "\"The journey of a thousand miles begins with a single step.\" — Lao Tzu",
+];
+
 const PROMPTS = [
-  "Welcome, traveler. This is your Vision Quest.",
+  "Welcome, traveler. Unlock the world.",
   "Tell us why you belong among the stars...",
   "What values guide your journey? How will you lift others?",
 ];
 
+function RotatingQuote() {
+  const [quoteIndex, setQuoteIndex] = useState(
+    () => Math.floor(Math.random() * PHILOSOPHICAL_QUOTES.length)
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setQuoteIndex((i) => (i + 1) % PHILOSOPHICAL_QUOTES.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.p
+        key={quoteIndex}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -6 }}
+        transition={{ duration: 0.5 }}
+        className="text-sm text-muted-foreground italic text-center font-vision"
+      >
+        {PHILOSOPHICAL_QUOTES[quoteIndex]}
+      </motion.p>
+    </AnimatePresence>
+  );
+}
 function VisionStep({
   visionText,
   setVisionText,
   wordCount,
   onSubmit,
   submitting,
+  jokeText,
+  setJokeText,
 }: {
   visionText: string;
   setVisionText: (v: string) => void;
   wordCount: number;
   onSubmit: () => void;
   submitting: boolean;
+  jokeText: string;
+  setJokeText: (v: string) => void;
 }) {
   const submitRef = useRef<HTMLButtonElement>(null);
   const [promptIndex, setPromptIndex] = useState(0);
@@ -167,6 +209,38 @@ function VisionStep({
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
+        </motion.div>
+
+        {/* Rotating philosophical quote */}
+        <motion.div
+          className="glass-card rounded-xl p-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+        >
+          <RotatingQuote />
+        </motion.div>
+
+        {/* Tell us a joke */}
+        <motion.div
+          className="glass-card rounded-xl p-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.6 }}
+        >
+          <h2 className="font-display font-semibold text-lg mb-2 flex items-center gap-2">
+            <span>😂</span> Tell Us a Joke
+          </h2>
+          <p className="text-sm text-muted-foreground mb-3">
+            Make us laugh! Show us your sense of humour — it's how we know you're human.
+          </p>
+          <Textarea
+            value={jokeText}
+            onChange={(e) => setJokeText(e.target.value)}
+            placeholder="A nomad walks into a café in Lisbon..."
+            className="min-h-[80px] bg-secondary/50 border-border"
+            maxLength={500}
+          />
         </motion.div>
       </div>
 
@@ -311,6 +385,7 @@ export default function VisionQuest() {
 
   const [step, setStep] = useState<"vision" | "quiz" | "complete">("vision");
   const [visionText, setVisionText] = useState("");
+  const [jokeText, setJokeText] = useState("");
   const [quizAnswers, setQuizAnswers] = useState<(number | null)[]>(
     new Array(INTEGRITY_QUESTIONS.length).fill(null)
   );
@@ -395,6 +470,8 @@ export default function VisionQuest() {
             wordCount={wordCount}
             onSubmit={handleVisionSubmit}
             submitting={submitting}
+            jokeText={jokeText}
+            setJokeText={setJokeText}
           />
         )}
         {step === "quiz" && (
