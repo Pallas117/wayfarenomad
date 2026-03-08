@@ -107,7 +107,7 @@ export default function Pulse() {
     const pins: MapPinType[] = [];
     filtered.forEach((e) => {
       if (e.lat && e.lng) {
-        pins.push({ id: e.id, lat: e.lat, lng: e.lng, title: e.title, subtitle: e.venue || e.city, type: "event" });
+        pins.push({ id: e.id, lat: e.lat, lng: e.lng, title: e.title, subtitle: e.venue || e.city, type: "event", category: e.category });
       }
     });
     hangouts?.forEach((h) => {
