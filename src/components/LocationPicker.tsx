@@ -55,19 +55,35 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
   const [showResults, setShowResults] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
+  const reverseGeocode = useCallback(async (rlat: number, rlng: number) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${rlat}&lon=${rlng}&zoom=18&addressdetails=0`,
+        { headers: { "Accept-Language": "en" } }
+      );
+      const data = await res.json();
+      if (data?.display_name) {
+        const shortName = data.display_name.split(",").slice(0, 2).join(",").trim();
+        onChange(rlat, rlng, shortName);
+        setQuery(shortName);
+      }
+    } catch { /* silent */ }
+  }, [onChange]);
+
   const handleGeolocate = useCallback(() => {
     if (!navigator.geolocation) return;
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         onChange(pos.coords.latitude, pos.coords.longitude);
+        reverseGeocode(pos.coords.latitude, pos.coords.longitude);
         setLocating(false);
         setOpen(true);
       },
       () => setLocating(false),
       { enableHighAccuracy: true, timeout: 8000 }
     );
-  }, [onChange]);
+  }, [onChange, reverseGeocode]);
 
   const searchNominatim = useCallback(async (q: string) => {
     if (q.length < 3) {
@@ -193,7 +209,7 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
               />
-              <ClickHandler onClick={(clickLat, clickLng) => onChange(clickLat, clickLng)} />
+              <ClickHandler onClick={(clickLat, clickLng) => { onChange(clickLat, clickLng); reverseGeocode(clickLat, clickLng); }} />
               {hasPin && (
                 <>
                   <Marker position={[lat!, lng!]} icon={pinIcon} />
