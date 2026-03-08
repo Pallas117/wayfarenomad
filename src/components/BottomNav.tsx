@@ -9,7 +9,7 @@ import { useUnreadCount } from "@/hooks/useUnreadCount";
 interface NavTab {
   to: string;
   label: string;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }> | null;
+  icon: React.ComponentType<any> | null;
   travelIcon?: React.ComponentType<{ className?: string; color?: string }>;
 }
 
