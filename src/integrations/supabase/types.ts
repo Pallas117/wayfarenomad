@@ -24,6 +24,7 @@ export type Database = {
           id: string
           lat: number | null
           lng: number | null
+          pulse_rank: number | null
           source_url: string | null
           title: string
           venue: string | null
@@ -39,6 +40,7 @@ export type Database = {
           id?: string
           lat?: number | null
           lng?: number | null
+          pulse_rank?: number | null
           source_url?: string | null
           title: string
           venue?: string | null
@@ -54,11 +56,120 @@ export type Database = {
           id?: string
           lat?: number | null
           lng?: number | null
+          pulse_rank?: number | null
           source_url?: string | null
           title?: string
           venue?: string | null
           verified?: boolean | null
           verified_by?: string | null
+        }
+        Relationships: []
+      }
+      expeditions: {
+        Row: {
+          cost_usd: number | null
+          created_at: string
+          description: string | null
+          end_date: string
+          host_id: string
+          id: string
+          lat: number | null
+          lng: number | null
+          location_name: string | null
+          max_participants: number | null
+          start_date: string
+          status: string | null
+          title: string
+        }
+        Insert: {
+          cost_usd?: number | null
+          created_at?: string
+          description?: string | null
+          end_date: string
+          host_id: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location_name?: string | null
+          max_participants?: number | null
+          start_date: string
+          status?: string | null
+          title: string
+        }
+        Update: {
+          cost_usd?: number | null
+          created_at?: string
+          description?: string | null
+          end_date?: string
+          host_id?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location_name?: string | null
+          max_participants?: number | null
+          start_date?: string
+          status?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      instant_meetups: {
+        Row: {
+          calendar_sync_status: boolean | null
+          created_at: string
+          id: string
+          initiator_id: string
+          recipient_id: string
+          scheduled_time: string | null
+          transit_mode: string | null
+          travel_time_minutes: number | null
+        }
+        Insert: {
+          calendar_sync_status?: boolean | null
+          created_at?: string
+          id?: string
+          initiator_id: string
+          recipient_id: string
+          scheduled_time?: string | null
+          transit_mode?: string | null
+          travel_time_minutes?: number | null
+        }
+        Update: {
+          calendar_sync_status?: boolean | null
+          created_at?: string
+          id?: string
+          initiator_id?: string
+          recipient_id?: string
+          scheduled_time?: string | null
+          transit_mode?: string | null
+          travel_time_minutes?: number | null
+        }
+        Relationships: []
+      }
+      itineraries: {
+        Row: {
+          arrival_date: string
+          city_name: string
+          created_at: string
+          departure_date: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          arrival_date: string
+          city_name: string
+          created_at?: string
+          departure_date: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          arrival_date?: string
+          city_name?: string
+          created_at?: string
+          departure_date?: string
+          id?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -68,6 +179,7 @@ export type Database = {
           id: string
           match_type: string
           matched_user_id: string
+          shared_vision_score: number | null
           status: string
           user_id: string
         }
@@ -76,6 +188,7 @@ export type Database = {
           id?: string
           match_type: string
           matched_user_id: string
+          shared_vision_score?: number | null
           status?: string
           user_id: string
         }
@@ -84,6 +197,7 @@ export type Database = {
           id?: string
           match_type?: string
           matched_user_id?: string
+          shared_vision_score?: number | null
           status?: string
           user_id?: string
         }
@@ -120,9 +234,12 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          bridge: Database["public"]["Enums"]["cultural_bridge"] | null
           created_at: string
           current_city: string | null
           display_name: string | null
+          encrypted_private_key: string | null
+          full_name: string | null
           id: string
           learns: string[] | null
           quiz_completed: boolean | null
@@ -138,9 +255,12 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          bridge?: Database["public"]["Enums"]["cultural_bridge"] | null
           created_at?: string
           current_city?: string | null
           display_name?: string | null
+          encrypted_private_key?: string | null
+          full_name?: string | null
           id?: string
           learns?: string[] | null
           quiz_completed?: boolean | null
@@ -156,9 +276,12 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          bridge?: Database["public"]["Enums"]["cultural_bridge"] | null
           created_at?: string
           current_city?: string | null
           display_name?: string | null
+          encrypted_private_key?: string | null
+          full_name?: string | null
           id?: string
           learns?: string[] | null
           quiz_completed?: boolean | null
@@ -172,6 +295,80 @@ export type Database = {
           vision_statement?: string | null
         }
         Relationships: []
+      }
+      roaming_beacons: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          fuzzed_lat: number | null
+          fuzzed_lng: number | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          fuzzed_lat?: number | null
+          fuzzed_lng?: number | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          fuzzed_lat?: number | null
+          fuzzed_lng?: number | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          expedition_id: string | null
+          id: string
+          platform_commission: number | null
+          recipient_id: string | null
+          sender_id: string | null
+          status: string | null
+          stripe_payment_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          expedition_id?: string | null
+          id?: string
+          platform_commission?: number | null
+          recipient_id?: string | null
+          sender_id?: string | null
+          status?: string | null
+          stripe_payment_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          expedition_id?: string | null
+          id?: string
+          platform_commission?: number | null
+          recipient_id?: string | null
+          sender_id?: string | null
+          status?: string | null
+          stripe_payment_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -206,6 +403,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "steward"
+      cultural_bridge: "western" | "dao-ist" | "islamic"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -334,6 +532,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user", "steward"],
+      cultural_bridge: ["western", "dao-ist", "islamic"],
     },
   },
 } as const
