@@ -269,6 +269,7 @@ export default function Pulse() {
 
       {/* Floating action buttons */}
       <div className="absolute bottom-4 right-4 z-[1000] flex flex-col gap-2">
+        <SubmitEventForm onSubmitted={loadEvents} />
         {isSteward && <AddResourceForm onAdded={loadResources} />}
       </div>
 
