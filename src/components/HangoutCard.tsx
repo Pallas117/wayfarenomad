@@ -60,9 +60,15 @@ export function HangoutCard({ hangout, onJoin, onLeave, onOpenChat, isJoining, i
               <Users className="h-3 w-3" /> {hangout.attendee_count}/{hangout.max_attendees}
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            by {hangout.creator_name}
-          </p>
+          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+            <span>by {hangout.creator_name}</span>
+            {distance !== undefined && (
+              <span className="flex items-center gap-1 text-primary font-medium">
+                <Navigation className="h-3 w-3" />
+                {distance < 1 ? `${Math.round(distance * 1000)}m` : `${distance.toFixed(1)}km`}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
