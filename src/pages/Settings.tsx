@@ -421,6 +421,12 @@ export default function SettingsPage() {
       {/* Power Management Section */}
       <PowerSection />
 
+      {/* Verification Status */}
+      <VerificationStatusCard />
+
+      {/* Support Wayfare */}
+      <DonationSection />
+
       {/* Account */}
       <motion.div
         className="glass-card rounded-xl p-5 space-y-4"
