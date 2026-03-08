@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MessageCircle, Lock, Users } from "lucide-react";
+import { PlaneIcon } from "@/components/animations/TravelIcons";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RoleGate } from "@/components/RoleGate";
 import { ConversationList, type Conversation } from "@/components/ConversationList";
