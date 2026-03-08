@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw } from "lucide-react";
+import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { SocialProfileLinks } from "@/components/SocialProfileLinks";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 import {
   haptic,
   getVibrationIntensity,
