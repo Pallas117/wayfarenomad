@@ -123,7 +123,7 @@ function VisionStep({
         >
           <h2 className="font-display font-semibold text-lg mb-2">Your Vision Statement</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Minimum 200 words — as you write, the cosmos awakens.
+            Minimum 100 words — as you write, the cosmos awakens.
           </p>
           <Textarea
             value={visionText}
