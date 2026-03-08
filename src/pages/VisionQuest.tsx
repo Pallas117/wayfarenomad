@@ -336,6 +336,7 @@ export default function VisionQuest() {
       toast({ title: "Error", description: error.message, variant: "destructive" });
       return;
     }
+    haptic("success");
     setStep("quiz");
   };
 
