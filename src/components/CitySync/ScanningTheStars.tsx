@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
 import { useCitySync } from "./CitySyncProvider";
 import { CheckCircle } from "lucide-react";
+import { usePower } from "@/components/PowerProvider";
 
 // ─── Constellation Globe ───
 function ConstellationGlobe({ imploding }: { imploding: boolean }) {
