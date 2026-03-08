@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock, Flame, Users, ShieldCheck } from "lucide-react";
+import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock, Flame, Users, ShieldCheck, Sparkles, EyeOff, Zap } from "lucide-react";
 import { WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserRank } from "@/hooks/useUserRank";
 import { useToast } from "@/hooks/use-toast";
 import { useHangouts } from "@/hooks/useHangouts";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { useEventReactions } from "@/hooks/useEventReactions";
 import { catStyle, catIconStyle } from "@/lib/categoryColors";
 
@@ -95,6 +95,126 @@ interface FunctionalPoint {
   verified: boolean;
 }
 
+interface KarmaPulse {
+  id: string;
+  action: string;
+  icon: React.ElementType;
+  displayName: string;
+  isAnonymous: boolean;
+  points: number;
+  timeAgo: string;
+  color: string;
+}
+
+function useKarmaPulses() {
+  const [pulses, setPulses] = useState<KarmaPulse[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPulses = async () => {
+      // Fetch recent community verifications
+      const [verRes, sosRes, safeRes] = await Promise.all([
+        supabase
+          .from("community_verifications")
+          .select("id, created_at, user_id")
+          .order("created_at", { ascending: false })
+          .limit(10),
+        supabase
+          .from("sos_responses")
+          .select("id, created_at, responder_id")
+          .order("created_at", { ascending: false })
+          .limit(5),
+        supabase
+          .from("safe_spaces")
+          .select("id, created_at, created_by, name")
+          .order("created_at", { ascending: false })
+          .limit(5),
+      ]);
+
+      // Collect all user IDs
+      const userIds = new Set<string>();
+      verRes.data?.forEach(v => userIds.add(v.user_id));
+      sosRes.data?.forEach(s => userIds.add(s.responder_id));
+      safeRes.data?.forEach(s => userIds.add(s.created_by));
+
+      // Fetch profiles for all users
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, display_name, leaderboard_anonymous")
+        .in("user_id", Array.from(userIds));
+
+      const profileMap = new Map<string, { display_name: string | null; leaderboard_anonymous: boolean }>();
+      profiles?.forEach((p: any) => profileMap.set(p.user_id, p));
+
+      const getName = (userId: string) => {
+        const p = profileMap.get(userId);
+        const isAnon = !!(p as any)?.leaderboard_anonymous;
+        return {
+          displayName: isAnon ? "Anonymous Nomad" : (p?.display_name || "A Traveler"),
+          isAnonymous: isAnon,
+        };
+      };
+
+      const allPulses: KarmaPulse[] = [];
+
+      verRes.data?.forEach(v => {
+        const { displayName, isAnonymous } = getName(v.user_id);
+        allPulses.push({
+          id: `ver-${v.id}`,
+          action: "verified an event",
+          icon: CheckCircle,
+          displayName,
+          isAnonymous,
+          points: 5,
+          timeAgo: formatDistanceToNow(new Date(v.created_at), { addSuffix: true }),
+          color: "hsl(var(--cat-wellbeing))",
+        });
+      });
+
+      sosRes.data?.forEach(s => {
+        const { displayName, isAnonymous } = getName(s.responder_id);
+        allPulses.push({
+          id: `sos-${s.id}`,
+          action: "responded to an SOS",
+          icon: Shield,
+          displayName,
+          isAnonymous,
+          points: 10,
+          timeAgo: formatDistanceToNow(new Date(s.created_at), { addSuffix: true }),
+          color: "hsl(var(--destructive))",
+        });
+      });
+
+      safeRes.data?.forEach(s => {
+        const { displayName, isAnonymous } = getName(s.created_by);
+        allPulses.push({
+          id: `safe-${s.id}`,
+          action: `added safe space "${s.name}"`,
+          icon: Heart,
+          displayName,
+          isAnonymous,
+          points: 8,
+          timeAgo: formatDistanceToNow(new Date(s.created_at), { addSuffix: true }),
+          color: "hsl(var(--primary))",
+        });
+      });
+
+      // Sort by most recent
+      allPulses.sort((a, b) => {
+        // Simple sort by the raw id order since they're already fetched newest first
+        return 0;
+      });
+
+      setPulses(allPulses.slice(0, 15));
+      setLoading(false);
+    };
+
+    fetchPulses();
+  }, []);
+
+  return { pulses, loading };
+}
+
 export default function Pulse() {
   const { user } = useAuth();
   const { isSteward } = useUserRank();
@@ -112,6 +232,7 @@ export default function Pulse() {
   const { data: hangouts } = useHangouts();
   const filteredIds = useMemo(() => events.map(e => e.id), [events]);
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
+  const { pulses: karmaPulses, loading: karmaPulsesLoading } = useKarmaPulses();
 
   useEffect(() => { loadEvents(); loadResources(); }, []);
 
@@ -395,6 +516,45 @@ export default function Pulse() {
                     </motion.div>
                   );
                 })}
+              </div>
+            </div>
+          )}
+
+          {/* ✨ Karma Pulses */}
+          {karmaPulses.length > 0 && (
+            <div className="px-4 pb-3">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-xs font-display font-bold uppercase tracking-wider text-primary">Karma Pulses</span>
+              </div>
+              <div className="space-y-1.5 max-h-[140px] overflow-y-auto no-scrollbar">
+                {karmaPulses.map((pulse, i) => (
+                  <motion.div
+                    key={pulse.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-2 p-2 rounded-lg bg-secondary/30 text-xs"
+                  >
+                    <div
+                      className="h-6 w-6 rounded-full flex items-center justify-center shrink-0"
+                      style={{ backgroundColor: `${pulse.color}20`, color: pulse.color }}
+                    >
+                      {pulse.isAnonymous ? <EyeOff className="h-3 w-3" /> : <pulse.icon className="h-3 w-3" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <span className={`font-medium ${pulse.isAnonymous ? "italic text-muted-foreground" : ""}`}>
+                        {pulse.displayName}
+                      </span>
+                      <span className="text-muted-foreground"> {pulse.action}</span>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <Zap className="h-3 w-3 text-primary" />
+                      <span className="font-display font-bold text-primary">+{pulse.points}</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground shrink-0">{pulse.timeAgo}</span>
+                  </motion.div>
+                ))}
               </div>
             </div>
           )}
