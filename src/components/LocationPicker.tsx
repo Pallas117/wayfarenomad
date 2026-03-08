@@ -53,6 +53,7 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
   const [results, setResults] = useState<NominatimResult[]>([]);
   const [searching, setSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [reversing, setReversing] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const reverseGeocode = useCallback(async (rlat: number, rlng: number) => {
