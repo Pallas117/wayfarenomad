@@ -545,6 +545,11 @@ function SafetyContent() {
             )}
           </div>
         </TabsContent>
+
+        {/* ─── Community Moments Tab ─── */}
+        <TabsContent value="photos" className="mt-4">
+          <CommunityPhotoBoard />
+        </TabsContent>
       </Tabs>
     </div>
   );
