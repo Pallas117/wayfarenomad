@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { Store, Users, Radio, Trophy, Shield } from "lucide-react";
+import { Store, Users, Radio, Trophy, Shield, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { haptic } from "@/lib/haptics";
 
 const tabs = [
   { to: "/marketplace", icon: Store, label: "Market" },
