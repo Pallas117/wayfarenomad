@@ -5,7 +5,7 @@ import { WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { CulturalEar } from "@/components/CulturalEar";
 import { AddResourceForm } from "@/components/AddResourceForm";
 import type { MapPin as MapPinType } from "@/components/MapView.types";
@@ -77,6 +77,7 @@ export default function Pulse() {
   const [loading, setLoading] = useState(true);
   const [scraping, setScraping] = useState(false);
   const [intrepidMode, setIntrepidMode] = useState(() => localStorage.getItem("intrepid") === "1");
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const { data: hangouts } = useHangouts();
 
   useEffect(() => { loadEvents(); loadResources(); }, []);
@@ -159,7 +160,7 @@ export default function Pulse() {
   return (
     <div className="relative h-[calc(100vh-4rem)] w-full overflow-hidden">
       {/* Full-screen map */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         <Suspense fallback={<div className="h-full w-full bg-background animate-pulse" />}>
           <LazyMapView pins={mapPins} intrepidMode={intrepidMode} className="!rounded-none" />
         </Suspense>
@@ -235,14 +236,17 @@ export default function Pulse() {
         {isSteward && <AddResourceForm onAdded={loadResources} />}
       </div>
 
+      {/* Bottom drawer trigger */}
+      <Button
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] gradient-gold text-primary-foreground shadow-lg rounded-full px-5 h-10 text-xs font-display"
+        onClick={() => setDrawerOpen(true)}
+      >
+        <Radio className="h-3.5 w-3.5 mr-1.5" />
+        {filtered.length} Events
+      </Button>
+
       {/* Bottom drawer for event list */}
-      <Drawer>
-        <DrawerTrigger asChild>
-          <Button className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] gradient-gold text-primary-foreground shadow-lg rounded-full px-5 h-10 text-xs font-display">
-            <Radio className="h-3.5 w-3.5 mr-1.5" />
-            {filtered.length} Events
-          </Button>
-        </DrawerTrigger>
+      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
         <DrawerContent className="max-h-[70vh]">
           <DrawerHeader>
             <DrawerTitle className="font-display text-sm">Community Events</DrawerTitle>
