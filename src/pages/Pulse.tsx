@@ -242,6 +242,20 @@ export default function Pulse() {
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
   const { pulses: karmaPulses, loading: karmaPulsesLoading } = useKarmaPulses();
 
+  const [searchParams] = useSearchParams();
+
+  // Handle ?focus= query param from other pages
+  useEffect(() => {
+    const focusId = searchParams.get("focus");
+    if (focusId) {
+      setFocusedEventId(focusId);
+      setDrawerOpen(true);
+      setTimeout(() => {
+        document.getElementById(`event-card-${focusId}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 500);
+    }
+  }, [searchParams]);
+
   useEffect(() => { loadEvents(); loadResources(); loadSafeSpaces(); loadExpeditions(); }, []);
 
   const loadSafeSpaces = async () => {
