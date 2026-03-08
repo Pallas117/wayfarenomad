@@ -28,6 +28,7 @@ export default function SettingsPage() {
   const { user, signOut } = useAuth();
   const [intensity, setIntensity] = useState(getVibrationIntensity());
   const hapticsSupported = isHapticsAvailable();
+  const citySyncCtx = useCitySync();
 
   const handleIntensityChange = (value: number[]) => {
     const v = value[0];
