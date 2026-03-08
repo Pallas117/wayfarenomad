@@ -44,9 +44,19 @@ const resourceFilters = [
 const CITIES = ["Kuala Lumpur", "Singapore", "Krabi"];
 
 const categoryIcon: Record<string, React.ElementType> = {
-  tech: Code,
-  music: Music,
+  wellbeing: Heart,
+  culture: Landmark,
+  entertainment: Clapperboard,
+  shopping: ShoppingBag,
+  nature: TreePine,
+  event: CalendarDays,
   festival: PartyPopper,
+  nightlife: Moon,
+  fitness: Dumbbell,
+  adventure: Compass,
+  creative: Palette,
+  singles: HeartHandshake,
+  alien: Skull,
 };
 
 interface PulseEvent {
