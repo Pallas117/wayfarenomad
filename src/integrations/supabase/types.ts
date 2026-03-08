@@ -53,6 +53,35 @@ export type Database = {
         }
         Relationships: []
       }
+      event_flags: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_flags_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           category: string
@@ -60,6 +89,7 @@ export type Database = {
           created_at: string
           description: string | null
           event_date: string | null
+          flag_count: number
           id: string
           lat: number | null
           lng: number | null
@@ -77,6 +107,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           event_date?: string | null
+          flag_count?: number
           id?: string
           lat?: number | null
           lng?: number | null
@@ -94,6 +125,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           event_date?: string | null
+          flag_count?: number
           id?: string
           lat?: number | null
           lng?: number | null
