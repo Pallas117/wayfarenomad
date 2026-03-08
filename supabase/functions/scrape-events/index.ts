@@ -67,8 +67,17 @@ Deno.serve(async (req) => {
             for (const result of searchData.data) {
               // Extract event info from the scraped content
               const title = result.title || result.metadata?.title || 'Untitled Event';
-              const description = result.markdown?.slice(0, 300) || result.description || '';
+              const rawDesc = result.markdown?.slice(0, 500) || result.description || '';
               const sourceUrl = result.url || '';
+
+              // Sanitize description: remove junk scraped content
+              const description = sanitizeDescription(rawDesc);
+
+              // Skip entries that are clearly not real events
+              if (isJunkEntry(title, description)) {
+                console.log(`Skipping junk entry: ${title.slice(0, 60)}`);
+                continue;
+              }
 
               // Determine category from content
               let category = 'festival';
@@ -80,7 +89,7 @@ Deno.serve(async (req) => {
               }
 
               allEvents.push({
-                title: title.slice(0, 200),
+                title: sanitizeTitle(title).slice(0, 200),
                 description: description.slice(0, 500),
                 city: city.name,
                 category,
