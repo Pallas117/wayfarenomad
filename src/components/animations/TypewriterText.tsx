@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { haptic } from "@/lib/haptics";
 
 interface TypewriterTextProps {
   text: string;
