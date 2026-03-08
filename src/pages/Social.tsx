@@ -151,7 +151,7 @@ function SocialContent() {
                         <span className="text-sm font-bold">{user.visionScore}%</span>
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">{user.bio || "Fellow nomad"}</p>
+                    <p className="text-sm text-muted-foreground mb-3">{user.bio || "Fellow traveler"}</p>
                     <div className="flex items-center gap-4 mb-3 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {user.city}</span>
                       <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {user.overlapDays}d overlap</span>

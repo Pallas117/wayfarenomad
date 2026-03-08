@@ -1,5 +1,5 @@
 /**
- * AES-256-GCM Encryption for the Nomad Platform
+ * AES-256-GCM Encryption for Wayfare
  * Uses Web Crypto API for client-side message encryption.
  */
 
