@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, Star, Shield, ShieldCheck, MapPin, Calendar,
-  MessageCircle, Send, Instagram, ExternalLink, CheckCircle2,
+  MessageCircle, Send, Instagram, ExternalLink, CheckCircle2, Compass,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { TravelLoader } from "@/components/animations/TravelLoader";
 import { haptic } from "@/lib/haptics";
+import { useIsCompassLocked } from "@/hooks/useCompassLock";
+import { CompassVerifySheet } from "@/components/CompassLock";
 
 interface ProfileData {
   user_id: string;
@@ -62,6 +64,8 @@ export default function Profile() {
   const [rankData, setRankData] = useState<UserRankData>({ rank: 0, label: "Initiate" });
   const [loading, setLoading] = useState(true);
   const isOwnProfile = user?.id === userId;
+  const { data: isCompassLocked } = useIsCompassLocked(userId ?? null);
+  const [showCompassVerify, setShowCompassVerify] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -156,6 +160,11 @@ export default function Profile() {
               {profile.social_verified && (
                 <Badge className="text-xs bg-primary/20 text-primary">
                   <CheckCircle2 className="h-3 w-3 mr-1" /> Verified
+                </Badge>
+              )}
+              {isCompassLocked && (
+                <Badge className="text-xs bg-accent/20 text-accent-foreground">
+                  <Compass className="h-3 w-3 mr-1" /> Met IRL
                 </Badge>
               )}
             </div>
@@ -346,30 +355,51 @@ export default function Profile() {
       {/* Action Buttons */}
       {!isOwnProfile && (
         <motion.div
-          className="flex gap-3"
+          className="space-y-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
         >
-          <Button
-            className="flex-1 gradient-gold text-primary-foreground min-h-[48px]"
-            onClick={() => {
-              navigate(`/messages?to=${userId}&name=${encodeURIComponent(name)}`);
-              haptic("tap");
-            }}
-          >
-            <Send className="h-4 w-4 mr-2" /> Message
-          </Button>
-          <Button
-            variant="outline"
-            className="flex-1 min-h-[48px]"
-            onClick={() => {
-              navigate("/social");
-              haptic("tap");
-            }}
-          >
-            <MessageCircle className="h-4 w-4 mr-2" /> Meet
-          </Button>
+          {!isCompassLocked && (
+            <Button
+              className="w-full gradient-gold text-primary-foreground min-h-[48px] gap-2"
+              onClick={() => {
+                setShowCompassVerify(true);
+                haptic("tap");
+              }}
+            >
+              <Compass className="h-4 w-4" /> Compass Lock — Verify In Person
+            </Button>
+          )}
+          <div className="flex gap-3">
+            <Button
+              className={`flex-1 min-h-[48px] ${isCompassLocked ? "gradient-gold text-primary-foreground" : ""}`}
+              variant={isCompassLocked ? "default" : "outline"}
+              disabled={!isCompassLocked}
+              onClick={() => {
+                navigate(`/messages?to=${userId}&name=${encodeURIComponent(name)}`);
+                haptic("tap");
+              }}
+            >
+              <Send className="h-4 w-4 mr-2" /> {isCompassLocked ? "Message" : "🔒 Message"}
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 min-h-[48px]"
+              onClick={() => {
+                navigate("/social");
+                haptic("tap");
+              }}
+            >
+              <MessageCircle className="h-4 w-4 mr-2" /> Meet
+            </Button>
+          </div>
+          <CompassVerifySheet
+            open={showCompassVerify}
+            onOpenChange={setShowCompassVerify}
+            targetUserId={userId}
+            targetName={name}
+          />
         </motion.div>
       )}
 

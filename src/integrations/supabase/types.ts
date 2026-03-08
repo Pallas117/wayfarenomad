@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      compass_locks: {
+        Row: {
+          created_at: string
+          id: string
+          lat: number | null
+          lng: number | null
+          user_a: string
+          user_b: string
+          verification_method: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          user_a: string
+          user_b: string
+          verification_method?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          user_a?: string
+          user_b?: string
+          verification_method?: string
+        }
+        Relationships: []
+      }
       emergency_beacons: {
         Row: {
           created_at: string
@@ -899,6 +929,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_compass_locked: {
+        Args: { _user_a: string; _user_b: string }
         Returns: boolean
       }
       is_group_member: {
