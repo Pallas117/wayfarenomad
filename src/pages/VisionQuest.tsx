@@ -160,7 +160,7 @@ function VisionStep({
             <Button
               ref={submitRef}
               onClick={onSubmit}
-              disabled={wordCount < 200 || submitting}
+              disabled={wordCount < 100 || submitting}
               className="gradient-gold text-primary-foreground relative overflow-hidden"
             >
               {submitting ? "Saving..." : "Continue to Quiz"}
