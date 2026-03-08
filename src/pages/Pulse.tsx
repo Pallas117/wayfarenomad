@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { CulturalEar } from "@/components/CulturalEar";
 import { AddResourceForm } from "@/components/AddResourceForm";
+import { SubmitEventForm } from "@/components/SubmitEventForm";
 import type { MapPin as MapPinType } from "@/components/MapView.types";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
