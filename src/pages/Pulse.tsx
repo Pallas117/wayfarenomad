@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { Radio, MapPin, Calendar, ExternalLink, Music, Code, PartyPopper, CheckCircle, Loader2, RefreshCw, Globe, Map as MapIcon } from "lucide-react";
+import { WeatherSunIcon, PlaneIcon, FloatingTravelBadges, WavesDivider } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
