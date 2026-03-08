@@ -206,6 +206,36 @@ export function useSendGroupMessage() {
           content,
         });
       if (error) throw error;
+
+      // Notify other group members via push
+      const { data: members } = await supabase
+        .from("group_chat_members")
+        .select("user_id")
+        .eq("group_chat_id", groupChatId)
+        .neq("user_id", senderId);
+
+      if (members?.length) {
+        const { data: group } = await supabase
+          .from("group_chats")
+          .select("name")
+          .eq("id", groupChatId)
+          .single();
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("user_id", senderId)
+          .single();
+
+        supabase.functions.invoke("send-push", {
+          body: {
+            type: "group_message",
+            receiver_ids: members.map((m) => m.user_id),
+            sender_name: profile?.display_name || "Someone",
+            group_name: group?.name || "Group Chat",
+          },
+        }).catch(console.error);
+      }
     },
   });
 }

@@ -126,6 +126,30 @@ export function useJoinHangout() {
         .from("hangout_attendees")
         .insert({ hangout_id: hangoutId, user_id: userId });
       if (error) throw error;
+
+      // Send push notification to hangout creator
+      const { data: hangout } = await supabase
+        .from("hangouts")
+        .select("creator_id, title")
+        .eq("id", hangoutId)
+        .single();
+
+      if (hangout && hangout.creator_id !== userId) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("user_id", userId)
+          .single();
+
+        supabase.functions.invoke("send-push", {
+          body: {
+            type: "hangout_join",
+            receiver_id: hangout.creator_id,
+            sender_name: profile?.display_name || "A traveler",
+            hangout_title: hangout.title,
+          },
+        }).catch(console.error);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["hangouts"] });
