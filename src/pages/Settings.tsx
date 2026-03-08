@@ -164,6 +164,47 @@ export default function SettingsPage() {
         </div>
       </motion.div>
 
+      {/* Push Notifications Section */}
+      <motion.div
+        className="glass-card rounded-xl p-5 mb-6 space-y-4"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.18 }}
+      >
+        <div className="flex items-center gap-3">
+          {push.isSubscribed ? (
+            <Bell className="h-5 w-5 text-primary" />
+          ) : (
+            <BellOff className="h-5 w-5 text-muted-foreground" />
+          )}
+          <h2 className="font-display font-semibold text-lg">Push Notifications</h2>
+          {!push.isSupported && (
+            <Badge variant="secondary" className="text-xs">Not supported</Badge>
+          )}
+        </div>
+
+        <p className="text-sm text-muted-foreground">
+          Get notified when you receive new encrypted messages, even when the app is closed.
+        </p>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium">Message Notifications</p>
+            <p className="text-xs text-muted-foreground">
+              {push.isSubscribed ? "You'll receive push alerts" : "Enable to get message alerts"}
+            </p>
+          </div>
+          <Switch
+            checked={push.isSubscribed}
+            onCheckedChange={(checked) => {
+              if (checked) push.subscribe();
+              else push.unsubscribe();
+            }}
+            disabled={!push.isSupported || push.loading}
+          />
+        </div>
+      </motion.div>
+
       {/* Privacy Section */}
       <motion.div
         className="glass-card rounded-xl p-5 mb-6 space-y-4"
