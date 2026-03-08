@@ -113,7 +113,7 @@ function MessagesContent() {
     <div className="p-6 max-w-lg mx-auto pb-24">
       <motion.div className="flex items-center justify-between mb-6" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center gap-3">
-          <MessageCircle className="h-6 w-6 text-primary" />
+          <PlaneIcon className="h-7 w-7 text-primary" />
           <h1 className="text-2xl font-display font-bold">Messages</h1>
         </div>
         <div className="flex items-center gap-1 text-xs text-muted-foreground">

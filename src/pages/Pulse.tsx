@@ -127,9 +127,10 @@ export default function Pulse() {
 
   return (
     <div className="p-6 max-w-lg mx-auto pb-24">
-      <motion.div className="flex items-center justify-between mb-6" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div className="relative flex items-center justify-between mb-6" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        <FloatingTravelBadges />
         <div className="flex items-center gap-3">
-          <Radio className="h-6 w-6 text-primary animate-pulse-glow" />
+          <WeatherSunIcon className="h-7 w-7 text-primary" />
           <h1 className="text-2xl font-display font-bold">Community Pulse</h1>
         </div>
         <div className="flex items-center gap-2">

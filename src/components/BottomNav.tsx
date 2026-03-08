@@ -1,14 +1,23 @@
 import { NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
-import { Flame, Compass, Radio, ShieldCheck, MessageSquare, Settings } from "lucide-react";
+import { ShieldCheck, MessageSquare, Settings } from "lucide-react";
+import { SailboatIcon, PlaneIcon, CompassRose, WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { useUnreadCount } from "@/hooks/useUnreadCount";
 
-const tabs = [
-  { to: "/marketplace", icon: Flame, label: "Market" },
-  { to: "/social", icon: Compass, label: "Social" },
+interface NavTab {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }> | null;
+  travelIcon?: React.ComponentType<{ className?: string; color?: string }>;
+}
+
+const tabs: NavTab[] = [
+  { to: "/marketplace", icon: null, travelIcon: SailboatIcon, label: "Market" },
+  { to: "/social", icon: null, travelIcon: CompassRose, label: "Social" },
   { to: "/messages", icon: MessageSquare, label: "Chat" },
-  { to: "/pulse", icon: Radio, label: "Pulse" },
+  { to: "/pulse", icon: null, travelIcon: WeatherSunIcon, label: "Pulse" },
   { to: "/safety", icon: ShieldCheck, label: "Safety" },
 ];
 
@@ -18,7 +27,7 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 glass-nav">
       <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
-        {tabs.map(({ to, icon: Icon, label }) => (
+        {tabs.map(({ to, icon: Icon, travelIcon: TravelIcon, label }) => (
           <NavLink
             key={to}
             to={to}
@@ -34,14 +43,30 @@ export function BottomNav() {
           >
             {({ isActive }) => (
               <>
-                <div className={cn("relative", isActive && "glow-gold rounded-full")}>
-                  <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.8} />
+                <motion.div
+                  className={cn("relative", isActive && "glow-gold rounded-full")}
+                  whileTap={{ scale: 0.85 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                >
+                  {TravelIcon ? (
+                    <TravelIcon
+                      className="h-5 w-5"
+                      color="currentColor"
+                    />
+                  ) : Icon ? (
+                    <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.8} />
+                  ) : null}
                   {to === "/messages" && unreadCount > 0 && (
-                    <span className="absolute -top-1.5 -right-2 h-4 min-w-[16px] px-1 rounded-full bg-destructive flex items-center justify-center text-[9px] font-bold text-destructive-foreground">
+                    <motion.span
+                      className="absolute -top-1.5 -right-2 h-4 min-w-[16px] px-1 rounded-full bg-destructive flex items-center justify-center text-[9px] font-bold text-destructive-foreground"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 500 }}
+                    >
                       {unreadCount > 9 ? "9+" : unreadCount}
-                    </span>
+                    </motion.span>
                   )}
-                </div>
+                </motion.div>
                 <span className="text-[10px] font-medium">{label}</span>
               </>
             )}
@@ -60,9 +85,12 @@ export function BottomNav() {
         >
           {({ isActive }) => (
             <>
-              <div className={cn("relative", isActive && "glow-gold rounded-full")}>
+              <motion.div
+                className={cn("relative", isActive && "glow-gold rounded-full")}
+                whileTap={{ scale: 0.85 }}
+              >
                 <Settings className="h-4 w-4" strokeWidth={isActive ? 2.5 : 1.8} />
-              </div>
+              </motion.div>
               <span className="text-[9px] font-medium">Settings</span>
             </>
           )}
