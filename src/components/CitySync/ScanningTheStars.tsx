@@ -117,6 +117,7 @@ function PingRings({ count }: { count: number }) {
 // ─── Main Scanning Screen ───
 export function ScanningTheStars() {
   const { isScanning, scanComplete, nodesFound, currentCity, theme } = useCitySync();
+  const power = usePower();
 
   if (!isScanning) return null;
 
