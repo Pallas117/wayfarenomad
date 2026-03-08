@@ -106,6 +106,8 @@ export default function Pulse() {
   const [intrepidMode, setIntrepidMode] = useState(() => localStorage.getItem("intrepid") === "1");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { data: hangouts } = useHangouts();
+  const filteredIds = useMemo(() => events.map(e => e.id), [events]);
+  const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
 
   useEffect(() => { loadEvents(); loadResources(); }, []);
 
