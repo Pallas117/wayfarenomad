@@ -16,6 +16,7 @@ import Leaderboard from "./pages/Leaderboard";
 import VisionQuest from "./pages/VisionQuest";
 import SettingsPage from "./pages/Settings";
 import Messages from "./pages/Messages";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
