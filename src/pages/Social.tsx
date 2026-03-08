@@ -47,6 +47,7 @@ function SocialContent() {
   const [expandedMatch, setExpandedMatch] = useState<string | null>(null);
   const [meetSyncUser, setMeetSyncUser] = useState<ItineraryMatch | null>(null);
   const { data: realMatches, isLoading } = useItineraryMatches();
+  const navigate = useNavigate();
 
   const matches: ItineraryMatch[] = (realMatches && realMatches.length > 0)
     ? realMatches
