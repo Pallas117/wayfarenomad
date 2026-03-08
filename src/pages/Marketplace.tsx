@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Store, Shield, Plus, Wifi, Smartphone, ExternalLink, RefreshCw } from "lucide-react";
+import { SailboatIcon, FloatingTravelBadges, WavesDivider } from "@/components/animations/TravelIcons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUserRank } from "@/hooks/useUserRank";
@@ -44,8 +45,9 @@ function MarketplaceContent() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
       >
+        <FloatingTravelBadges />
         <div className="flex items-center gap-3">
-          <Store className="h-6 w-6 text-primary" />
+          <SailboatIcon className="h-7 w-7 text-primary" />
           <h1 className="text-2xl font-display font-bold">Marketplace</h1>
         </div>
         <div className="flex gap-2">

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Trophy, Star, MapPin } from "lucide-react";
+import { TrainIcon } from "@/components/animations/TravelIcons";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StardustParticles } from "@/components/animations/StardustParticles";
 
@@ -23,7 +24,7 @@ export default function Leaderboard() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Trophy className="h-6 w-6 text-primary" />
+        <TrainIcon className="h-7 w-7 text-primary" />
         <h1 className="text-2xl font-display font-bold">Stellar Canopy</h1>
         {/* Profile icon target for stardust */}
         <div ref={profileRef} className="ml-auto h-8 w-8 rounded-full bg-secondary/50 flex items-center justify-center">
