@@ -193,15 +193,63 @@ function DiscoverTab() {
   );
 }
 
+function getDistanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 function HangoutsTab() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { isSteward } = useUserRank();
   const [showCreate, setShowCreate] = useState(false);
+  const [nearbyMode, setNearbyMode] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [geoLoading, setGeoLoading] = useState(false);
   const { data: hangouts, isLoading } = useHangouts();
   const joinHangout = useJoinHangout();
   const leaveHangout = useLeaveHangout();
   const navigate = useNavigate();
+
+  const requestLocation = () => {
+    if (userLocation) {
+      setNearbyMode(!nearbyMode);
+      haptic("tap");
+      return;
+    }
+    setGeoLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setNearbyMode(true);
+        setGeoLoading(false);
+        haptic("success");
+      },
+      () => {
+        toast({ title: "Location unavailable", description: "Enable location access to use Nearby filter.", variant: "destructive" });
+        setGeoLoading(false);
+      },
+      { enableHighAccuracy: false, timeout: 10000 }
+    );
+  };
+
+  const sortedHangouts = useMemo(() => {
+    if (!hangouts) return [];
+    if (!nearbyMode || !userLocation) return hangouts;
+
+    return [...hangouts]
+      .map((h) => ({
+        ...h,
+        distance: h.lat && h.lng ? getDistanceKm(userLocation.lat, userLocation.lng, h.lat, h.lng) : Infinity,
+      }))
+      .sort((a, b) => a.distance - b.distance);
+  }, [hangouts, nearbyMode, userLocation]);
 
   const handleJoin = async (hangoutId: string) => {
     if (!user) return;
@@ -226,13 +274,13 @@ function HangoutsTab() {
 
   return (
     <>
-      {isSteward && (
-        <div className="mb-4">
+      <div className="flex gap-2 mb-4">
+        {isSteward && (
           <AnimatePresence>
             {showCreate ? (
               <CreateHangoutForm onClose={() => setShowCreate(false)} />
             ) : (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1">
                 <Button
                   className="w-full gradient-gold text-primary-foreground hover:opacity-90 min-h-[44px]"
                   onClick={() => { setShowCreate(true); haptic("tap"); }}
@@ -242,12 +290,29 @@ function HangoutsTab() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
-      )}
+        )}
+        {!showCreate && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <Button
+              variant={nearbyMode ? "default" : "outline"}
+              className={cn("min-h-[44px] gap-1.5", nearbyMode && "gradient-gold text-primary-foreground")}
+              onClick={requestLocation}
+              disabled={geoLoading}
+            >
+              {geoLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Navigation className="h-4 w-4" />
+              )}
+              Nearby
+            </Button>
+          </motion.div>
+        )}
+      </div>
 
       {isLoading ? (
         <div className="space-y-4"><GoldCardSkeleton /><GoldCardSkeleton /></div>
-      ) : !hangouts?.length ? (
+      ) : !sortedHangouts.length ? (
         <motion.div className="text-center py-12 text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <Coffee className="h-8 w-8 mx-auto mb-3 text-primary/40" />
           <p className="text-sm">No upcoming hangouts yet.</p>
@@ -255,7 +320,7 @@ function HangoutsTab() {
         </motion.div>
       ) : (
         <div className="space-y-4">
-          {hangouts.map((hangout, i) => (
+          {sortedHangouts.map((hangout, i) => (
             <HangoutCard
               key={hangout.id}
               hangout={hangout}
@@ -264,6 +329,7 @@ function HangoutsTab() {
               onLeave={() => handleLeave(hangout.id)}
               onOpenChat={() => navigate(`/messages?group=${hangout.id}`)}
               isJoining={joinHangout.isPending}
+              distance={nearbyMode && 'distance' in hangout && hangout.distance !== Infinity ? (hangout as any).distance : undefined}
             />
           ))}
         </div>
