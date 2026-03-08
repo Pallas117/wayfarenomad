@@ -545,6 +545,9 @@ export default function SettingsPage() {
       {/* Verification Status */}
       <VerificationStatusCard />
 
+      {/* Compass Connections */}
+      <CompassConnectionsSection />
+
       {/* Support Wayfare */}
       <DonationSection />
 
