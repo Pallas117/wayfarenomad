@@ -87,6 +87,21 @@ export default function Profile() {
 
       const r = (rankRes.data as number) ?? 0;
       setRankData({ rank: r, label: RANK_LABELS[r] ?? "Initiate" });
+
+      // Load karma activity
+      const [verRes, sosRes, safeRes] = await Promise.all([
+        supabase.from("community_verifications").select("id, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(5),
+        supabase.from("sos_responses").select("id, created_at").eq("responder_id", userId).order("created_at", { ascending: false }).limit(5),
+        supabase.from("safe_spaces").select("id, created_at, name").eq("created_by", userId).order("created_at", { ascending: false }).limit(5),
+      ]);
+
+      const activity: any[] = [];
+      verRes.data?.forEach(v => activity.push({ id: v.id, type: "verify", label: "Verified an event", points: 5, time: v.created_at }));
+      sosRes.data?.forEach(s => activity.push({ id: s.id, type: "sos", label: "Responded to SOS", points: 10, time: s.created_at }));
+      safeRes.data?.forEach(s => activity.push({ id: s.id, type: "safe", label: `Added "${s.name}"`, points: 8, time: s.created_at }));
+      activity.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+      setKarmaActivity(activity.slice(0, 10));
+
       setLoading(false);
     };
 
