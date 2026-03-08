@@ -138,8 +138,12 @@ function SocialContent() {
               >
                 <div className="flex items-start gap-4">
                   <motion.div
-                    className="h-14 w-14 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-lg shrink-0"
+                    className="h-14 w-14 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-lg shrink-0 cursor-pointer"
                     whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                      navigate(`/profile/${user.userId}`);
+                      haptic("tap");
+                    }}
                   >
                     {user.avatar}
                   </motion.div>
