@@ -31,12 +31,12 @@ describe("TravelLoader", () => {
 
 describe("TravelLoaderInline", () => {
   it("renders default message", () => {
-    render(<TravelLoaderInline />);
-    expect(screen.getByText("Loading…")).toBeInTheDocument();
+    const { container } = render(<TravelLoaderInline />);
+    expect(getByText(container, "Loading…")).toBeTruthy();
   });
 
   it("renders custom message", () => {
-    render(<TravelLoaderInline message="Finding nomads…" />);
-    expect(screen.getByText("Finding nomads…")).toBeInTheDocument();
+    const { container } = render(<TravelLoaderInline message="Finding nomads…" />);
+    expect(getByText(container, "Finding nomads…")).toBeTruthy();
   });
 });
