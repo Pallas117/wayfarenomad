@@ -64,7 +64,7 @@ export default function Pulse() {
     : mockEvents.filter((e) => e.category === activeCategory);
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
+    <div className="p-6 max-w-lg mx-auto pb-24">
       <div className="flex items-center gap-3 mb-6">
         <Radio className="h-6 w-6 text-primary animate-pulse-glow" />
         <h1 className="text-2xl font-display font-bold">Community Pulse</h1>
@@ -78,10 +78,15 @@ export default function Pulse() {
           <p className="text-sm text-muted-foreground">Google Maps integration coming soon</p>
           <p className="text-xs text-muted-foreground mt-1">Lisbon, Portugal</p>
         </div>
-        {/* Pulse pins preview */}
-        <div className="absolute top-8 left-12 h-3 w-3 rounded-full bg-primary animate-pulse-glow" />
-        <div className="absolute top-16 right-20 h-3 w-3 rounded-full bg-primary animate-pulse-glow" style={{ animationDelay: "0.5s" }} />
-        <div className="absolute bottom-12 left-1/3 h-3 w-3 rounded-full bg-primary animate-pulse-glow" style={{ animationDelay: "1s" }} />
+        {/* Twinkle pins */}
+        <div className="absolute top-8 left-12 h-3 w-3 rounded-full bg-primary animate-twinkle" />
+        <div className="absolute top-16 right-20 h-3 w-3 rounded-full bg-primary animate-twinkle" style={{ animationDelay: "0.7s" }} />
+        <div className="absolute bottom-12 left-1/3 h-3 w-3 rounded-full bg-primary animate-twinkle" style={{ animationDelay: "1.4s" }} />
+        {/* Constellation lines */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="60" y1="35" x2="200" y2="67" stroke="hsl(43 72% 52% / 0.15)" strokeWidth="1" />
+          <line x1="200" y1="67" x2="140" y2="140" stroke="hsl(43 72% 52% / 0.15)" strokeWidth="1" />
+        </svg>
       </div>
 
       {/* Category Filter */}

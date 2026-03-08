@@ -363,7 +363,7 @@ function SafetyContent() {
                     className="bg-secondary/50 border-border"
                   />
                   <Button
-                    className="w-full gradient-coral text-primary-foreground"
+                    className="w-full gradient-gold text-primary-foreground min-h-[44px]"
                     onClick={() => addSpaceMutation.mutate()}
                     disabled={!newSpace.name || !newSpace.city || addSpaceMutation.isPending}
                   >

@@ -34,7 +34,7 @@ export function RoleGate({ minRank, children, fallbackMessage }: RoleGateProps) 
         <p className="text-muted-foreground text-sm max-w-xs">
           Join the Nomad community to access this feature.
         </p>
-        <Button onClick={() => navigate("/auth")} className="gradient-coral text-primary-foreground">
+        <Button onClick={() => navigate("/auth")} className="gradient-gold text-primary-foreground min-h-[44px]">
           Sign In
         </Button>
       </div>
@@ -53,7 +53,7 @@ export function RoleGate({ minRank, children, fallbackMessage }: RoleGateProps) 
 
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
-        <div className="h-16 w-16 rounded-2xl bg-secondary flex items-center justify-center">
+        <div className="h-16 w-16 rounded-2xl gradient-gold-subtle border border-primary/20 flex items-center justify-center">
           <Shield className="h-8 w-8 text-primary" />
         </div>
         <h2 className="font-display text-xl font-bold">
@@ -63,11 +63,11 @@ export function RoleGate({ minRank, children, fallbackMessage }: RoleGateProps) 
           {fallbackMessage || unlockSteps[minRank] || "You need a higher rank to access this feature."}
         </p>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Sparkles className="h-3 w-3" />
+          <Sparkles className="h-3 w-3 text-primary" />
           <span>Current rank: <strong className="text-foreground">{currentLabel}</strong></span>
         </div>
         {minRank === 1 && (
-          <Button onClick={() => navigate("/vision-quest")} className="gradient-coral text-primary-foreground">
+          <Button onClick={() => navigate("/vision-quest")} className="gradient-gold text-primary-foreground min-h-[44px]">
             Start Vision Quest
           </Button>
         )}
