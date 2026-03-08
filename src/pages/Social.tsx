@@ -311,7 +311,7 @@ function HangoutsTab() {
       </div>
 
       {isLoading ? (
-        <div className="space-y-4"><GoldCardSkeleton /><GoldCardSkeleton /></div>
+        <TravelLoaderInline message="Loading hangouts…" />
       ) : !sortedHangouts.length ? (
         <motion.div className="text-center py-12 text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <Coffee className="h-8 w-8 mx-auto mb-3 text-primary/40" />

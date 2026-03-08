@@ -20,7 +20,7 @@ function GroupChatList({ onSelect }: { onSelect: (gc: GroupChat) => void }) {
   const { data: groups, isLoading } = useGroupChats();
 
   if (isLoading) {
-    return <div className="space-y-3 p-4"><GoldCardSkeleton /><GoldCardSkeleton /></div>;
+    return <TravelLoaderInline message="Loading conversations…" />;
   }
 
   if (!groups?.length) {
