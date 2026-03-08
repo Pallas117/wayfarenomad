@@ -131,7 +131,7 @@ export default function SettingsPage() {
             <MapPin className="h-5 w-5 text-primary" />
             <h2 className="font-display font-semibold text-lg">Regional Hub</h2>
           </div>
-          <Button size="sm" variant="ghost" onClick={() => useCitySyncRef.rescan()} className="h-8 w-8 p-0">
+          <Button size="sm" variant="ghost" onClick={() => citySyncCtx.rescan()} className="h-8 w-8 p-0">
             <RotateCw className="h-4 w-4" />
           </Button>
         </div>
