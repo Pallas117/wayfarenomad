@@ -121,11 +121,13 @@ export type Database = {
           event_date: string | null
           flag_count: number
           id: string
+          is_user_submitted: boolean
           lat: number | null
           lng: number | null
           pulse_rank: number | null
           scraped_from: string | null
           source_url: string | null
+          submitted_by: string | null
           title: string
           venue: string | null
           verified: boolean | null
@@ -139,11 +141,13 @@ export type Database = {
           event_date?: string | null
           flag_count?: number
           id?: string
+          is_user_submitted?: boolean
           lat?: number | null
           lng?: number | null
           pulse_rank?: number | null
           scraped_from?: string | null
           source_url?: string | null
+          submitted_by?: string | null
           title: string
           venue?: string | null
           verified?: boolean | null
@@ -157,11 +161,13 @@ export type Database = {
           event_date?: string | null
           flag_count?: number
           id?: string
+          is_user_submitted?: boolean
           lat?: number | null
           lng?: number | null
           pulse_rank?: number | null
           scraped_from?: string | null
           source_url?: string | null
+          submitted_by?: string | null
           title?: string
           venue?: string | null
           verified?: boolean | null
