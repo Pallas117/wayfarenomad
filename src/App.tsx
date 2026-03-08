@@ -16,6 +16,7 @@ import Leaderboard from "./pages/Leaderboard";
 import VisionQuest from "./pages/VisionQuest";
 import SettingsPage from "./pages/Settings";
 import Messages from "./pages/Messages";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="leaderboard" element={<Leaderboard />} />
               <Route path="messages" element={<Messages />} />
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="profile/:userId" element={<Profile />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

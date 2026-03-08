@@ -138,14 +138,24 @@ function SocialContent() {
               >
                 <div className="flex items-start gap-4">
                   <motion.div
-                    className="h-14 w-14 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-lg shrink-0"
+                    className="h-14 w-14 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-lg shrink-0 cursor-pointer"
                     whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                      navigate(`/profile/${user.userId}`);
+                      haptic("tap");
+                    }}
                   >
                     {user.avatar}
                   </motion.div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-display font-semibold text-lg">{user.displayName}</h3>
+                      <h3
+                        className="font-display font-semibold text-lg cursor-pointer hover:text-primary transition-colors"
+                        onClick={() => {
+                          navigate(`/profile/${user.userId}`);
+                          haptic("tap");
+                        }}
+                      >{user.displayName}</h3>
                       <div className="flex items-center gap-1 text-primary">
                         <Sparkles className="h-4 w-4" />
                         <span className="text-sm font-bold">{user.visionScore}%</span>
