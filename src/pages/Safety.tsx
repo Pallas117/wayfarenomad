@@ -199,6 +199,7 @@ function SafetyContent() {
       }
     },
     onSuccess: () => {
+      haptic("success");
       toast({ title: "✨ Response sent", description: "The member has been notified you're on your way." });
       setRespondMsg("");
       setRespondEta("15");
