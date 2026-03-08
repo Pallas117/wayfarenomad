@@ -230,6 +230,8 @@ export default function Pulse() {
   const [intrepidMode, setIntrepidMode] = useState(() => localStorage.getItem("intrepid") === "1");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sortMode, setSortMode] = useState<"trending" | "newest">("trending");
+  const [focusedEventId, setFocusedEventId] = useState<string | null>(null);
+  const [hangoutPrefill, setHangoutPrefill] = useState<any>(null);
   const { data: hangouts } = useHangouts();
   const filteredIds = useMemo(() => events.map(e => e.id), [events]);
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
