@@ -13,6 +13,7 @@ import {
   Clock,
   Navigation,
   Users,
+  Camera,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +36,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
+import { CommunityPhotoBoard } from "@/components/CommunityPhotoBoard";
 
 const safeSpaceCategories = [
   { id: "all", label: "All", icon: Shield },
@@ -269,6 +271,9 @@ function SafetyContent() {
           </TabsTrigger>
           <TabsTrigger value="spaces" className="flex-1 text-xs min-h-[44px]">
             <MapPin className="h-3.5 w-3.5 mr-1" /> Safe Spaces
+          </TabsTrigger>
+          <TabsTrigger value="photos" className="flex-1 text-xs min-h-[44px]">
+            <Camera className="h-3.5 w-3.5 mr-1" /> Moments
           </TabsTrigger>
         </TabsList>
 
@@ -539,6 +544,11 @@ function SafetyContent() {
               })
             )}
           </div>
+        </TabsContent>
+
+        {/* ─── Community Moments Tab ─── */}
+        <TabsContent value="photos" className="mt-4">
+          <CommunityPhotoBoard />
         </TabsContent>
       </Tabs>
     </div>

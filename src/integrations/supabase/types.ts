@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      community_photos: {
+        Row: {
+          caption: string | null
+          city: string
+          created_at: string
+          event_title: string | null
+          id: string
+          image_url: string
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          city: string
+          created_at?: string
+          event_title?: string | null
+          id?: string
+          image_url: string
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          city?: string
+          created_at?: string
+          event_title?: string | null
+          id?: string
+          image_url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       compass_locks: {
         Row: {
           created_at: string

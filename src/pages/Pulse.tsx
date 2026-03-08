@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock } from "lucide-react";
+import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock, Flame } from "lucide-react";
 import { WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useHangouts } from "@/hooks/useHangouts";
 import { format } from "date-fns";
 import { useEventReactions } from "@/hooks/useEventReactions";
+import { catStyle, catIconStyle } from "@/lib/categoryColors";
 
 const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
 
@@ -184,6 +185,14 @@ export default function Pulse() {
     return f;
   }, [events, activeCategory, activeCity, sortMode]);
 
+  // Hot Right Now — top 3 starred events
+  const hotEvents = useMemo(() => {
+    return [...events]
+      .filter(e => (e.flag_count ?? 0) < 3)
+      .sort((a, b) => (b.star_count ?? 0) - (a.star_count ?? 0))
+      .slice(0, 3);
+  }, [events]);
+
   const mapPins: MapPinType[] = useMemo(() => {
     const pins: MapPinType[] = [];
     filtered.forEach((e) => {
@@ -196,7 +205,6 @@ export default function Pulse() {
         pins.push({ id: h.id, lat: h.lat, lng: h.lng, title: h.title, subtitle: format(new Date(h.hangout_time), "MMM d, h:mm a"), type: "hangout" });
       }
     });
-    // Resource pins
     if (activeResources.length > 0) {
       resources.filter(r => activeResources.includes(r.category)).forEach(r => {
         pins.push({ id: r.id, lat: r.lat, lng: r.lng, title: r.name, subtitle: r.description || r.category, type: "resource", category: r.category });
@@ -251,26 +259,31 @@ export default function Pulse() {
           </TabsList>
         </Tabs>
 
-        {/* Category + Resource filters */}
+        {/* Category + Resource filters with category colors */}
         <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
-          {categories.map((c) => (
-            <Button
-              key={c.id}
-              variant={activeCategory === c.id ? "default" : "outline"}
-              size="sm"
-              className="h-7 text-[10px] px-2 bg-background/80 backdrop-blur-md"
-              onClick={() => setActiveCategory(c.id)}
-            >
-              <c.icon className="h-3 w-3 mr-0.5" />{c.label}
-            </Button>
-          ))}
-          <div className="w-px h-7 bg-border" />
+          {categories.map((c) => {
+            const isActive = activeCategory === c.id;
+            const style = c.id !== "all" && isActive ? catStyle(c.id) : undefined;
+            return (
+              <Button
+                key={c.id}
+                variant={isActive ? "default" : "outline"}
+                size="sm"
+                className={`h-7 text-[10px] px-2.5 backdrop-blur-md shrink-0 transition-all ${isActive ? "border shadow-sm" : "bg-background/80"}`}
+                style={style}
+                onClick={() => setActiveCategory(c.id)}
+              >
+                <c.icon className="h-3 w-3 mr-0.5" />{c.label}
+              </Button>
+            );
+          })}
+          <div className="w-px h-7 bg-border shrink-0" />
           {resourceFilters.map((r) => (
             <Button
               key={r.id}
               variant={activeResources.includes(r.id) ? "default" : "outline"}
               size="sm"
-              className="h-7 text-[10px] px-2 bg-background/80 backdrop-blur-md"
+              className="h-7 text-[10px] px-2 bg-background/80 backdrop-blur-md shrink-0"
               onClick={() => toggleResource(r.id)}
             >
               <r.icon className="h-3 w-3 mr-0.5" />{r.label}
@@ -296,7 +309,7 @@ export default function Pulse() {
 
       {/* Bottom drawer for event list */}
       <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-        <DrawerContent className="max-h-[70vh]">
+        <DrawerContent className="max-h-[80vh]">
           <DrawerHeader className="flex flex-row items-center justify-between pb-2">
             <DrawerTitle className="font-display text-sm">Community Events</DrawerTitle>
             <div className="flex items-center gap-1">
@@ -318,6 +331,53 @@ export default function Pulse() {
               </Button>
             </div>
           </DrawerHeader>
+
+          {/* 🔥 Hot Right Now */}
+          {hotEvents.length > 0 && (
+            <div className="px-4 pb-3">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Flame className="h-4 w-4 text-orange-500" />
+                <span className="text-xs font-display font-bold uppercase tracking-wider" style={{ color: "hsl(25 90% 55%)" }}>Hot Right Now</span>
+              </div>
+              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                {hotEvents.map((event, i) => {
+                  const CatIcon = categoryIcon[event.category] || Radio;
+                  return (
+                    <motion.div
+                      key={event.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="shrink-0 w-48 rounded-xl p-3 border relative overflow-hidden"
+                      style={{
+                        background: `linear-gradient(135deg, hsl(${catStyle(event.category).color?.replace('hsl(', '').replace(')', '')} / 0.15), hsl(var(--card)))`,
+                        borderColor: `hsl(${catStyle(event.category).color?.replace('hsl(', '').replace(')', '')} / 0.3)`,
+                      }}
+                    >
+                      <div className="absolute top-2 right-2 text-xs font-bold" style={{ color: "hsl(25 90% 55%)" }}>
+                        #{i + 1}
+                      </div>
+                      <div className="flex items-center gap-1 mb-1">
+                        <CatIcon className="h-3 w-3" style={catIconStyle(event.category)} />
+                        <span className="text-[10px] font-medium capitalize" style={catIconStyle(event.category)}>{event.category}</span>
+                      </div>
+                      <h4 className="font-display font-semibold text-xs leading-tight line-clamp-2 mb-1.5">{event.title}</h4>
+                      <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                        <span className="flex items-center gap-0.5">
+                          <Star className="h-2.5 w-2.5 fill-yellow-500 text-yellow-500" />{event.star_count ?? 0}
+                        </span>
+                        <span className="flex items-center gap-0.5">
+                          <Heart className="h-2.5 w-2.5 fill-red-400 text-red-400" />{event.like_count ?? 0}
+                        </span>
+                        <span className="text-[9px]">{event.city === "Kuala Lumpur" ? "KL" : event.city}</span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <div className="px-4 pb-6 space-y-3 overflow-y-auto max-h-[55vh]">
             {loading ? (
               <div className="flex items-center justify-center py-8">
@@ -331,20 +391,22 @@ export default function Pulse() {
             ) : (
               filtered.map((event) => {
                 const CatIcon = categoryIcon[event.category] || Radio;
+                const cStyle = catStyle(event.category);
                 return (
                   <motion.div
                     key={event.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="glass-card rounded-xl p-4"
+                    className="glass-card rounded-xl p-4 border-l-[3px]"
+                    style={{ borderLeftColor: cStyle.color }}
                   >
                     <div className="flex items-start justify-between mb-1.5">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <CatIcon className="h-3.5 w-3.5 text-primary" />
-                        <Badge variant="secondary" className="text-[10px] capitalize">{event.category}</Badge>
+                        <CatIcon className="h-3.5 w-3.5" style={catIconStyle(event.category)} />
+                        <Badge className="text-[10px] capitalize border" style={cStyle}>{event.category}</Badge>
                         <Badge variant="outline" className="text-[10px]">{event.city === "Kuala Lumpur" ? "KL" : event.city}</Badge>
                         {event.is_user_submitted ? (
-                          <Badge className="text-[10px] bg-accent/20 text-accent-foreground border-accent/30">👽 Community Pick</Badge>
+                          <Badge className="text-[10px]" style={{ backgroundColor: "hsl(var(--cat-alien) / 0.15)", color: "hsl(var(--cat-alien))", borderColor: "hsl(var(--cat-alien) / 0.3)" }}>👽 Community Pick</Badge>
                         ) : event.verified ? (
                           <Badge className="text-[10px] bg-primary/20 text-primary border-primary/30"><CheckCircle className="h-2.5 w-2.5 mr-0.5" />Verified</Badge>
                         ) : (
@@ -373,17 +435,17 @@ export default function Pulse() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => toggleReaction(event.id, "star")}
-                          className={`flex items-center gap-0.5 text-[10px] transition-colors ${hasReaction(event.id, "star") ? "text-yellow-500" : "text-muted-foreground hover:text-yellow-500"}`}
+                          className={`flex items-center gap-0.5 text-[10px] transition-all ${hasReaction(event.id, "star") ? "text-yellow-500 scale-110" : "text-muted-foreground hover:text-yellow-500"}`}
                         >
-                          <Star className={`h-3.5 w-3.5 ${hasReaction(event.id, "star") ? "fill-yellow-500" : ""}`} />
-                          {(event.star_count ?? 0) + (hasReaction(event.id, "star") ? 0 : 0)}
+                          <Star className={`h-3.5 w-3.5 transition-all ${hasReaction(event.id, "star") ? "fill-yellow-500" : ""}`} />
+                          {event.star_count ?? 0}
                         </button>
                         <button
                           onClick={() => toggleReaction(event.id, "like")}
-                          className={`flex items-center gap-0.5 text-[10px] transition-colors ${hasReaction(event.id, "like") ? "text-red-500" : "text-muted-foreground hover:text-red-500"}`}
+                          className={`flex items-center gap-0.5 text-[10px] transition-all ${hasReaction(event.id, "like") ? "text-red-500 scale-110" : "text-muted-foreground hover:text-red-500"}`}
                         >
-                          <Heart className={`h-3.5 w-3.5 ${hasReaction(event.id, "like") ? "fill-red-500" : ""}`} />
-                          {(event.like_count ?? 0)}
+                          <Heart className={`h-3.5 w-3.5 transition-all ${hasReaction(event.id, "like") ? "fill-red-500" : ""}`} />
+                          {event.like_count ?? 0}
                         </button>
                       </div>
                     </div>

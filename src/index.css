@@ -54,6 +54,21 @@
     --starlight: 40 10% 96%;
 
     --verified: 43 72% 52%;
+
+    /* Category accent colors */
+    --cat-wellbeing: 340 65% 55%;
+    --cat-culture: 25 80% 55%;
+    --cat-entertainment: 280 60% 55%;
+    --cat-shopping: 160 55% 45%;
+    --cat-nature: 140 55% 42%;
+    --cat-event: 210 60% 55%;
+    --cat-festival: 35 90% 55%;
+    --cat-nightlife: 260 70% 60%;
+    --cat-fitness: 15 75% 55%;
+    --cat-adventure: 195 70% 50%;
+    --cat-creative: 320 60% 55%;
+    --cat-singles: 350 70% 60%;
+    --cat-alien: 150 80% 50%;
   }
 }
 
