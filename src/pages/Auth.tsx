@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Mail, Lock, User } from "lucide-react";
-import nomadLogo from "@/assets/nomad-logo.png"; // TODO: replace with Wayfare logo
+import wayfareLogo from "@/assets/wayfare-logo.png";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
