@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Store, Shield, Plus, Wifi, Smartphone, ExternalLink, RefreshCw } from "lucide-react";
+import { SailboatIcon, FloatingTravelBadges, WavesDivider } from "@/components/animations/TravelIcons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUserRank } from "@/hooks/useUserRank";
