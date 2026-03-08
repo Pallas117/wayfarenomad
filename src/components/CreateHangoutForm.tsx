@@ -32,6 +32,8 @@ export function CreateHangoutForm({ onClose }: CreateHangoutFormProps) {
   const [category, setCategory] = useState("coffee");
   const [dateTime, setDateTime] = useState("");
   const [maxAttendees, setMaxAttendees] = useState("10");
+  const [lat, setLat] = useState<number | null>(null);
+  const [lng, setLng] = useState<number | null>(null);
 
   const handleSubmit = async () => {
     if (!user || !title || !dateTime) return;
