@@ -11,6 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { TravelLoader } from "@/components/animations/TravelLoader";
 import { haptic } from "@/lib/haptics";
+import { useIsCompassLocked } from "@/hooks/useCompassLock";
+import { CompassVerifySheet } from "@/components/CompassLock";
 
 interface ProfileData {
   user_id: string;
