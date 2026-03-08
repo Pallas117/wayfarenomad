@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { SocialProfileLinks } from "@/components/SocialProfileLinks";
@@ -40,12 +41,15 @@ export default function SettingsPage() {
   const [displayName, setDisplayName] = useState("Traveler");
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
+  const [bioInput, setBioInput] = useState("");
+  const [savedBio, setSavedBio] = useState("");
+  const [savingBio, setSavingBio] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("avatar_url, display_name, full_name")
+      .select("avatar_url, display_name, full_name, bio")
       .eq("user_id", user.id)
       .single()
       .then(({ data }) => {
@@ -53,6 +57,8 @@ export default function SettingsPage() {
           setAvatarUrl(data.avatar_url);
           setDisplayName(data.display_name || data.full_name || "Traveler");
           setNameInput(data.display_name || data.full_name || "");
+          setBioInput(data.bio || "");
+          setSavedBio(data.bio || "");
         }
       });
   }, [user]);
@@ -129,6 +135,44 @@ export default function SettingsPage() {
               disabled={savingName || nameInput.trim().length < 2 || nameInput.trim() === displayName}
             >
               <Check className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Bio */}
+        <div className="w-full space-y-2">
+          <label className="text-xs text-muted-foreground uppercase tracking-wider">Bio</label>
+          <Textarea
+            value={bioInput}
+            onChange={(e) => setBioInput(e.target.value)}
+            placeholder="Tell the community about yourself..."
+            maxLength={300}
+            className="min-h-[80px] bg-secondary/50"
+          />
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">{bioInput.length}/300</span>
+            <Button
+              size="sm"
+              className="gradient-gold text-primary-foreground"
+              disabled={savingBio || bioInput.trim() === savedBio}
+              onClick={async () => {
+                if (!user) return;
+                setSavingBio(true);
+                const { error } = await supabase
+                  .from("profiles")
+                  .update({ bio: bioInput.trim() || null })
+                  .eq("user_id", user.id);
+                setSavingBio(false);
+                if (error) {
+                  toast({ title: "Error", description: error.message, variant: "destructive" });
+                } else {
+                  setSavedBio(bioInput.trim());
+                  haptic("success");
+                  toast({ title: "Bio updated ✦" });
+                }
+              }}
+            >
+              <Check className="h-3.5 w-3.5 mr-1" /> Save Bio
             </Button>
           </div>
         </div>
