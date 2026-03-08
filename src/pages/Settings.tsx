@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { SocialProfileLinks } from "@/components/SocialProfileLinks";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { AvatarUpload } from "@/components/AvatarUpload";
+import { supabase } from "@/integrations/supabase/client";
 import {
   haptic,
   getVibrationIntensity,
