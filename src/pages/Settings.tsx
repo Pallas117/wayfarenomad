@@ -31,6 +31,7 @@ export default function SettingsPage() {
   const [intensity, setIntensity] = useState(getVibrationIntensity());
   const hapticsSupported = isHapticsAvailable();
   const citySyncCtx = useCitySync();
+  const push = usePushNotifications();
 
   const handleIntensityChange = (value: number[]) => {
     const v = value[0];
