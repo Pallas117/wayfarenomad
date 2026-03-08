@@ -140,10 +140,17 @@ function SafetyContent() {
   // Activate SOS beacon
   const sosMutation = useMutation({
     mutationFn: async () => {
+      // Fuzz coordinates by 50-100m for privacy
+      const baseLat = 38.7223;
+      const baseLng = -9.1393;
+      const fuzzMeters = 50 + Math.random() * 50; // 50-100m
+      const fuzzLat = (fuzzMeters / 111320) * (Math.random() > 0.5 ? 1 : -1);
+      const fuzzLng = (fuzzMeters / (111320 * Math.cos(baseLat * Math.PI / 180))) * (Math.random() > 0.5 ? 1 : -1);
+
       const { error } = await supabase.from("emergency_beacons").insert({
         user_id: user!.id,
-        lat: 38.7223,
-        lng: -9.1393,
+        lat: baseLat + fuzzLat,
+        lng: baseLng + fuzzLng,
         message: sosMessage || "Emergency - need help",
         status: "active",
       });

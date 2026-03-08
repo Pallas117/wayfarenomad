@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
 import { CitySyncProvider } from "./components/CitySync";
 import { ScanningTheStars } from "./components/CitySync";
+import { MOUAgreement } from "./components/MOUAgreement";
 import Auth from "./pages/Auth";
 import Social from "./pages/Social";
 import Pulse from "./pages/Pulse";
@@ -25,6 +26,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <ScanningTheStars />
+        <MOUAgreement />
         <BrowserRouter>
           <Routes>
             <Route path="/auth" element={<Auth />} />
