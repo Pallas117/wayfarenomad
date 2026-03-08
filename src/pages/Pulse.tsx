@@ -232,6 +232,7 @@ export default function Pulse() {
   const { data: hangouts } = useHangouts();
   const filteredIds = useMemo(() => events.map(e => e.id), [events]);
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
+  const { pulses: karmaPulses, loading: karmaPulsesLoading } = useKarmaPulses();
 
   useEffect(() => { loadEvents(); loadResources(); }, []);
 
