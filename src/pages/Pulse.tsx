@@ -20,6 +20,7 @@ import { useHangouts } from "@/hooks/useHangouts";
 import { format, formatDistanceToNow } from "date-fns";
 import { useEventReactions } from "@/hooks/useEventReactions";
 import { catStyle, catIconStyle } from "@/lib/categoryColors";
+import { useItineraryMatches } from "@/hooks/useItineraryMatches";
 
 const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
 
