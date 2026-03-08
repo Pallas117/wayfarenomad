@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star } from "lucide-react";
+import { Radio, MapPin, Calendar, ExternalLink, CheckCircle, Loader2, RefreshCw, Globe, Mountain, Droplets, ShoppingCart, Shield, Flag, AlertTriangle, Heart, Landmark, Clapperboard, ShoppingBag, TreePine, CalendarDays, PartyPopper, Moon, Dumbbell, Compass, Palette, HeartHandshake, Skull, Star, TrendingUp, Clock } from "lucide-react";
 import { WeatherSunIcon } from "@/components/animations/TravelIcons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -105,6 +105,7 @@ export default function Pulse() {
   const [scraping, setScraping] = useState(false);
   const [intrepidMode, setIntrepidMode] = useState(() => localStorage.getItem("intrepid") === "1");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [sortMode, setSortMode] = useState<"trending" | "newest">("trending");
   const { data: hangouts } = useHangouts();
   const filteredIds = useMemo(() => events.map(e => e.id), [events]);
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
@@ -170,12 +171,18 @@ export default function Pulse() {
     setActiveResources(prev => prev.includes(id) ? prev.filter(r => r !== id) : [...prev, id]);
   };
 
-  const filtered = events.filter(e => {
-    const catMatch = activeCategory === "all" || e.category === activeCategory;
-    const cityMatch = activeCity === "all" || e.city === activeCity;
-    const notHidden = (e.flag_count ?? 0) < 3;
-    return catMatch && cityMatch && notHidden;
-  });
+  const filtered = useMemo(() => {
+    const f = events.filter(e => {
+      const catMatch = activeCategory === "all" || e.category === activeCategory;
+      const cityMatch = activeCity === "all" || e.city === activeCity;
+      const notHidden = (e.flag_count ?? 0) < 3;
+      return catMatch && cityMatch && notHidden;
+    });
+    if (sortMode === "trending") {
+      f.sort((a, b) => (b.star_count ?? 0) - (a.star_count ?? 0));
+    }
+    return f;
+  }, [events, activeCategory, activeCity, sortMode]);
 
   const mapPins: MapPinType[] = useMemo(() => {
     const pins: MapPinType[] = [];
@@ -290,8 +297,26 @@ export default function Pulse() {
       {/* Bottom drawer for event list */}
       <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
         <DrawerContent className="max-h-[70vh]">
-          <DrawerHeader>
+          <DrawerHeader className="flex flex-row items-center justify-between pb-2">
             <DrawerTitle className="font-display text-sm">Community Events</DrawerTitle>
+            <div className="flex items-center gap-1">
+              <Button
+                variant={sortMode === "trending" ? "default" : "outline"}
+                size="sm"
+                className="h-7 text-[10px] px-2"
+                onClick={() => setSortMode("trending")}
+              >
+                <TrendingUp className="h-3 w-3 mr-0.5" />Trending
+              </Button>
+              <Button
+                variant={sortMode === "newest" ? "default" : "outline"}
+                size="sm"
+                className="h-7 text-[10px] px-2"
+                onClick={() => setSortMode("newest")}
+              >
+                <Clock className="h-3 w-3 mr-0.5" />Newest
+              </Button>
+            </div>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-3 overflow-y-auto max-h-[55vh]">
             {loading ? (
