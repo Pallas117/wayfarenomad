@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { usePower } from "@/components/PowerProvider";
 
 interface StarfieldBackgroundProps {
   intensity?: number; // 0–1, controls star count
@@ -7,8 +8,12 @@ interface StarfieldBackgroundProps {
 export function StarfieldBackground({ intensity = 0 }: StarfieldBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<{ x: number; y: number; r: number; speed: number; opacity: number }[]>([]);
+  const power = usePower();
 
   useEffect(() => {
+    // Don't render canvas effects in saver/critical mode
+    if (!power.allowCanvasEffects) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -21,8 +26,9 @@ export function StarfieldBackground({ intensity = 0 }: StarfieldBackgroundProps)
     resize();
     window.addEventListener("resize", resize);
 
-    // Generate stars
-    const count = Math.floor(80 + intensity * 200);
+    // Reduce star count based on power mode
+    const baseCount = Math.floor(80 + intensity * 200);
+    const count = Math.floor(baseCount * power.particleMultiplier);
     starsRef.current = Array.from({ length: count }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -32,7 +38,17 @@ export function StarfieldBackground({ intensity = 0 }: StarfieldBackgroundProps)
     }));
 
     let raf: number;
-    const draw = () => {
+    let lastFrame = 0;
+    // In balanced mode, cap at ~30fps instead of 60
+    const frameInterval = power.mode === "balanced" ? 33 : 0;
+
+    const draw = (timestamp: number) => {
+      if (frameInterval && timestamp - lastFrame < frameInterval) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrame = timestamp;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const goldH = 43, goldS = 72, goldL = 52;
       const time = Date.now() * 0.001;
@@ -48,13 +64,15 @@ export function StarfieldBackground({ intensity = 0 }: StarfieldBackgroundProps)
 
       raf = requestAnimationFrame(draw);
     };
-    draw();
+    raf = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, [intensity]);
+  }, [intensity, power.allowCanvasEffects, power.particleMultiplier, power.mode]);
+
+  if (!power.allowCanvasEffects) return null;
 
   return (
     <canvas
