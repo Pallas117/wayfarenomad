@@ -78,7 +78,34 @@ const PROMPTS = [
   "What values guide your journey? How will you lift others?",
 ];
 
-function VisionStep({
+function RotatingQuote() {
+  const [quoteIndex, setQuoteIndex] = useState(
+    () => Math.floor(Math.random() * PHILOSOPHICAL_QUOTES.length)
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setQuoteIndex((i) => (i + 1) % PHILOSOPHICAL_QUOTES.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.p
+        key={quoteIndex}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -6 }}
+        transition={{ duration: 0.5 }}
+        className="text-sm text-muted-foreground italic text-center font-vision"
+      >
+        {PHILOSOPHICAL_QUOTES[quoteIndex]}
+      </motion.p>
+    </AnimatePresence>
+  );
+}
+
   visionText,
   setVisionText,
   wordCount,
