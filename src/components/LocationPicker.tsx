@@ -27,6 +27,7 @@ interface LocationPickerProps {
   lat: number | null;
   lng: number | null;
   onChange: (lat: number, lng: number, name?: string) => void;
+  onClear?: () => void;
 }
 
 function ClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
