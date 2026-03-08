@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { Radio, MapPin, Calendar, ExternalLink, Music, Code, PartyPopper, CheckCircle, Loader2, RefreshCw, Globe, Map as MapIcon } from "lucide-react";
 import { WeatherSunIcon, PlaneIcon, FloatingTravelBadges, WavesDivider } from "@/components/animations/TravelIcons";
+import { TravelLoader } from "@/components/animations/TravelLoader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -188,9 +189,7 @@ export default function Pulse() {
       <LayoutGroup>
         <div className="space-y-4">
           {loading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map(i => <div key={i} className="glass-card rounded-xl p-5 animate-pulse h-32" />)}
-            </div>
+            <TravelLoader message="Scanning the horizon for events…" />
           ) : filtered.length === 0 ? (
             <motion.div className="text-center py-12 text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <Radio className="h-8 w-8 mx-auto mb-3 text-primary/40" />
