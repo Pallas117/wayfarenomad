@@ -362,6 +362,9 @@ export default function SettingsPage() {
         </div>
       </motion.div>
 
+      {/* Power Management Section */}
+      <PowerSection />
+
       {/* Account */}
       <motion.div
         className="glass-card rounded-xl p-5 space-y-4"
