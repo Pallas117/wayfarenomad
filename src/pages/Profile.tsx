@@ -370,7 +370,34 @@ export default function Profile() {
         </div>
       </motion.div>
 
-      {/* Action Buttons */}
+      {/* Karma Activity */}
+      {karmaActivity.length > 0 && (
+        <motion.div
+          className="glass-card rounded-xl p-5 mb-4 space-y-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.32 }}
+        >
+          <h3 className="text-sm font-display font-semibold subheading">Karma Activity</h3>
+          <div className="space-y-2">
+            {karmaActivity.map((a) => (
+              <div key={a.id} className="flex items-center gap-2 text-xs">
+                <div className="h-6 w-6 rounded-full flex items-center justify-center shrink-0 bg-primary/10">
+                  {a.type === "verify" ? <CheckCircle2 className="h-3 w-3 text-primary" /> :
+                   a.type === "sos" ? <Shield className="h-3 w-3 text-destructive" /> :
+                   <Heart className="h-3 w-3 text-primary" />}
+                </div>
+                <span className="flex-1 text-muted-foreground">{a.label}</span>
+                <span className="flex items-center gap-0.5 text-primary font-display font-bold">
+                  <Zap className="h-3 w-3" />+{a.points}
+                </span>
+                <span className="text-[10px] text-muted-foreground">{formatDistanceToNow(new Date(a.time), { addSuffix: true })}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
       {!isOwnProfile && (
         <motion.div
           className="space-y-3"
