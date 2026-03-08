@@ -340,9 +340,27 @@ export default function Pulse() {
                     </div>
                     <h3 className="font-display font-semibold text-sm mb-0.5">{event.title}</h3>
                     <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{event.description}</p>
-                    <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-                      {event.venue && <span className="flex items-center gap-0.5"><MapPin className="h-2.5 w-2.5" />{event.venue}</span>}
-                      {event.event_date && <span className="flex items-center gap-0.5"><Calendar className="h-2.5 w-2.5" />{event.event_date}</span>}
+                    <div className="flex items-center justify-between mt-1">
+                      <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                        {event.venue && <span className="flex items-center gap-0.5"><MapPin className="h-2.5 w-2.5" />{event.venue}</span>}
+                        {event.event_date && <span className="flex items-center gap-0.5"><Calendar className="h-2.5 w-2.5" />{event.event_date}</span>}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => toggleReaction(event.id, "star")}
+                          className={`flex items-center gap-0.5 text-[10px] transition-colors ${hasReaction(event.id, "star") ? "text-yellow-500" : "text-muted-foreground hover:text-yellow-500"}`}
+                        >
+                          <Star className={`h-3.5 w-3.5 ${hasReaction(event.id, "star") ? "fill-yellow-500" : ""}`} />
+                          {(event.star_count ?? 0) + (hasReaction(event.id, "star") ? 0 : 0)}
+                        </button>
+                        <button
+                          onClick={() => toggleReaction(event.id, "like")}
+                          className={`flex items-center gap-0.5 text-[10px] transition-colors ${hasReaction(event.id, "like") ? "text-red-500" : "text-muted-foreground hover:text-red-500"}`}
+                        >
+                          <Heart className={`h-3.5 w-3.5 ${hasReaction(event.id, "like") ? "fill-red-500" : ""}`} />
+                          {(event.like_count ?? 0)}
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 );
