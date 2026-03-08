@@ -3,6 +3,8 @@ import { Users, Heart, Handshake, MapPin, Calendar, Sparkles } from "lucide-reac
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { RoleGate } from "@/components/RoleGate";
+import { useUserRank } from "@/hooks/useUserRank";
 import { cn } from "@/lib/utils";
 
 type SocialMode = "friendship" | "dating";
@@ -46,8 +48,9 @@ const mockUsers = [
   },
 ];
 
-export default function Social() {
+function SocialContent() {
   const [mode, setMode] = useState<SocialMode>("friendship");
+  const { isSteward } = useUserRank();
 
   return (
     <div className="p-6 max-w-lg mx-auto">
@@ -70,15 +73,24 @@ export default function Social() {
           </div>
           <Switch
             checked={mode === "dating"}
-            onCheckedChange={(checked) => setMode(checked ? "dating" : "friendship")}
+            onCheckedChange={(checked) => {
+              if (checked && !isSteward) return; // Dating requires Steward rank
+              setMode(checked ? "dating" : "friendship");
+            }}
+            disabled={!isSteward && mode === "friendship"}
           />
           <div className="flex items-center gap-2">
             <span className={cn("text-sm font-medium transition-colors", mode === "dating" ? "text-foreground" : "text-muted-foreground")}>
-              Itinerary
+              {!isSteward ? "🔒 " : ""}Itinerary
             </span>
             <Heart className={cn("h-5 w-5 transition-colors", mode === "dating" ? "text-primary" : "text-muted-foreground")} />
           </div>
         </div>
+        {!isSteward && (
+          <p className="text-xs text-muted-foreground mt-2 text-center">
+            Pass the Integrity Quiz to unlock Dating mode
+          </p>
+        )}
       </div>
 
       {/* User Cards */}
@@ -90,11 +102,9 @@ export default function Social() {
             style={{ animationDelay: `${i * 100}ms` }}
           >
             <div className="flex items-start gap-4">
-              {/* Avatar */}
               <div className="h-14 w-14 rounded-full gradient-coral flex items-center justify-center text-primary-foreground font-display font-bold text-lg shrink-0">
                 {user.avatar}
               </div>
-
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="font-display font-semibold text-lg">{user.name}</h3>
@@ -103,10 +113,7 @@ export default function Social() {
                     <span className="text-sm font-bold">{user.score}%</span>
                   </div>
                 </div>
-
                 <p className="text-sm text-muted-foreground mb-3">{user.bio}</p>
-
-                {/* Location & overlap */}
                 <div className="flex items-center gap-4 mb-3 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" /> {user.city}
@@ -115,24 +122,18 @@ export default function Social() {
                     <Calendar className="h-3 w-3" /> {user.overlap}d overlap
                   </span>
                 </div>
-
-                {/* Skills */}
                 {mode === "friendship" ? (
                   <div className="space-y-2">
                     <div className="flex flex-wrap gap-1.5">
                       <span className="text-xs text-muted-foreground mr-1">Teaches:</span>
                       {user.teaches.map((s) => (
-                        <Badge key={s} variant="secondary" className="text-xs bg-secondary/50">
-                          {s}
-                        </Badge>
+                        <Badge key={s} variant="secondary" className="text-xs bg-secondary/50">{s}</Badge>
                       ))}
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       <span className="text-xs text-muted-foreground mr-1">Learns:</span>
                       {user.learns.map((s) => (
-                        <Badge key={s} variant="outline" className="text-xs border-primary/30 text-primary">
-                          {s}
-                        </Badge>
+                        <Badge key={s} variant="outline" className="text-xs border-primary/30 text-primary">{s}</Badge>
                       ))}
                     </div>
                   </div>
@@ -144,8 +145,6 @@ export default function Social() {
                 )}
               </div>
             </div>
-
-            {/* Actions */}
             <div className="flex gap-2 mt-4">
               <Button size="sm" className="flex-1 gradient-coral text-primary-foreground hover:opacity-90">
                 Connect
@@ -158,5 +157,13 @@ export default function Social() {
         ))}
       </div>
     </div>
+  );
+}
+
+export default function Social() {
+  return (
+    <RoleGate minRank={1}>
+      <SocialContent />
+    </RoleGate>
   );
 }

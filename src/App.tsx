@@ -9,6 +9,7 @@ import Social from "./pages/Social";
 import Pulse from "./pages/Pulse";
 import Marketplace from "./pages/Marketplace";
 import Leaderboard from "./pages/Leaderboard";
+import VisionQuest from "./pages/VisionQuest";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/auth" element={<Auth />} />
+          <Route path="/vision-quest" element={<VisionQuest />} />
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Navigate to="/social" replace />} />
             <Route path="social" element={<Social />} />
