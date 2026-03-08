@@ -1,1 +1,4 @@
 project_id = "xfwovoctvaaihxasmtsf"
+
+[functions.scrape-events]
+verify_jwt = false
