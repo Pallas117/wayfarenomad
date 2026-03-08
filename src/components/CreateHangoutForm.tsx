@@ -4,6 +4,7 @@ import { X, Coffee, Laptop, PartyPopper, Bike } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { LocationPicker } from "@/components/LocationPicker";
 import { useAuth } from "@/hooks/useAuth";
 import { useCreateHangout } from "@/hooks/useHangouts";
 import { useToast } from "@/hooks/use-toast";
@@ -31,6 +32,8 @@ export function CreateHangoutForm({ onClose }: CreateHangoutFormProps) {
   const [category, setCategory] = useState("coffee");
   const [dateTime, setDateTime] = useState("");
   const [maxAttendees, setMaxAttendees] = useState("10");
+  const [lat, setLat] = useState<number | null>(null);
+  const [lng, setLng] = useState<number | null>(null);
 
   const handleSubmit = async () => {
     if (!user || !title || !dateTime) return;
@@ -41,6 +44,8 @@ export function CreateHangoutForm({ onClose }: CreateHangoutFormProps) {
         title,
         description: description || undefined,
         location_name: locationName || undefined,
+        lat: lat ?? undefined,
+        lng: lng ?? undefined,
         hangout_time: new Date(dateTime).toISOString(),
         max_attendees: parseInt(maxAttendees) || 10,
         category,
@@ -107,6 +112,12 @@ export function CreateHangoutForm({ onClose }: CreateHangoutFormProps) {
         placeholder="Location name (e.g. Blue Tokai, Canggu)"
         value={locationName}
         onChange={(e) => setLocationName(e.target.value)}
+      />
+
+      <LocationPicker
+        lat={lat}
+        lng={lng}
+        onChange={(newLat, newLng) => { setLat(newLat); setLng(newLng); }}
       />
 
       <div className="flex gap-3">
