@@ -47,7 +47,7 @@ function FlyTo({ lat, lng }: { lat: number; lng: number }) {
   return null;
 }
 
-export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
+export function LocationPicker({ lat, lng, onChange, onClear }: LocationPickerProps) {
   const [open, setOpen] = useState(false);
   const [locating, setLocating] = useState(false);
   const [query, setQuery] = useState("");
