@@ -520,6 +520,45 @@ export default function Pulse() {
             </div>
           )}
 
+          {/* ✨ Karma Pulses */}
+          {karmaPulses.length > 0 && (
+            <div className="px-4 pb-3">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-xs font-display font-bold uppercase tracking-wider text-primary">Karma Pulses</span>
+              </div>
+              <div className="space-y-1.5 max-h-[140px] overflow-y-auto no-scrollbar">
+                {karmaPulses.map((pulse, i) => (
+                  <motion.div
+                    key={pulse.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-2 p-2 rounded-lg bg-secondary/30 text-xs"
+                  >
+                    <div
+                      className="h-6 w-6 rounded-full flex items-center justify-center shrink-0"
+                      style={{ backgroundColor: `${pulse.color}20`, color: pulse.color }}
+                    >
+                      {pulse.isAnonymous ? <EyeOff className="h-3 w-3" /> : <pulse.icon className="h-3 w-3" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <span className={`font-medium ${pulse.isAnonymous ? "italic text-muted-foreground" : ""}`}>
+                        {pulse.displayName}
+                      </span>
+                      <span className="text-muted-foreground"> {pulse.action}</span>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <Zap className="h-3 w-3 text-primary" />
+                      <span className="font-display font-bold text-primary">+{pulse.points}</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground shrink-0">{pulse.timeAgo}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="px-4 pb-6 space-y-3 overflow-y-auto max-h-[55vh]">
             {loading ? (
               <div className="flex items-center justify-center py-8">
