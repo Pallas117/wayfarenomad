@@ -304,6 +304,51 @@ function DonationSection() {
   );
 }
 
+function LeaderboardAnonymityToggle() {
+  const { user } = useAuth();
+  const [anonymous, setAnonymous] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("leaderboard_anonymous")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) setAnonymous(!!(data as any).leaderboard_anonymous);
+        setLoading(false);
+      });
+  }, [user]);
+
+  const handleToggle = async (checked: boolean) => {
+    if (!user) return;
+    setAnonymous(checked);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ leaderboard_anonymous: checked } as any)
+      .eq("user_id", user.id);
+    if (error) {
+      setAnonymous(!checked);
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      haptic("success");
+      toast({ title: checked ? "Identity hidden on leaderboards" : "Identity visible on leaderboards" });
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm font-medium">Hide identity on leaderboards</p>
+        <p className="text-xs text-muted-foreground">Show as "Anonymous Nomad" in karma rankings</p>
+      </div>
+      <Switch checked={anonymous} onCheckedChange={handleToggle} disabled={loading} />
+    </div>
+  );
+}
+
 export default function SettingsPage() {
   const { user, signOut } = useAuth();
   const [intensity, setIntensity] = useState(getVibrationIntensity());
