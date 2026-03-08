@@ -241,7 +241,17 @@ export default function Pulse() {
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
   const { pulses: karmaPulses, loading: karmaPulsesLoading } = useKarmaPulses();
 
-  useEffect(() => { loadEvents(); loadResources(); }, []);
+  useEffect(() => { loadEvents(); loadResources(); loadSafeSpaces(); loadExpeditions(); }, []);
+
+  const loadSafeSpaces = async () => {
+    const { data } = await supabase.from("safe_spaces").select("*");
+    if (data) setSafeSpaces(data);
+  };
+
+  const loadExpeditions = async () => {
+    const { data } = await supabase.from("expeditions").select("*").in("status", ["planning", "active"]);
+    if (data) setExpeditions(data);
+  };
 
   const loadEvents = async () => {
     setLoading(true);
