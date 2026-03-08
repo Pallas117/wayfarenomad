@@ -443,6 +443,8 @@ export default function VisionQuest() {
             wordCount={wordCount}
             onSubmit={handleVisionSubmit}
             submitting={submitting}
+            jokeText={jokeText}
+            setJokeText={setJokeText}
           />
         )}
         {step === "quiz" && (
