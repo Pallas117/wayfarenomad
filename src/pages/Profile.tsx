@@ -130,9 +130,17 @@ export default function Profile() {
         transition={{ delay: 0.05 }}
       >
         <div className="flex items-center gap-4 mb-4">
-          <div className="h-20 w-20 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-2xl shrink-0 glow-gold">
-            {initials}
-          </div>
+          {profile.avatar_url ? (
+            <img
+              src={profile.avatar_url}
+              alt={name}
+              className="h-20 w-20 rounded-full object-cover shrink-0 glow-gold"
+            />
+          ) : (
+            <div className="h-20 w-20 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-2xl shrink-0 glow-gold">
+              {initials}
+            </div>
+          )}
           <div className="flex-1 min-w-0">
             <h2 className="font-display font-bold text-xl truncate">{name}</h2>
             {profile.current_city && (

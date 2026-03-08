@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { SocialProfileLinks } from "@/components/SocialProfileLinks";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { AvatarUpload } from "@/components/AvatarUpload";
+import { supabase } from "@/integrations/supabase/client";
 import {
   haptic,
   getVibrationIntensity,
@@ -32,6 +34,23 @@ export default function SettingsPage() {
   const hapticsSupported = isHapticsAvailable();
   const citySyncCtx = useCitySync();
   const push = usePushNotifications();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState("Traveler");
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("avatar_url, display_name, full_name")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) {
+          setAvatarUrl(data.avatar_url);
+          setDisplayName(data.display_name || data.full_name || "Traveler");
+        }
+      });
+  }, [user]);
 
   const handleIntensityChange = (value: number[]) => {
     const v = value[0];
@@ -49,6 +68,21 @@ export default function SettingsPage() {
       >
         <Settings className="h-6 w-6 text-primary" />
         <h1 className="text-2xl font-display font-bold">Settings</h1>
+      </motion.div>
+
+      {/* Avatar Upload */}
+      <motion.div
+        className="glass-card rounded-xl p-5 mb-6 flex flex-col items-center gap-3"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+      >
+        <AvatarUpload
+          currentUrl={avatarUrl}
+          displayName={displayName}
+          onUploaded={(url) => setAvatarUrl(url)}
+        />
+        <p className="text-xs text-muted-foreground">Tap to change your photo</p>
       </motion.div>
 
       {/* Social Profile Links */}
