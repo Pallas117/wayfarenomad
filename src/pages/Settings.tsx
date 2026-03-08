@@ -57,6 +57,28 @@ export default function SettingsPage() {
       });
   }, [user]);
 
+  const handleSaveName = async () => {
+    const trimmed = nameInput.trim();
+    if (!trimmed || trimmed.length < 2 || !user) return;
+    if (trimmed.length > 50) {
+      toast({ title: "Too long", description: "Display name must be under 50 characters.", variant: "destructive" });
+      return;
+    }
+    setSavingName(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ display_name: trimmed })
+      .eq("user_id", user.id);
+    setSavingName(false);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      setDisplayName(trimmed);
+      haptic("success");
+      toast({ title: "Name updated ✦" });
+    }
+  };
+
   const handleIntensityChange = (value: number[]) => {
     const v = value[0];
     setIntensity(v);
