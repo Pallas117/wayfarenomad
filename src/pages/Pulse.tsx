@@ -159,7 +159,7 @@ export default function Pulse() {
   return (
     <div className="relative h-[calc(100vh-4rem)] w-full overflow-hidden">
       {/* Full-screen map */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         <Suspense fallback={<div className="h-full w-full bg-background animate-pulse" />}>
           <LazyMapView pins={mapPins} intrepidMode={intrepidMode} className="!rounded-none" />
         </Suspense>
