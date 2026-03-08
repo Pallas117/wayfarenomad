@@ -152,13 +152,28 @@ Deno.serve(async (req) => {
                 continue;
               }
 
-              // Determine category from content
-              let category = 'festival';
+              // Determine category from content using keyword map
               const lower = (title + ' ' + description).toLowerCase();
-              if (lower.includes('tech') || lower.includes('code') || lower.includes('developer') || lower.includes('startup') || lower.includes('ai') || lower.includes('hackathon')) {
-                category = 'tech';
-              } else if (lower.includes('music') || lower.includes('concert') || lower.includes('dj') || lower.includes('live')) {
-                category = 'music';
+              const categoryKeywords: Record<string, string[]> = {
+                wellbeing: ['yoga', 'meditation', 'wellness', 'spa', 'mindfulness', 'healing', 'retreat', 'therapy'],
+                culture: ['museum', 'gallery', 'heritage', 'temple', 'history', 'cultural', 'tradition', 'exhibition'],
+                entertainment: ['comedy', 'show', 'cinema', 'theater', 'theatre', 'concert', 'performance', 'stand-up', 'magic'],
+                shopping: ['market', 'bazaar', 'sale', 'pop-up', 'fair', 'flea', 'thrift', 'shopping'],
+                nature: ['hike', 'hiking', 'park', 'garden', 'wildlife', 'eco', 'nature', 'bird', 'botanical'],
+                festival: ['festival', 'carnival', 'parade', 'celebration', 'fiesta'],
+                nightlife: ['club', 'bar', 'dj', 'lounge', 'party', 'nightclub', 'rave', 'after-hours'],
+                fitness: ['gym', 'run', 'marathon', 'crossfit', 'sports', 'fitness', 'workout', 'triathlon'],
+                adventure: ['diving', 'kayak', 'climbing', 'extreme', 'surf', 'rafting', 'bungee', 'skydiving', 'zipline'],
+                creative: ['art', 'design', 'craft', 'photography', 'music', 'painting', 'pottery', 'writing', 'sketch'],
+                singles: ['singles', 'dating', 'mixer', 'speed-dating', 'speed dating', 'matchmaking'],
+                event: ['conference', 'meetup', 'workshop', 'seminar', 'summit', 'talk', 'lecture', 'networking', 'tech', 'code', 'developer', 'startup', 'ai', 'hackathon'],
+              };
+              let category = 'event';
+              for (const [cat, keywords] of Object.entries(categoryKeywords)) {
+                if (keywords.some(kw => lower.includes(kw))) {
+                  category = cat;
+                  break;
+                }
               }
 
               allEvents.push({

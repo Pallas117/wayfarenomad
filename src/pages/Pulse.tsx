@@ -237,7 +237,7 @@ export default function Pulse() {
         </Tabs>
 
         {/* Category + Resource filters */}
-        <div className="flex gap-1.5 flex-wrap">
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
           {categories.map((c) => (
             <Button
               key={c.id}
