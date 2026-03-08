@@ -393,6 +393,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_user_rank: { Args: { _user_id: string }; Returns: number }
+      has_min_rank: {
+        Args: { _min_rank: number; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -400,6 +405,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      promote_to_captain: { Args: { _user_id: string }; Returns: undefined }
+      promote_to_steward: { Args: { _user_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "steward"
