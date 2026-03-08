@@ -50,6 +50,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </CitySyncProvider>
+      </PowerProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
