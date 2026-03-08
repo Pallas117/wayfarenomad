@@ -200,6 +200,17 @@ export function LocationPicker({ lat, lng, onChange, onClear }: LocationPickerPr
           <Navigation className="h-3.5 w-3.5 mr-1.5" />
           {locating ? "Locating…" : "My Location"}
         </Button>
+        {hasPin && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-xs text-destructive hover:text-destructive"
+            onClick={handleClear}
+          >
+            <X className="h-3.5 w-3.5" />
+          </Button>
+        )}
       </div>
 
       {/* Map */}
