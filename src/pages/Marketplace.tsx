@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useUserRank } from "@/hooks/useUserRank";
 import { useExpeditions } from "@/hooks/useExpeditions";
 import { useAuth } from "@/hooks/useAuth";
-import { GoldEventSkeleton } from "@/components/animations/GoldSkeleton";
+import { TravelLoaderInline } from "@/components/animations/TravelLoader";
 import { ExpeditionCard } from "@/components/ExpeditionCard";
 import { CreateExpeditionForm } from "@/components/CreateExpeditionForm";
 
