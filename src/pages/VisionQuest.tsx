@@ -11,6 +11,7 @@ import { StarfieldBackground } from "@/components/animations/StarfieldBackground
 import { TypewriterText } from "@/components/animations/TypewriterText";
 import { StardustParticles } from "@/components/animations/StardustParticles";
 import { ConstellationBadge } from "@/components/animations/ConstellationBadge";
+import { haptic } from "@/lib/haptics";
 
 const INTEGRITY_QUESTIONS = [
   {
