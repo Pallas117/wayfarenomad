@@ -131,17 +131,21 @@ export function CompassVerifySheet({
             <div className="text-center space-y-2">
               <p className="text-xs text-muted-foreground">Show this to the person you're meeting:</p>
               <motion.div
-                className="mx-auto w-48 h-48 rounded-2xl bg-card border-2 border-primary/30 flex flex-col items-center justify-center gap-2"
+                className="mx-auto w-52 h-52 rounded-2xl bg-white p-3 flex items-center justify-center"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
               >
-                <QrCode className="h-16 w-16 text-primary" />
-                <code className="text-xs text-muted-foreground font-mono break-all px-2 select-all">
-                  {qrPayload}
-                </code>
+                <QRCodeSVG
+                  value={qrPayload}
+                  size={180}
+                  level="M"
+                  bgColor="#ffffff"
+                  fgColor="#1a1a2e"
+                  includeMargin={false}
+                />
               </motion.div>
               <p className="text-[10px] text-muted-foreground">
-                They can copy your code, or you can enter theirs below
+                Scan this with your camera, or enter their code below
               </p>
             </div>
 
