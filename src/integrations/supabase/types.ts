@@ -64,6 +64,7 @@ export type Database = {
           lat: number | null
           lng: number | null
           pulse_rank: number | null
+          scraped_from: string | null
           source_url: string | null
           title: string
           venue: string | null
@@ -80,6 +81,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           pulse_rank?: number | null
+          scraped_from?: string | null
           source_url?: string | null
           title: string
           venue?: string | null
@@ -96,6 +98,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           pulse_rank?: number | null
+          scraped_from?: string | null
           source_url?: string | null
           title?: string
           venue?: string | null
@@ -316,16 +319,21 @@ export type Database = {
           encrypted_private_key: string | null
           full_name: string | null
           id: string
+          instagram_handle: string | null
           learns: string[] | null
           quiz_completed: boolean | null
+          social_verified: boolean | null
           stardust_points: number | null
+          substack_url: string | null
           teaches: string[] | null
+          telegram_handle: string | null
           travel_end: string | null
           travel_start: string | null
           updated_at: string
           user_id: string
           vision_completed: boolean | null
           vision_statement: string | null
+          whatsapp_number: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -337,16 +345,21 @@ export type Database = {
           encrypted_private_key?: string | null
           full_name?: string | null
           id?: string
+          instagram_handle?: string | null
           learns?: string[] | null
           quiz_completed?: boolean | null
+          social_verified?: boolean | null
           stardust_points?: number | null
+          substack_url?: string | null
           teaches?: string[] | null
+          telegram_handle?: string | null
           travel_end?: string | null
           travel_start?: string | null
           updated_at?: string
           user_id: string
           vision_completed?: boolean | null
           vision_statement?: string | null
+          whatsapp_number?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -358,16 +371,21 @@ export type Database = {
           encrypted_private_key?: string | null
           full_name?: string | null
           id?: string
+          instagram_handle?: string | null
           learns?: string[] | null
           quiz_completed?: boolean | null
+          social_verified?: boolean | null
           stardust_points?: number | null
+          substack_url?: string | null
           teaches?: string[] | null
+          telegram_handle?: string | null
           travel_end?: string | null
           travel_start?: string | null
           updated_at?: string
           user_id?: string
           vision_completed?: boolean | null
           vision_statement?: string | null
+          whatsapp_number?: string | null
         }
         Relationships: []
       }
