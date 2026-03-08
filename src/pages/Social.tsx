@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Users, Heart, Handshake, MapPin, Calendar, Sparkles, MessageCircle, Send, Plus, Coffee } from "lucide-react";
