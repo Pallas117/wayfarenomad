@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff } from "lucide-react";
+import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff, Check } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { SocialProfileLinks } from "@/components/SocialProfileLinks";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
@@ -36,6 +38,8 @@ export default function SettingsPage() {
   const push = usePushNotifications();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState("Traveler");
+  const [nameInput, setNameInput] = useState("");
+  const [savingName, setSavingName] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -48,9 +52,32 @@ export default function SettingsPage() {
         if (data) {
           setAvatarUrl(data.avatar_url);
           setDisplayName(data.display_name || data.full_name || "Traveler");
+          setNameInput(data.display_name || data.full_name || "");
         }
       });
   }, [user]);
+
+  const handleSaveName = async () => {
+    const trimmed = nameInput.trim();
+    if (!trimmed || trimmed.length < 2 || !user) return;
+    if (trimmed.length > 50) {
+      toast({ title: "Too long", description: "Display name must be under 50 characters.", variant: "destructive" });
+      return;
+    }
+    setSavingName(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ display_name: trimmed })
+      .eq("user_id", user.id);
+    setSavingName(false);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      setDisplayName(trimmed);
+      haptic("success");
+      toast({ title: "Name updated ✦" });
+    }
+  };
 
   const handleIntensityChange = (value: number[]) => {
     const v = value[0];
@@ -83,6 +110,28 @@ export default function SettingsPage() {
           onUploaded={(url) => setAvatarUrl(url)}
         />
         <p className="text-xs text-muted-foreground">Tap to change your photo</p>
+
+        {/* Display Name */}
+        <div className="w-full space-y-2">
+          <label className="text-xs text-muted-foreground uppercase tracking-wider">Display Name</label>
+          <div className="flex gap-2">
+            <Input
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              placeholder="Your display name"
+              maxLength={50}
+              className="flex-1"
+            />
+            <Button
+              size="icon"
+              className="gradient-gold text-primary-foreground shrink-0"
+              onClick={handleSaveName}
+              disabled={savingName || nameInput.trim().length < 2 || nameInput.trim() === displayName}
+            >
+              <Check className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </motion.div>
 
       {/* Social Profile Links */}

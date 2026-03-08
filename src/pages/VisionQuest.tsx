@@ -82,8 +82,8 @@ function VisionStep({
 }) {
   const submitRef = useRef<HTMLButtonElement>(null);
   const [promptIndex, setPromptIndex] = useState(0);
-  const intensity = Math.min(wordCount / 200, 1);
-  const showParticles = wordCount >= 200;
+  const intensity = Math.min(wordCount / 100, 1);
+  const showParticles = wordCount >= 100;
 
   const handlePromptComplete = useCallback(() => {
     if (promptIndex < PROMPTS.length - 1) {
@@ -123,7 +123,7 @@ function VisionStep({
         >
           <h2 className="font-display font-semibold text-lg mb-2">Your Vision Statement</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Minimum 200 words — as you write, the cosmos awakens.
+            Minimum 100 words — as you write, the cosmos awakens.
           </p>
           <Textarea
             value={visionText}
@@ -131,7 +131,7 @@ function VisionStep({
             placeholder="I believe in building genuine connections across cultures..."
             className="min-h-[200px] bg-secondary/50 border-border transition-shadow duration-500"
             style={{
-              boxShadow: wordCount >= 200
+              boxShadow: wordCount >= 100
                 ? "0 0 20px hsla(43, 72%, 52%, 0.2)"
                 : "none",
             }}
@@ -140,19 +140,19 @@ function VisionStep({
             <motion.span
               className="text-xs font-medium"
               animate={{
-                color: wordCount >= 200
+                color: wordCount >= 100
                   ? "hsl(43 72% 52%)"
                   : "hsl(225 15% 55%)",
               }}
             >
-              {wordCount}/200 words
+              {wordCount}/100 words
             </motion.span>
 
             {/* Progress bar */}
             <div className="flex-1 mx-4 h-1 rounded-full bg-secondary overflow-hidden">
               <motion.div
                 className="h-full gradient-gold rounded-full"
-                animate={{ width: `${Math.min((wordCount / 200) * 100, 100)}%` }}
+                animate={{ width: `${Math.min((wordCount / 100) * 100, 100)}%` }}
                 transition={{ type: "spring", stiffness: 80 }}
               />
             </div>
@@ -160,7 +160,7 @@ function VisionStep({
             <Button
               ref={submitRef}
               onClick={onSubmit}
-              disabled={wordCount < 200 || submitting}
+              disabled={wordCount < 100 || submitting}
               className="gradient-gold text-primary-foreground relative overflow-hidden"
             >
               {submitting ? "Saving..." : "Continue to Quiz"}
@@ -319,8 +319,8 @@ export default function VisionQuest() {
   const wordCount = visionText.trim().split(/\s+/).filter(Boolean).length;
 
   const handleVisionSubmit = async () => {
-    if (wordCount < 200) {
-      toast({ title: "Too short", description: `You need at least 200 words (currently ${wordCount}).`, variant: "destructive" });
+    if (wordCount < 100) {
+      toast({ title: "Too short", description: `You need at least 100 words (currently ${wordCount}).`, variant: "destructive" });
       return;
     }
     if (!user) return;
