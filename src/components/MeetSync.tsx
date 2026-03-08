@@ -62,42 +62,31 @@ export function MeetSync({ recipientId, recipientName, city, onClose }: MeetSync
 
   if (sent) {
     return (
-      <MeetupCard3D
-        front={
-          <div className="text-center p-6 space-y-3">
-            <Calendar className="h-8 w-8 text-primary mx-auto" />
-            <p className="font-display font-semibold">Sending to {recipientName}...</p>
-          </div>
-        }
-        back={
-          <div className="text-center p-6 space-y-4">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", delay: 0.3 }}
-            >
-              <Check className="h-10 w-10 text-primary mx-auto" />
-            </motion.div>
-            <p className="font-display font-semibold text-lg">Meetup Proposed!</p>
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline" className="flex-1 min-h-[44px]" asChild>
-                <a href={calendarUrl} target="_blank" rel="noopener noreferrer">
-                  <Calendar className="h-4 w-4 mr-1" /> Add to Calendar
-                </a>
-              </Button>
-              <Button size="sm" variant="outline" className="flex-1 min-h-[44px]" asChild>
-                <a href={transitUrl} target="_blank" rel="noopener noreferrer">
-                  <MapPin className="h-4 w-4 mr-1" /> Get Directions
-                </a>
-              </Button>
-            </div>
-            <Button size="sm" variant="ghost" onClick={onClose} className="min-h-[44px]">
-              Close
-            </Button>
-          </div>
-        }
-        flipped={true}
-      />
+      <div className="space-y-3">
+        <MeetupCard3D
+          initiator={recipientName}
+          location={venue || city}
+          time={`${date} ${time}`}
+          travelTime={`${travelTime}min`}
+          transitMode={transitMode}
+          status="accepted"
+        />
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" className="flex-1 min-h-[44px]" asChild>
+            <a href={calendarUrl} target="_blank" rel="noopener noreferrer">
+              <Calendar className="h-4 w-4 mr-1" /> Add to Calendar
+            </a>
+          </Button>
+          <Button size="sm" variant="outline" className="flex-1 min-h-[44px]" asChild>
+            <a href={transitUrl} target="_blank" rel="noopener noreferrer">
+              <MapPin className="h-4 w-4 mr-1" /> Get Directions
+            </a>
+          </Button>
+        </div>
+        <Button size="sm" variant="ghost" onClick={onClose} className="w-full min-h-[44px]">
+          Close
+        </Button>
+      </div>
     );
   }
 
