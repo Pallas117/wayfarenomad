@@ -8,7 +8,9 @@ import { RoleGate } from "@/components/RoleGate";
 import { ConversationList, type Conversation } from "@/components/ConversationList";
 import { ChatView } from "@/components/ChatView";
 import { GroupChatView } from "@/components/GroupChatView";
+import { CompassLockGate, CompassVerifySheet } from "@/components/CompassLock";
 import { useGroupChats, useJoinGroupChat, type GroupChat } from "@/hooks/useGroupChat";
+import { useIsCompassLocked } from "@/hooks/useCompassLock";
 import { useAuth } from "@/hooks/useAuth";
 import { TravelLoaderInline } from "@/components/animations/TravelLoader";
 import { formatDistanceToNow } from "date-fns";
@@ -67,6 +69,59 @@ function GroupChatList({ onSelect }: { onSelect: (gc: GroupChat) => void }) {
   );
 }
 
+/** Wrapper that checks compass lock before showing ChatView */
+function CompassGatedChat({
+  recipientId,
+  recipientName,
+  recipientAvatar,
+  onBack,
+}: {
+  recipientId: string;
+  recipientName: string;
+  recipientAvatar: string;
+  onBack: () => void;
+}) {
+  const { data: isLocked, isLoading } = useIsCompassLocked(recipientId);
+  const [showVerify, setShowVerify] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-5rem)]">
+        <TravelLoaderInline message="Checking Compass Lock…" />
+      </div>
+    );
+  }
+
+  if (!isLocked) {
+    return (
+      <div className="h-[calc(100vh-5rem)]">
+        <CompassLockGate
+          recipientName={recipientName}
+          onInitiateVerify={() => setShowVerify(true)}
+          onBack={onBack}
+        />
+        <CompassVerifySheet
+          open={showVerify}
+          onOpenChange={setShowVerify}
+          targetUserId={recipientId}
+          targetName={recipientName}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-[calc(100vh-5rem)]">
+      <ChatView
+        recipientId={recipientId}
+        recipientName={recipientName}
+        recipientAvatar={recipientAvatar}
+        onBack={onBack}
+      />
+    </div>
+  );
+}
+
 function MessagesContent() {
   const [searchParams] = useSearchParams();
   const initialRecipient = searchParams.get("to");
@@ -90,14 +145,12 @@ function MessagesContent() {
 
   if (activeChat) {
     return (
-      <div className="h-[calc(100vh-5rem)]">
-        <ChatView
-          recipientId={activeChat.recipientId}
-          recipientName={activeChat.recipientName}
-          recipientAvatar={activeChat.recipientAvatar}
-          onBack={() => setActiveChat(null)}
-        />
-      </div>
+      <CompassGatedChat
+        recipientId={activeChat.recipientId}
+        recipientName={activeChat.recipientName}
+        recipientAvatar={activeChat.recipientAvatar}
+        onBack={() => setActiveChat(null)}
+      />
     );
   }
 
