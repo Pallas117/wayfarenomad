@@ -40,6 +40,9 @@ export default function SettingsPage() {
   const [displayName, setDisplayName] = useState("Traveler");
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
+  const [bioInput, setBioInput] = useState("");
+  const [savedBio, setSavedBio] = useState("");
+  const [savingBio, setSavingBio] = useState(false);
 
   useEffect(() => {
     if (!user) return;
