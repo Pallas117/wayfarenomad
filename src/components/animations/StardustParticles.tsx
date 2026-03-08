@@ -1,13 +1,10 @@
 import { useEffect, useRef } from "react";
+import { usePower } from "@/components/PowerProvider";
 
 interface StardustParticlesProps {
-  /** Element ref to fly particles toward */
   targetRef?: React.RefObject<HTMLElement>;
-  /** Whether particles are active */
   active?: boolean;
-  /** Number of particles per burst */
   count?: number;
-  /** Origin position (center of screen if not specified) */
   originRef?: React.RefObject<HTMLElement>;
 }
 
@@ -20,9 +17,12 @@ interface Particle {
 export function StardustParticles({ targetRef, active = false, count = 12, originRef }: StardustParticlesProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
+  const power = usePower();
+
+  const shouldRender = active && power.allowParticles;
 
   useEffect(() => {
-    if (!active) return;
+    if (!shouldRender) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -38,7 +38,8 @@ export function StardustParticles({ targetRef, active = false, count = 12, origi
     const ox = originRect ? originRect.left + originRect.width / 2 : canvas.width / 2;
     const oy = originRect ? originRect.top + originRect.height / 2 : canvas.height / 2;
 
-    particlesRef.current = Array.from({ length: count }, () => ({
+    const adjustedCount = Math.floor(count * power.particleMultiplier);
+    particlesRef.current = Array.from({ length: adjustedCount }, () => ({
       x: ox + (Math.random() - 0.5) * 60,
       y: oy + (Math.random() - 0.5) * 60,
       tx, ty,
@@ -61,7 +62,6 @@ export function StardustParticles({ targetRef, active = false, count = 12, origi
         const t = p.progress;
         const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 
-        // Curved path via control point
         const cx = (p.x + p.tx) / 2 + p.offsetX;
         const cy = (p.y + p.ty) / 2 + p.offsetY;
         const bx = (1 - ease) * (1 - ease) * p.x + 2 * (1 - ease) * ease * cx + ease * ease * p.tx;
@@ -82,9 +82,9 @@ export function StardustParticles({ targetRef, active = false, count = 12, origi
     draw();
 
     return () => cancelAnimationFrame(raf);
-  }, [active, count, targetRef, originRef]);
+  }, [shouldRender, count, targetRef, originRef, power.particleMultiplier]);
 
-  if (!active) return null;
+  if (!shouldRender) return null;
 
   return (
     <canvas

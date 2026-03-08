@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff, Check } from "lucide-react";
+import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff, Check, Battery, BatteryCharging, Zap } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import { SocialProfileLinks } from "@/components/SocialProfileLinks";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { AvatarUpload } from "@/components/AvatarUpload";
 import { supabase } from "@/integrations/supabase/client";
+import { usePower } from "@/components/PowerProvider";
 import {
   haptic,
   getVibrationIntensity,
@@ -30,6 +31,62 @@ const HAPTIC_DEMOS: { name: string; pattern: Parameters<typeof haptic>[0]; label
   { name: "Stardust", pattern: "stardust", label: "Sparkle" },
   { name: "Shimmer", pattern: "shimmer", label: "Micro-vibes" },
 ];
+
+const POWER_MODE_INFO = {
+  full: { label: "Full Power", color: "bg-green-500/20 text-green-400", desc: "All effects & animations active" },
+  balanced: { label: "Balanced", color: "bg-primary/20 text-primary", desc: "Reduced particles, 30fps cap on effects" },
+  saver: { label: "Power Saver", color: "bg-orange-500/20 text-orange-400", desc: "Canvas & 3D effects disabled, minimal motion" },
+  critical: { label: "Critical", color: "bg-destructive/20 text-destructive", desc: "Static UI only — all effects locked" },
+} as const;
+
+function PowerSection() {
+  const power = usePower();
+  const info = POWER_MODE_INFO[power.mode];
+  const batteryPct = power.batteryLevel !== null ? Math.round(power.batteryLevel * 100) : null;
+
+  return (
+    <motion.div
+      className="glass-card rounded-xl p-5 mb-6 space-y-4"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.22 }}
+    >
+      <div className="flex items-center gap-3">
+        <Zap className="h-5 w-5 text-primary" />
+        <h2 className="font-display font-semibold text-lg">Power Management</h2>
+      </div>
+
+      <p className="text-sm text-muted-foreground">
+        Wayfare automatically adapts to your device's battery level to conserve power.
+      </p>
+
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {power.isCharging ? (
+            <BatteryCharging className="h-5 w-5 text-green-400" />
+          ) : (
+            <Battery className="h-5 w-5 text-muted-foreground" />
+          )}
+          <span className="text-sm font-medium">
+            {batteryPct !== null ? `${batteryPct}%` : "Unknown"}
+          </span>
+          {power.isCharging && (
+            <span className="text-xs text-green-400">Charging</span>
+          )}
+        </div>
+        <Badge className={`text-xs ${info.color}`}>{info.label}</Badge>
+      </div>
+
+      <div className="text-xs text-muted-foreground space-y-1 p-3 rounded-lg bg-secondary/30 border border-border">
+        <p className="font-medium text-foreground/80">{info.desc}</p>
+        <p>• Animations: {power.allowAnimations ? "✓" : "✗"}</p>
+        <p>• Canvas effects: {power.allowCanvasEffects ? "✓" : "✗"}</p>
+        <p>• 3D scenes: {power.allow3D ? "✓" : "✗"}</p>
+        <p>• Particles: {power.allowParticles ? `✓ (${Math.round(power.particleMultiplier * 100)}%)` : "✗"}</p>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function SettingsPage() {
   const { user, signOut } = useAuth();
@@ -360,6 +417,9 @@ export default function SettingsPage() {
           <Switch defaultChecked />
         </div>
       </motion.div>
+
+      {/* Power Management Section */}
+      <PowerSection />
 
       {/* Account */}
       <motion.div

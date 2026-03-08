@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
 import { useCitySync } from "./CitySyncProvider";
 import { CheckCircle } from "lucide-react";
+import { usePower } from "@/components/PowerProvider";
 
 // ─── Constellation Globe ───
 function ConstellationGlobe({ imploding }: { imploding: boolean }) {
@@ -116,6 +117,7 @@ function PingRings({ count }: { count: number }) {
 // ─── Main Scanning Screen ───
 export function ScanningTheStars() {
   const { isScanning, scanComplete, nodesFound, currentCity, theme } = useCitySync();
+  const power = usePower();
 
   if (!isScanning) return null;
 
@@ -128,16 +130,27 @@ export function ScanningTheStars() {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.8 }}
       >
-        {/* 3D Globe */}
+        {/* 3D Globe — skip in saver/critical mode */}
         <div className="w-64 h-64 relative">
-          <Canvas
-            camera={{ position: [0, 0, 5], fov: 45 }}
-            style={{ background: "transparent" }}
-          >
-            <ambientLight intensity={0.5} />
-            <ConstellationGlobe imploding={scanComplete} />
-            <PingRings count={nodesFound.length} />
-          </Canvas>
+          {power.allow3D ? (
+            <Canvas
+              camera={{ position: [0, 0, 5], fov: 45 }}
+              style={{ background: "transparent" }}
+            >
+              <ambientLight intensity={0.5} />
+              <ConstellationGlobe imploding={scanComplete} />
+              <PingRings count={nodesFound.length} />
+            </Canvas>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <motion.div
+                className="h-20 w-20 rounded-full border-2 border-dashed"
+                style={{ borderColor: `hsl(${theme.primary})` }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              />
+            </div>
+          )}
 
           {/* Post-implode gold star */}
           <AnimatePresence>

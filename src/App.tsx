@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
 import { CitySyncProvider } from "./components/CitySync";
 import { ScanningTheStars } from "./components/CitySync";
+import { PowerProvider } from "./components/PowerProvider";
 import { MOUAgreement } from "./components/MOUAgreement";
 import Auth from "./pages/Auth";
 import Social from "./pages/Social";
@@ -24,6 +25,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <PowerProvider>
       <CitySyncProvider>
         <Toaster />
         <Sonner />
@@ -48,6 +50,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </CitySyncProvider>
+      </PowerProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
