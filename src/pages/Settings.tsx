@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff, Check, Battery, BatteryCharging, Zap, CheckCircle2, Circle, Heart, Coffee } from "lucide-react";
+import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff, Check, Battery, BatteryCharging, Zap, CheckCircle2, Circle, Heart, Coffee, Compass, Users } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
