@@ -36,7 +36,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/vision-quest" element={<VisionQuest />} />
             <Route path="/" element={<AppLayout />}>
-              <Route index element={<Navigate to="/social" replace />} />
+              <Route index element={<Navigate to="/pulse" replace />} />
               <Route path="social" element={<Social />} />
               <Route path="pulse" element={<Pulse />} />
               <Route path="marketplace" element={<Marketplace />} />

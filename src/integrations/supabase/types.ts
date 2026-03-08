@@ -187,6 +187,51 @@ export type Database = {
         }
         Relationships: []
       }
+      functional_points: {
+        Row: {
+          address: string | null
+          category: string
+          city: string
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          lat: number
+          lng: number
+          name: string
+          verified: boolean
+          verified_by: string | null
+        }
+        Insert: {
+          address?: string | null
+          category: string
+          city: string
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          lat: number
+          lng: number
+          name: string
+          verified?: boolean
+          verified_by?: string | null
+        }
+        Update: {
+          address?: string | null
+          category?: string
+          city?: string
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          lat?: number
+          lng?: number
+          name?: string
+          verified?: boolean
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
       group_chat_members: {
         Row: {
           group_chat_id: string
