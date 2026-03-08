@@ -147,9 +147,9 @@ export default function SettingsPage() {
               variant="outline"
               size="sm"
               className={`min-h-[44px] text-xs justify-start gap-2 ${
-                useCitySyncRef.currentHub === t.id ? "border-primary bg-primary/10" : ""
+                citySyncCtx.currentHub === t.id ? "border-primary bg-primary/10" : ""
               }`}
-              onClick={() => useCitySyncRef.setHubManually(t.id)}
+              onClick={() => citySyncCtx.setHubManually(t.id)}
             >
               <span>{t.emoji}</span>
               <span className="truncate">{t.name.split("—")[1]?.trim() || t.name}</span>
