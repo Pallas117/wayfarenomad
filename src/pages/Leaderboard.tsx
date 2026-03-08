@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Trophy, Star, MapPin } from "lucide-react";
+import { TrainIcon } from "@/components/animations/TravelIcons";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StardustParticles } from "@/components/animations/StardustParticles";
 
