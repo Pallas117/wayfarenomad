@@ -11,6 +11,7 @@ import Marketplace from "./pages/Marketplace";
 import Safety from "./pages/Safety";
 import Leaderboard from "./pages/Leaderboard";
 import VisionQuest from "./pages/VisionQuest";
+import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
