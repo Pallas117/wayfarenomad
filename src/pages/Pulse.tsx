@@ -236,14 +236,17 @@ export default function Pulse() {
         {isSteward && <AddResourceForm onAdded={loadResources} />}
       </div>
 
+      {/* Bottom drawer trigger */}
+      <Button
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] gradient-gold text-primary-foreground shadow-lg rounded-full px-5 h-10 text-xs font-display"
+        onClick={() => setDrawerOpen(true)}
+      >
+        <Radio className="h-3.5 w-3.5 mr-1.5" />
+        {filtered.length} Events
+      </Button>
+
       {/* Bottom drawer for event list */}
-      <Drawer>
-        <DrawerTrigger asChild>
-          <Button className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] gradient-gold text-primary-foreground shadow-lg rounded-full px-5 h-10 text-xs font-display">
-            <Radio className="h-3.5 w-3.5 mr-1.5" />
-            {filtered.length} Events
-          </Button>
-        </DrawerTrigger>
+      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
         <DrawerContent className="max-h-[70vh]">
           <DrawerHeader>
             <DrawerTitle className="font-display text-sm">Community Events</DrawerTitle>
