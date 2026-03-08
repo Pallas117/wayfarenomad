@@ -168,7 +168,7 @@ describe("Haptic Fallback (Graceful Degradation)", () => {
     setVibrationIntensity(0.1);
     haptic("sosAlert");
 
-    const pattern = vibrateSpy.mock.calls[0][0] as number[];
+    const pattern = (vibrateSpy.mock.calls as any)[0][0] as number[];
     // All vibration segments (even indices) should be >= 5ms
     pattern.forEach((val, i) => {
       if (i % 2 === 0) {
