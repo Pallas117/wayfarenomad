@@ -242,6 +242,17 @@ export default function Pulse() {
   const filteredIds = useMemo(() => events.map(e => e.id), [events]);
   const { toggleReaction, hasReaction } = useEventReactions(filteredIds);
   const { pulses: karmaPulses, loading: karmaPulsesLoading } = useKarmaPulses();
+  const { data: itineraryMatches } = useItineraryMatches();
+
+  // Count matches per city for event cards
+  const matchesByCity = useMemo(() => {
+    const map = new Map<string, number>();
+    itineraryMatches?.forEach(m => {
+      const key = m.city.toLowerCase();
+      map.set(key, (map.get(key) || 0) + 1);
+    });
+    return map;
+  }, [itineraryMatches]);
 
   const [searchParams] = useSearchParams();
 
