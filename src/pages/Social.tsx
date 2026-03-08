@@ -9,7 +9,7 @@ import { useUserRank } from "@/hooks/useUserRank";
 import { useItineraryMatches, type ItineraryMatch } from "@/hooks/useItineraryMatches";
 import { PathConvergence } from "@/components/animations/PathConvergence";
 import { MeetSync } from "@/components/MeetSync";
-import { GoldProfileSkeleton } from "@/components/animations/GoldSkeleton";
+import { GoldCardSkeleton } from "@/components/animations/GoldSkeleton";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
 
