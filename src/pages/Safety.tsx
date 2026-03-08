@@ -363,7 +363,7 @@ function SafetyContent() {
                     className="bg-secondary/50 border-border"
                   />
                   <Button
-                    className="w-full gradient-coral text-primary-foreground"
+                    className="w-full gradient-gold text-primary-foreground min-h-[44px]"
                     onClick={() => addSpaceMutation.mutate()}
                     disabled={!newSpace.name || !newSpace.city || addSpaceMutation.isPending}
                   >
@@ -400,7 +400,7 @@ function SafetyContent() {
                           {space.category}
                         </Badge>
                         {space.verified && (
-                          <Badge className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
+                          <Badge className="text-xs bg-primary/20 text-primary border-primary/30">
                             ✓ Verified
                           </Badge>
                         )}

@@ -1,7 +1,6 @@
 import { Store, Shield, Plus, Wifi, Smartphone, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RoleGate } from "@/components/RoleGate";
 import { useUserRank } from "@/hooks/useUserRank";
 
 const esimProviders = [
@@ -36,7 +35,7 @@ function MarketplaceContent() {
           <h1 className="text-2xl font-display font-bold">Marketplace</h1>
         </div>
         {isCaptain && (
-          <Button size="sm" className="gradient-coral text-primary-foreground">
+          <Button size="sm" className="gradient-gold text-primary-foreground min-h-[44px]">
             <Plus className="h-4 w-4 mr-1" /> Host Expedition
           </Button>
         )}

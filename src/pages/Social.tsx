@@ -53,7 +53,7 @@ function SocialContent() {
   const { isSteward } = useUserRank();
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
+    <div className="p-6 max-w-lg mx-auto pb-24">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -74,7 +74,7 @@ function SocialContent() {
           <Switch
             checked={mode === "dating"}
             onCheckedChange={(checked) => {
-              if (checked && !isSteward) return; // Dating requires Steward rank
+              if (checked && !isSteward) return;
               setMode(checked ? "dating" : "friendship");
             }}
             disabled={!isSteward && mode === "friendship"}
@@ -102,7 +102,7 @@ function SocialContent() {
             style={{ animationDelay: `${i * 100}ms` }}
           >
             <div className="flex items-start gap-4">
-              <div className="h-14 w-14 rounded-full gradient-coral flex items-center justify-center text-primary-foreground font-display font-bold text-lg shrink-0">
+              <div className="h-14 w-14 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-lg shrink-0">
                 {user.avatar}
               </div>
               <div className="flex-1 min-w-0">
@@ -146,10 +146,10 @@ function SocialContent() {
               </div>
             </div>
             <div className="flex gap-2 mt-4">
-              <Button size="sm" className="flex-1 gradient-coral text-primary-foreground hover:opacity-90">
+              <Button size="sm" className="flex-1 gradient-gold text-primary-foreground hover:opacity-90 min-h-[44px]">
                 Connect
               </Button>
-              <Button size="sm" variant="outline" className="flex-1">
+              <Button size="sm" variant="outline" className="flex-1 min-h-[44px]">
                 View Profile
               </Button>
             </div>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,50 +6,54 @@
 
 @layer base {
   :root {
-    --background: 222 60% 10%;
-    --foreground: 210 40% 96%;
+    --background: 225 60% 7%;
+    --foreground: 40 10% 96%;
 
-    --card: 222 50% 14%;
-    --card-foreground: 210 40% 96%;
+    --card: 225 50% 10%;
+    --card-foreground: 40 10% 96%;
 
-    --popover: 222 50% 14%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 225 50% 10%;
+    --popover-foreground: 40 10% 96%;
 
-    --primary: 0 100% 70%;
-    --primary-foreground: 222 60% 10%;
+    --primary: 43 72% 52%;
+    --primary-foreground: 225 60% 7%;
 
-    --secondary: 222 40% 20%;
-    --secondary-foreground: 210 40% 96%;
+    --secondary: 225 35% 15%;
+    --secondary-foreground: 40 10% 96%;
 
-    --muted: 222 30% 18%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 225 25% 14%;
+    --muted-foreground: 225 15% 55%;
 
-    --accent: 0 100% 70%;
-    --accent-foreground: 222 60% 10%;
+    --accent: 43 72% 52%;
+    --accent-foreground: 225 60% 7%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 40 10% 98%;
 
-    --border: 222 30% 22%;
-    --input: 222 30% 22%;
-    --ring: 0 100% 70%;
+    --border: 225 25% 18%;
+    --input: 225 25% 18%;
+    --ring: 43 72% 52%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 222 55% 12%;
-    --sidebar-foreground: 210 40% 96%;
-    --sidebar-primary: 0 100% 70%;
-    --sidebar-primary-foreground: 222 60% 10%;
-    --sidebar-accent: 222 40% 20%;
-    --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 222 30% 22%;
-    --sidebar-ring: 0 100% 70%;
+    --sidebar-background: 225 55% 9%;
+    --sidebar-foreground: 40 10% 96%;
+    --sidebar-primary: 43 72% 52%;
+    --sidebar-primary-foreground: 225 60% 7%;
+    --sidebar-accent: 225 35% 15%;
+    --sidebar-accent-foreground: 40 10% 96%;
+    --sidebar-border: 225 25% 18%;
+    --sidebar-ring: 43 72% 52%;
 
-    --coral: 0 100% 70%;
-    --coral-glow: 0 100% 75%;
-    --navy: 222 60% 10%;
-    --navy-light: 222 50% 14%;
-    --navy-lighter: 222 40% 20%;
+    --gold: 43 72% 52%;
+    --gold-glow: 43 80% 60%;
+    --gold-dim: 43 50% 35%;
+    --navy: 225 60% 7%;
+    --navy-light: 225 50% 10%;
+    --navy-lighter: 225 35% 15%;
+    --starlight: 40 10% 96%;
+
+    --verified: 43 72% 52%;
   }
 }
 
@@ -69,17 +73,49 @@
 }
 
 @layer utilities {
-  .gradient-coral {
-    background: linear-gradient(135deg, hsl(0 100% 70%), hsl(15 100% 65%));
+  .gradient-gold {
+    background: linear-gradient(135deg, hsl(43 72% 52%), hsl(43 80% 60%));
   }
 
-  .glow-coral {
-    box-shadow: 0 0 20px hsl(0 100% 70% / 0.3), 0 0 40px hsl(0 100% 70% / 0.1);
+  .gradient-gold-subtle {
+    background: linear-gradient(135deg, hsl(43 72% 52% / 0.15), hsl(43 80% 60% / 0.05));
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px hsl(43 72% 52% / 0.3), 0 0 40px hsl(43 72% 52% / 0.1);
+  }
+
+  .glow-gold-strong {
+    box-shadow: 0 0 30px hsl(43 72% 52% / 0.4), 0 0 60px hsl(43 72% 52% / 0.15);
   }
 
   .glass-card {
-    background: hsl(222 50% 14% / 0.8);
+    background: hsl(225 50% 10% / 0.8);
     backdrop-filter: blur(12px);
-    border: 1px solid hsl(222 30% 22% / 0.5);
+    border: 1px solid hsl(225 25% 18% / 0.5);
+  }
+
+  .glass-nav {
+    background: hsl(225 50% 10% / 0.85);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid hsl(43 72% 52% / 0.1);
+  }
+
+  .constellation-line {
+    background: linear-gradient(90deg, transparent, hsl(43 72% 52% / 0.2), transparent);
+    height: 1px;
+  }
+
+  .font-vision {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .text-starlight {
+    color: hsl(var(--starlight));
+  }
+
+  /* Legacy alias */
+  .gradient-coral {
+    background: linear-gradient(135deg, hsl(43 72% 52%), hsl(43 80% 60%));
   }
 }

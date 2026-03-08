@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
         display: ["Space Grotesk", "sans-serif"],
+        vision: ["Cormorant Garamond", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,9 +52,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        coral: {
-          DEFAULT: "hsl(var(--coral))",
-          glow: "hsl(var(--coral-glow))",
+        gold: {
+          DEFAULT: "hsl(var(--gold))",
+          glow: "hsl(var(--gold-glow))",
+          dim: "hsl(var(--gold-dim))",
         },
         navy: {
           DEFAULT: "hsl(var(--navy))",
@@ -86,19 +88,40 @@ export default {
           to: { height: "0" },
         },
         "pulse-glow": {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.6" },
+          "0%, 100%": { opacity: "1", boxShadow: "0 0 8px hsl(43 72% 52% / 0.4)" },
+          "50%": { opacity: "0.7", boxShadow: "0 0 20px hsl(43 72% 52% / 0.6)" },
         },
         "slide-up": {
           from: { transform: "translateY(10px)", opacity: "0" },
           to: { transform: "translateY(0)", opacity: "1" },
         },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        "beacon-breathe": {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.8" },
+          "50%": { transform: "scale(1.15)", opacity: "1" },
+        },
+        "twinkle": {
+          "0%, 100%": { opacity: "0.4", transform: "scale(0.95)" },
+          "50%": { opacity: "1", transform: "scale(1.05)" },
+        },
+        "stardust": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
-        "slide-up": "slide-up 0.3s ease-out",
+        "pulse-glow": "pulse-glow 2.5s ease-in-out infinite",
+        "slide-up": "slide-up 0.3s ease-out forwards",
+        "shimmer": "shimmer 3s linear infinite",
+        "beacon-breathe": "beacon-breathe 3s ease-in-out infinite",
+        "twinkle": "twinkle 2s ease-in-out infinite",
+        "stardust": "stardust 4s ease-in-out infinite",
       },
     },
   },
