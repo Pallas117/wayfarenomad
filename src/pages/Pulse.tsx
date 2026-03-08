@@ -96,6 +96,126 @@ interface FunctionalPoint {
   verified: boolean;
 }
 
+interface KarmaPulse {
+  id: string;
+  action: string;
+  icon: React.ElementType;
+  displayName: string;
+  isAnonymous: boolean;
+  points: number;
+  timeAgo: string;
+  color: string;
+}
+
+function useKarmaPulses() {
+  const [pulses, setPulses] = useState<KarmaPulse[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPulses = async () => {
+      // Fetch recent community verifications
+      const [verRes, sosRes, safeRes] = await Promise.all([
+        supabase
+          .from("community_verifications")
+          .select("id, created_at, user_id")
+          .order("created_at", { ascending: false })
+          .limit(10),
+        supabase
+          .from("sos_responses")
+          .select("id, created_at, responder_id")
+          .order("created_at", { ascending: false })
+          .limit(5),
+        supabase
+          .from("safe_spaces")
+          .select("id, created_at, created_by, name")
+          .order("created_at", { ascending: false })
+          .limit(5),
+      ]);
+
+      // Collect all user IDs
+      const userIds = new Set<string>();
+      verRes.data?.forEach(v => userIds.add(v.user_id));
+      sosRes.data?.forEach(s => userIds.add(s.responder_id));
+      safeRes.data?.forEach(s => userIds.add(s.created_by));
+
+      // Fetch profiles for all users
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, display_name, leaderboard_anonymous")
+        .in("user_id", Array.from(userIds));
+
+      const profileMap = new Map<string, { display_name: string | null; leaderboard_anonymous: boolean }>();
+      profiles?.forEach((p: any) => profileMap.set(p.user_id, p));
+
+      const getName = (userId: string) => {
+        const p = profileMap.get(userId);
+        const isAnon = !!(p as any)?.leaderboard_anonymous;
+        return {
+          displayName: isAnon ? "Anonymous Nomad" : (p?.display_name || "A Traveler"),
+          isAnonymous: isAnon,
+        };
+      };
+
+      const allPulses: KarmaPulse[] = [];
+
+      verRes.data?.forEach(v => {
+        const { displayName, isAnonymous } = getName(v.user_id);
+        allPulses.push({
+          id: `ver-${v.id}`,
+          action: "verified an event",
+          icon: CheckCircle,
+          displayName,
+          isAnonymous,
+          points: 5,
+          timeAgo: formatDistanceToNow(new Date(v.created_at), { addSuffix: true }),
+          color: "hsl(var(--cat-wellbeing))",
+        });
+      });
+
+      sosRes.data?.forEach(s => {
+        const { displayName, isAnonymous } = getName(s.responder_id);
+        allPulses.push({
+          id: `sos-${s.id}`,
+          action: "responded to an SOS",
+          icon: Shield,
+          displayName,
+          isAnonymous,
+          points: 10,
+          timeAgo: formatDistanceToNow(new Date(s.created_at), { addSuffix: true }),
+          color: "hsl(var(--destructive))",
+        });
+      });
+
+      safeRes.data?.forEach(s => {
+        const { displayName, isAnonymous } = getName(s.created_by);
+        allPulses.push({
+          id: `safe-${s.id}`,
+          action: `added safe space "${s.name}"`,
+          icon: Heart,
+          displayName,
+          isAnonymous,
+          points: 8,
+          timeAgo: formatDistanceToNow(new Date(s.created_at), { addSuffix: true }),
+          color: "hsl(var(--primary))",
+        });
+      });
+
+      // Sort by most recent
+      allPulses.sort((a, b) => {
+        // Simple sort by the raw id order since they're already fetched newest first
+        return 0;
+      });
+
+      setPulses(allPulses.slice(0, 15));
+      setLoading(false);
+    };
+
+    fetchPulses();
+  }, []);
+
+  return { pulses, loading };
+}
+
 export default function Pulse() {
   const { user } = useAuth();
   const { isSteward } = useUserRank();
