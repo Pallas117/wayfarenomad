@@ -9,7 +9,8 @@ export function useAuth() {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
+        console.log("[useAuth] onAuthStateChange:", event, "user:", session?.user?.id ?? "none");
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -17,6 +18,7 @@ export function useAuth() {
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("[useAuth] getSession:", session?.user?.id ?? "no session");
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
