@@ -19,6 +19,7 @@ export function BottomNav() {
           <NavLink
             key={to}
             to={to}
+            onClick={() => haptic("tap")}
             className={({ isActive }) =>
               cn(
                 "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200 min-w-[44px] min-h-[44px] justify-center",
