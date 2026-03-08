@@ -23,7 +23,9 @@ const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
 };
 
 export function ExpeditionCard({ expedition, isHost, onBook, onCancel, onComplete, index }: ExpeditionCardProps) {
+  const navigate = useNavigate();
   const status = STATUS_CONFIG[expedition.status ?? "planning"] ?? STATUS_CONFIG.planning;
+  const hasLocation = expedition.lat && expedition.lng;
   const isCompleted = expedition.status === "completed";
   const isCancelled = expedition.status === "cancelled";
   const canBook = !isHost && !expedition.is_booked && !isCompleted && !isCancelled;
