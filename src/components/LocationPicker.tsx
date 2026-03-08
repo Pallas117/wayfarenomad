@@ -76,6 +76,7 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         onChange(pos.coords.latitude, pos.coords.longitude);
+        reverseGeocode(pos.coords.latitude, pos.coords.longitude);
         setLocating(false);
         setOpen(true);
       },
