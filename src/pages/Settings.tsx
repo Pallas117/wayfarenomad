@@ -135,7 +135,7 @@ function CompassConnectionsSection() {
   );
 }
 
-
+function PowerSection() {
   const power = usePower();
   const info = POWER_MODE_INFO[power.mode];
   const batteryPct = power.batteryLevel !== null ? Math.round(power.batteryLevel * 100) : null;
