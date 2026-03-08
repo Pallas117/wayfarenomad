@@ -745,6 +745,7 @@ export type Database = {
           full_name: string | null
           id: string
           instagram_handle: string | null
+          leaderboard_anonymous: boolean
           learns: string[] | null
           quiz_completed: boolean | null
           social_verified: boolean | null
@@ -771,6 +772,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           instagram_handle?: string | null
+          leaderboard_anonymous?: boolean
           learns?: string[] | null
           quiz_completed?: boolean | null
           social_verified?: boolean | null
@@ -797,6 +799,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           instagram_handle?: string | null
+          leaderboard_anonymous?: boolean
           learns?: string[] | null
           quiz_completed?: boolean | null
           social_verified?: boolean | null
