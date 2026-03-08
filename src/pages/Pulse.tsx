@@ -292,8 +292,14 @@ export default function Pulse() {
                         {event.verified ? (
                           <Badge className="text-[10px] bg-primary/20 text-primary border-primary/30"><CheckCircle className="h-2.5 w-2.5 mr-0.5" />Verified</Badge>
                         ) : (
-                          <Button variant="ghost" size="sm" className="h-5 text-[10px] text-primary px-1" onClick={() => handleVerify(event.id)}>Verify</Button>
+                          <>
+                            <Badge variant="outline" className="text-[10px] text-muted-foreground border-muted"><AlertTriangle className="h-2.5 w-2.5 mr-0.5" />Auto-scraped</Badge>
+                            {isSteward && <Button variant="ghost" size="sm" className="h-5 text-[10px] text-primary px-1" onClick={() => handleVerify(event.id)}>Verify</Button>}
+                          </>
                         )}
+                        <Button variant="ghost" size="sm" className="h-5 text-[10px] text-destructive/70 px-1" onClick={() => handleFlag(event.id)}>
+                          <Flag className="h-2.5 w-2.5" />
+                        </Button>
                       </div>
                       {event.source_url && (
                         <a href={event.source_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">

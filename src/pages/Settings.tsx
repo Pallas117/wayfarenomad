@@ -88,6 +88,126 @@ function PowerSection() {
   );
 }
 
+function VerificationStatusCard() {
+  const { user } = useAuth();
+  const [profile, setProfile] = useState<any>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("vision_completed, quiz_completed, social_verified, instagram_handle, telegram_handle, whatsapp_number, substack_url")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => { if (data) setProfile(data); });
+  }, [user]);
+
+  if (!profile) return null;
+
+  const emailConfirmed = !!user?.email_confirmed_at;
+  const socialCount = [profile.instagram_handle, profile.telegram_handle, profile.whatsapp_number, profile.substack_url].filter(Boolean).length;
+  const hasSocial = socialCount >= 2;
+  const steps = [
+    { label: "Email confirmed", done: emailConfirmed },
+    { label: "2+ social links", done: hasSocial },
+    { label: "Vision Quest completed", done: !!profile.vision_completed },
+    { label: "Integrity Quiz passed", done: !!profile.quiz_completed },
+  ];
+  const allDone = steps.every(s => s.done);
+
+  return (
+    <motion.div
+      className="glass-card rounded-xl p-5 mb-6 space-y-3"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.25 }}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 text-primary" />
+          <h2 className="font-display font-semibold text-lg">Verification Status</h2>
+        </div>
+        {allDone && (
+          <Badge className="bg-primary/20 text-primary border-primary/30 text-xs">
+            <CheckCircle2 className="h-3 w-3 mr-1" /> Fully Verified
+          </Badge>
+        )}
+      </div>
+      <div className="space-y-2">
+        {steps.map((s) => (
+          <div key={s.label} className="flex items-center gap-2 text-sm">
+            {s.done ? (
+              <CheckCircle2 className="h-4 w-4 text-primary" />
+            ) : (
+              <Circle className="h-4 w-4 text-muted-foreground" />
+            )}
+            <span className={s.done ? "text-foreground" : "text-muted-foreground"}>{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+function DonationSection() {
+  const [loading, setLoading] = useState<string | null>(null);
+
+  const handleDonate = async (tier: string) => {
+    setLoading(tier);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-donation", {
+        body: { tier },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      }
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to create donation session", variant: "destructive" });
+    }
+    setLoading(null);
+  };
+
+  return (
+    <motion.div
+      className="glass-card rounded-xl p-5 mb-6 space-y-4"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.28 }}
+    >
+      <div className="flex items-center gap-3">
+        <Heart className="h-5 w-5 text-primary" />
+        <h2 className="font-display font-semibold text-lg">Support Wayfare</h2>
+      </div>
+      <p className="text-sm text-muted-foreground">
+        Wayfare is free to use. We earn through small commissions on event tickets, tours, and accommodation partnerships — never from your data.
+      </p>
+      <p className="text-xs text-muted-foreground">
+        If you'd like to buy us a coffee and keep the servers running:
+      </p>
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { tier: "coffee", label: "$5", sub: "Coffee" },
+          { tier: "fuel", label: "$15", sub: "Fuel" },
+          { tier: "patron", label: "$50", sub: "Patron" },
+        ].map((d) => (
+          <Button
+            key={d.tier}
+            variant="outline"
+            className="flex flex-col items-center gap-0.5 min-h-[60px] hover:border-primary/50"
+            onClick={() => handleDonate(d.tier)}
+            disabled={loading !== null}
+          >
+            <Coffee className="h-4 w-4 text-primary" />
+            <span className="font-display font-bold text-sm">{d.label}</span>
+            <span className="text-[10px] text-muted-foreground">{d.sub}</span>
+          </Button>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function SettingsPage() {
   const { user, signOut } = useAuth();
   const [intensity, setIntensity] = useState(getVibrationIntensity());
