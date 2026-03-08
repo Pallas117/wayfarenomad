@@ -122,6 +122,11 @@ export function CreateHangoutForm({ onClose }: CreateHangoutFormProps) {
           setLng(newLng);
           if (name && !locationName) setLocationName(name);
         }}
+        onClear={() => {
+          setLat(null);
+          setLng(null);
+          setLocationName("");
+        }}
       />
 
       <div className="flex gap-3">

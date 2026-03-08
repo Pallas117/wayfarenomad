@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MapPin, Navigation, Search, Loader2 } from "lucide-react";
+import { MapPin, Navigation, Search, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,6 +27,7 @@ interface LocationPickerProps {
   lat: number | null;
   lng: number | null;
   onChange: (lat: number, lng: number, name?: string) => void;
+  onClear?: () => void;
 }
 
 function ClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
@@ -46,7 +47,7 @@ function FlyTo({ lat, lng }: { lat: number; lng: number }) {
   return null;
 }
 
-export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
+export function LocationPicker({ lat, lng, onChange, onClear }: LocationPickerProps) {
   const [open, setOpen] = useState(false);
   const [locating, setLocating] = useState(false);
   const [query, setQuery] = useState("");
@@ -125,6 +126,14 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
     setOpen(true);
   };
 
+  const handleClear = () => {
+    onClear?.();
+    setQuery("");
+    setResults([]);
+    setShowResults(false);
+    setOpen(false);
+  };
+
   const hasPin = lat !== null && lng !== null;
 
   return (
@@ -191,6 +200,17 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
           <Navigation className="h-3.5 w-3.5 mr-1.5" />
           {locating ? "Locating…" : "My Location"}
         </Button>
+        {hasPin && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-xs text-destructive hover:text-destructive"
+            onClick={handleClear}
+          >
+            <X className="h-3.5 w-3.5" />
+          </Button>
+        )}
       </div>
 
       {/* Map */}
