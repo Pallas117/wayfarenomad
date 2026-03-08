@@ -209,7 +209,7 @@ export function LocationPicker({ lat, lng, onChange }: LocationPickerProps) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
               />
-              <ClickHandler onClick={(clickLat, clickLng) => onChange(clickLat, clickLng)} />
+              <ClickHandler onClick={(clickLat, clickLng) => { onChange(clickLat, clickLng); reverseGeocode(clickLat, clickLng); }} />
               {hasPin && (
                 <>
                   <Marker position={[lat!, lng!]} icon={pinIcon} />
