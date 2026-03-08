@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff, Check, Battery, BatteryCharging, Zap, CheckCircle2, Circle, Heart, Coffee } from "lucide-react";
+import { Settings, Vibrate, Volume2, VolumeX, Shield, Info, MapPin, RotateCw, Bell, BellOff, Check, Battery, BatteryCharging, Zap, CheckCircle2, Circle, Heart, Coffee, Compass, Users } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { AvatarUpload } from "@/components/AvatarUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { usePower } from "@/components/PowerProvider";
+import { useCompassLocks } from "@/hooks/useCompassLock";
 import {
   haptic,
   getVibrationIntensity,
@@ -38,6 +39,101 @@ const POWER_MODE_INFO = {
   saver: { label: "Power Saver", color: "bg-orange-500/20 text-orange-400", desc: "Canvas & 3D effects disabled, minimal motion" },
   critical: { label: "Critical", color: "bg-destructive/20 text-destructive", desc: "Static UI only — all effects locked" },
 } as const;
+
+function CompassConnectionsSection() {
+  const { user } = useAuth();
+  const { data: locks, isLoading } = useCompassLocks();
+
+  // Fetch profiles for connected users
+  const [profiles, setProfiles] = useState<Record<string, { display_name: string | null; avatar_url: string | null }>>({});
+
+  useEffect(() => {
+    if (!locks?.length || !user?.id) return;
+    const otherIds = locks.map((l) => (l.user_a === user.id ? l.user_b : l.user_a));
+    if (otherIds.length === 0) return;
+
+    supabase
+      .from("profiles")
+      .select("user_id, display_name, avatar_url")
+      .in("user_id", otherIds)
+      .then(({ data }) => {
+        const map: Record<string, { display_name: string | null; avatar_url: string | null }> = {};
+        data?.forEach((p) => { map[p.user_id] = p; });
+        setProfiles(map);
+      });
+  }, [locks, user?.id]);
+
+  return (
+    <motion.div
+      className="glass-card rounded-xl p-5 mb-6 space-y-4"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.22 }}
+    >
+      <div className="flex items-center gap-3">
+        <Compass className="h-5 w-5 text-primary" />
+        <h2 className="font-display font-semibold text-lg">Compass Connections</h2>
+        {locks && locks.length > 0 && (
+          <Badge className="text-xs bg-primary/20 text-primary ml-auto">{locks.length}</Badge>
+        )}
+      </div>
+      <p className="text-xs text-muted-foreground">People you've verified in person — real connections, no flakiness.</p>
+
+      {isLoading ? (
+        <div className="space-y-2">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-16 rounded-xl bg-secondary/30 animate-pulse" />
+          ))}
+        </div>
+      ) : !locks?.length ? (
+        <div className="flex flex-col items-center py-8 gap-3 text-muted-foreground">
+          <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+            <Users className="h-7 w-7 text-primary" />
+          </div>
+          <p className="text-sm text-center">No compass connections yet.<br />Meet someone IRL and scan their QR code!</p>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {locks.map((lock) => {
+            const otherId = lock.user_a === user?.id ? lock.user_b : lock.user_a;
+            const profile = profiles[otherId];
+            const name = profile?.display_name || "Traveler";
+            const initials = name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+            const date = new Date(lock.created_at);
+
+            return (
+              <div key={lock.id} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/20">
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt={name} className="h-10 w-10 rounded-full object-cover shrink-0" />
+                ) : (
+                  <div className="h-10 w-10 rounded-full gradient-gold flex items-center justify-center text-primary-foreground font-display font-bold text-xs shrink-0">
+                    {initials}
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="font-display font-semibold text-sm truncate">{name}</p>
+                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                    <span>{lock.verification_method === "gps" ? "📍 GPS" : "📱 QR"}</span>
+                    <span>·</span>
+                    <span>{date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                    {lock.lat && lock.lng && (
+                      <>
+                        <span>·</span>
+                        <MapPin className="h-3 w-3 inline" />
+                        <span>{lock.lat.toFixed(2)}, {lock.lng.toFixed(2)}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <Compass className="h-4 w-4 text-primary shrink-0" />
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </motion.div>
+  );
+}
 
 function PowerSection() {
   const power = usePower();
@@ -543,6 +639,9 @@ export default function SettingsPage() {
 
       {/* Verification Status */}
       <VerificationStatusCard />
+
+      {/* Compass Connections */}
+      <CompassConnectionsSection />
 
       {/* Support Wayfare */}
       <DonationSection />
