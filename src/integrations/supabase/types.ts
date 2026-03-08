@@ -187,6 +187,77 @@ export type Database = {
         }
         Relationships: []
       }
+      hangout_attendees: {
+        Row: {
+          created_at: string
+          hangout_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hangout_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hangout_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hangout_attendees_hangout_id_fkey"
+            columns: ["hangout_id"]
+            isOneToOne: false
+            referencedRelation: "hangouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hangouts: {
+        Row: {
+          category: string
+          created_at: string
+          creator_id: string
+          description: string | null
+          hangout_time: string
+          id: string
+          lat: number | null
+          lng: number | null
+          location_name: string | null
+          max_attendees: number | null
+          title: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          creator_id: string
+          description?: string | null
+          hangout_time: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location_name?: string | null
+          max_attendees?: number | null
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          creator_id?: string
+          description?: string | null
+          hangout_time?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location_name?: string | null
+          max_attendees?: number | null
+          title?: string
+        }
+        Relationships: []
+      }
       instant_meetups: {
         Row: {
           calendar_sync_status: boolean | null
