@@ -105,7 +105,7 @@ function RotatingQuote() {
     </AnimatePresence>
   );
 }
-
+function VisionStep({
   visionText,
   setVisionText,
   wordCount,
