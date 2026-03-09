@@ -9,7 +9,17 @@ interface PerfStats {
 
 export function PerfOverlay({ pinCount }: { pinCount: number }) {
   const [stats, setStats] = useState<PerfStats>({ fps: 0, memory: null, pinCount: 0 });
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(() => {
+    const stored = localStorage.getItem("perf-overlay-visible");
+    return stored === null ? true : stored === "true";
+  });
+
+  const toggleVisible = () => {
+    setIsVisible((prev) => {
+      localStorage.setItem("perf-overlay-visible", String(!prev));
+      return !prev;
+    });
+  };
   const frameRef = useRef(0);
   const lastRef = useRef(performance.now());
   const rafRef = useRef<number>(0);
@@ -56,7 +66,7 @@ export function PerfOverlay({ pinCount }: { pinCount: number }) {
       }}
     >
       <button
-        onClick={() => setIsVisible(!isVisible)}
+        onClick={toggleVisible}
         style={{
           width: 28,
           height: 28,
