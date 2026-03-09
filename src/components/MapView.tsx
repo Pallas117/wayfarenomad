@@ -1,7 +1,8 @@
-import { useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useEffect, useCallback } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { MarkerClusterLayer } from "./MarkerClusterLayer";
 
 // Fix default marker icons in Leaflet + bundlers
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -82,8 +83,14 @@ function FitBounds({ pins }: { pins: MapPin[] }) {
   return null;
 }
 
+function makePinIcon(pin: MapPin): L.DivIcon {
+  return pin.type === "beacon" ? beaconIcon : makeCategoryIcon(pin.category);
+}
+
 export function MapView({ pins, center = [3.139, 101.6869], zoom = 10, className = "", tileUrl, intrepidMode, onPinClick }: MapViewProps) {
   const url = tileUrl || (intrepidMode ? TOPO_TILES : DARK_TILES);
+
+  const stableMakeIcon = useCallback((pin: MapPin) => makePinIcon(pin), []);
 
   return (
     <MapContainer
@@ -103,23 +110,11 @@ export function MapView({ pins, center = [3.139, 101.6869], zoom = 10, className
         url={url}
       />
       {pins.length > 0 && <FitBounds pins={pins} />}
-      {pins.map((pin) => (
-        <Marker
-          key={pin.id}
-          position={[pin.lat, pin.lng]}
-          icon={pin.type === "beacon" ? beaconIcon : makeCategoryIcon(pin.category)}
-          eventHandlers={{
-            click: () => onPinClick?.(pin),
-          }}
-        >
-          <Popup>
-            <div className="text-xs">
-              <strong>{pin.title}</strong>
-              {pin.subtitle && <p className="text-muted-foreground">{pin.subtitle}</p>}
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      <MarkerClusterLayer
+        pins={pins}
+        makeIcon={stableMakeIcon}
+        onPinClick={onPinClick}
+      />
     </MapContainer>
   );
 }
