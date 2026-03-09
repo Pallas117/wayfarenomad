@@ -14,7 +14,7 @@ interface MarkerClusterLayerProps {
 
 export function MarkerClusterLayer({ pins, makeIcon, onPinClick }: MarkerClusterLayerProps) {
   const map = useMap();
-  const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
+  const clusterRef = useRef<any>(null);
 
   useEffect(() => {
     if (!clusterRef.current) {
