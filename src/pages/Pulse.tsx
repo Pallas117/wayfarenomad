@@ -21,6 +21,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { useEventReactions } from "@/hooks/useEventReactions";
 import { catStyle, catIconStyle } from "@/lib/categoryColors";
 import { useItineraryMatches } from "@/hooks/useItineraryMatches";
+import { PerfOverlay } from "@/components/PerfOverlay";
 
 const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
 
@@ -430,6 +431,7 @@ export default function Pulse() {
           />
         </Suspense>
       </div>
+      <PerfOverlay pinCount={mapPins.length} />
 
       {/* Floating top controls */}
       <div className="absolute top-0 left-0 right-0 z-[1000] p-3 space-y-2">
