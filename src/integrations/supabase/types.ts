@@ -361,6 +361,36 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback: {
+        Row: {
+          created_at: string
+          feature_request: string | null
+          id: string
+          location: string | null
+          nomad_handle: string | null
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feature_request?: string | null
+          id?: string
+          location?: string | null
+          nomad_handle?: string | null
+          rating: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feature_request?: string | null
+          id?: string
+          location?: string | null
+          nomad_handle?: string | null
+          rating?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       functional_points: {
         Row: {
           address: string | null
@@ -867,6 +897,30 @@ export type Database = {
           fuzzed_lat?: number | null
           fuzzed_lng?: number | null
           id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rsvps: {
+        Row: {
+          created_at: string
+          event_name: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_name: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_name?: string
+          id?: string
+          status?: string
           user_id?: string
         }
         Relationships: []
