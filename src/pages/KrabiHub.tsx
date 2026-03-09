@@ -304,5 +304,6 @@ export default function KrabiHub() {
 
       <NomadDebriefModal open={showFeedback} onOpenChange={setShowFeedback} />
     </div>
+    </>
   );
 }
