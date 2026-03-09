@@ -126,6 +126,10 @@ export default function KrabiHub() {
   });
 
   return (
+    <>
+      <AnimatePresence>
+        {showSplash && <KrabiSplash onComplete={() => setShowSplash(false)} />}
+      </AnimatePresence>
     <div className="min-h-screen pb-24 krabi-theme">
       {/* Hero Banner */}
       <motion.div
