@@ -59,8 +59,8 @@ export default function KrabiHub() {
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [checkingRsvp, setCheckingRsvp] = useState(true);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showSplash, setShowSplash] = useState(() => !hasSeenKrabiOnboarding());
 
-  useEffect(() => {
     if (!user) {
       setCheckingRsvp(false);
       return;
