@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
@@ -6,11 +6,12 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const authEventFired = useRef(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log("[useAuth] onAuthStateChange:", event, "user:", session?.user?.id ?? "none");
+        authEventFired.current = true;
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -18,10 +19,11 @@ export function useAuth() {
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("[useAuth] getSession:", session?.user?.id ?? "no session");
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
+      if (!authEventFired.current) {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();

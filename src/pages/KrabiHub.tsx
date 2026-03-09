@@ -93,25 +93,27 @@ export default function KrabiHub() {
     
     try {
       if (hasRsvp) {
-        await supabase
+        const { error } = await supabase
           .from("rsvps")
           .delete()
           .eq("user_id", user.id)
           .eq("event_name", EVENT_NAME);
         
+        if (error) throw error;
         setHasRsvp(false);
         toast.success("RSVP cancelled");
       } else {
-        await supabase
+        const { error } = await supabase
           .from("rsvps")
           .insert({ user_id: user.id, event_name: EVENT_NAME, status: "attending" });
         
+        if (error) throw error;
         setHasRsvp(true);
         haptic("success");
         toast.success("You're in! See you at Songkran 💦");
       }
-    } catch (err) {
-      toast.error("Something went wrong");
+    } catch (err: any) {
+      toast.error(err?.message || "Something went wrong");
     } finally {
       setRsvpLoading(false);
     }

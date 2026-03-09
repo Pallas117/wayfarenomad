@@ -1081,12 +1081,75 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          bridge: Database["public"]["Enums"]["cultural_bridge"] | null
+          created_at: string | null
+          current_city: string | null
+          display_name: string | null
+          leaderboard_anonymous: boolean | null
+          learns: string[] | null
+          quiz_completed: boolean | null
+          social_verified: boolean | null
+          stardust_points: number | null
+          teaches: string[] | null
+          travel_end: string | null
+          travel_start: string | null
+          user_id: string | null
+          vision_completed: boolean | null
+          vision_statement: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          bridge?: Database["public"]["Enums"]["cultural_bridge"] | null
+          created_at?: string | null
+          current_city?: string | null
+          display_name?: string | null
+          leaderboard_anonymous?: boolean | null
+          learns?: string[] | null
+          quiz_completed?: boolean | null
+          social_verified?: boolean | null
+          stardust_points?: number | null
+          teaches?: string[] | null
+          travel_end?: string | null
+          travel_start?: string | null
+          user_id?: string | null
+          vision_completed?: boolean | null
+          vision_statement?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          bridge?: Database["public"]["Enums"]["cultural_bridge"] | null
+          created_at?: string | null
+          current_city?: string | null
+          display_name?: string | null
+          leaderboard_anonymous?: boolean | null
+          learns?: string[] | null
+          quiz_completed?: boolean | null
+          social_verified?: boolean | null
+          stardust_points?: number | null
+          teaches?: string[] | null
+          travel_end?: string | null
+          travel_start?: string | null
+          user_id?: string | null
+          vision_completed?: boolean | null
+          vision_statement?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       award_stardust: {
         Args: { _points: number; _user_id: string }
         Returns: undefined
+      }
+      can_join_group: {
+        Args: { _group_chat_id: string; _user_id: string }
+        Returns: boolean
       }
       get_user_rank: { Args: { _user_id: string }; Returns: number }
       has_min_rank: {
