@@ -176,7 +176,7 @@ describe("Pulse Map – Filter Throughput", () => {
 
   it("chains type + category filter in < 5 ms", () => {
     const start = performance.now();
-    const result = pins.filter((p) => p.type === "event" && p.category === "tech");
+    const result = pins.filter((p) => p.type === "event" && p.category === "music");
     const elapsed = performance.now() - start;
 
     expect(result.length).toBeGreaterThan(0);
