@@ -66,7 +66,7 @@ export function PerfOverlay({ pinCount }: { pinCount: number }) {
       }}
     >
       <button
-        onClick={() => setIsVisible(!isVisible)}
+        onClick={toggleVisible}
         style={{
           width: 28,
           height: 28,
