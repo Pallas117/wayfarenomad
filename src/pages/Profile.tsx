@@ -77,8 +77,12 @@ export default function Profile() {
     const load = async () => {
       setLoading(true);
 
+      const isOwn = user?.id === userId;
+
       const [profileRes, rankRes] = await Promise.all([
-        supabase.from("profiles").select("*").eq("user_id", userId).single(),
+        isOwn
+          ? supabase.from("profiles").select("*").eq("user_id", userId).single()
+          : supabase.from("public_profiles" as any).select("*").eq("user_id", userId).single(),
         supabase.rpc("get_user_rank", { _user_id: userId }),
       ]);
 
@@ -107,7 +111,7 @@ export default function Profile() {
     };
 
     load();
-  }, [userId]);
+  }, [userId, user?.id]);
 
   if (loading) {
     return (
