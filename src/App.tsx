@@ -19,6 +19,7 @@ import SettingsPage from "./pages/Settings";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import AdminVerify from "./pages/AdminVerify";
+import KrabiHub from "./pages/KrabiHub";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
