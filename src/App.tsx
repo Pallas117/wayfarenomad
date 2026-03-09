@@ -47,6 +47,7 @@ const App = () => (
               <Route path="messages" element={<Messages />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="profile/:userId" element={<Profile />} />
+              <Route path="krabi" element={<KrabiHub />} />
               <Route path="admin/verify" element={<AdminVerify />} />
             </Route>
             <Route path="*" element={<NotFound />} />
