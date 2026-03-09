@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
+import { Activity, X } from "lucide-react";
 
 interface PerfStats {
   fps: number;
-  memory: number | null; // MB
+  memory: number | null;
   pinCount: number;
 }
 
 export function PerfOverlay({ pinCount }: { pinCount: number }) {
   const [stats, setStats] = useState<PerfStats>({ fps: 0, memory: null, pinCount: 0 });
+  const [isVisible, setIsVisible] = useState(true);
   const frameRef = useRef(0);
   const lastRef = useRef(performance.now());
   const rafRef = useRef<number>(0);
@@ -46,28 +48,59 @@ export function PerfOverlay({ pinCount }: { pinCount: number }) {
         bottom: 72,
         right: 12,
         zIndex: 9999,
-        background: "hsl(225 50% 10% / 0.9)",
-        backdropFilter: "blur(8px)",
-        border: "1px solid hsl(225 25% 18% / 0.6)",
-        borderRadius: 8,
-        padding: "6px 10px",
-        fontFamily: "'IBM Plex Sans', monospace",
-        fontSize: 11,
-        lineHeight: 1.6,
-        color: "hsl(40 10% 96%)",
-        pointerEvents: "none",
-        userSelect: "none",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-end",
+        gap: 4,
+        pointerEvents: "auto",
       }}
     >
-      <div style={{ color: fpsColor, fontWeight: 600 }}>
-        {stats.fps} FPS
-      </div>
-      <div style={{ opacity: 0.7 }}>
-        📍 {stats.pinCount} pins
-      </div>
-      {stats.memory !== null && (
-        <div style={{ opacity: 0.7 }}>
-          🧠 {stats.memory} MB
+      <button
+        onClick={() => setIsVisible(!isVisible)}
+        style={{
+          width: 28,
+          height: 28,
+          borderRadius: 6,
+          background: "hsl(225 50% 10% / 0.9)",
+          backdropFilter: "blur(8px)",
+          border: "1px solid hsl(225 25% 18% / 0.6)",
+          color: "hsl(40 10% 96%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+        }}
+        title={isVisible ? "Hide performance stats" : "Show performance stats"}
+      >
+        {isVisible ? <X size={14} /> : <Activity size={14} />}
+      </button>
+
+      {isVisible && (
+        <div
+          style={{
+            background: "hsl(225 50% 10% / 0.9)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid hsl(225 25% 18% / 0.6)",
+            borderRadius: 8,
+            padding: "6px 10px",
+            fontFamily: "'IBM Plex Sans', monospace",
+            fontSize: 11,
+            lineHeight: 1.6,
+            color: "hsl(40 10% 96%)",
+            userSelect: "none",
+          }}
+        >
+          <div style={{ color: fpsColor, fontWeight: 600 }}>
+            {stats.fps} FPS
+          </div>
+          <div style={{ opacity: 0.7 }}>
+            📍 {stats.pinCount} pins
+          </div>
+          {stats.memory !== null && (
+            <div style={{ opacity: 0.7 }}>
+              🧠 {stats.memory} MB
+            </div>
+          )}
         </div>
       )}
     </div>
