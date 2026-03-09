@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { KrabiSplash, hasSeenKrabiOnboarding } from "@/components/KrabiSplash";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Icon } from "leaflet";
 import { 
@@ -58,6 +59,7 @@ export default function KrabiHub() {
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [checkingRsvp, setCheckingRsvp] = useState(true);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showSplash, setShowSplash] = useState(() => !hasSeenKrabiOnboarding());
 
   useEffect(() => {
     if (!user) {
@@ -124,6 +126,10 @@ export default function KrabiHub() {
   });
 
   return (
+    <>
+      <AnimatePresence>
+        {showSplash && <KrabiSplash onComplete={() => setShowSplash(false)} />}
+      </AnimatePresence>
     <div className="min-h-screen pb-24 krabi-theme">
       {/* Hero Banner */}
       <motion.div
@@ -298,5 +304,6 @@ export default function KrabiHub() {
 
       <NomadDebriefModal open={showFeedback} onOpenChange={setShowFeedback} />
     </div>
+    </>
   );
 }
