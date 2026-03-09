@@ -21,6 +21,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { useEventReactions } from "@/hooks/useEventReactions";
 import { catStyle, catIconStyle } from "@/lib/categoryColors";
 import { useItineraryMatches } from "@/hooks/useItineraryMatches";
+import { PerfOverlay } from "@/components/PerfOverlay";
 
 const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
 
