@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft, Star, Shield, ShieldCheck, MapPin, Calendar,
   MessageCircle, Send, Instagram, ExternalLink, CheckCircle2, Compass,
-  Heart, Zap, Users,
+  Heart, Zap, Users, QrCode, Share2,
 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
@@ -450,10 +451,50 @@ export default function Profile() {
 
       {isOwnProfile && (
         <motion.div
+          className="space-y-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
         >
+          {/* Nomad Passport QR Code */}
+          <div className="glass-card rounded-xl p-6 text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <QrCode className="h-5 w-5 text-primary" />
+              <h3 className="font-display font-semibold text-sm subheading">Nomad Passport</h3>
+            </div>
+            <div className="inline-block p-4 bg-white rounded-xl">
+              <QRCodeSVG
+                value={`${window.location.origin}/profile/${userId}`}
+                size={160}
+                bgColor="#ffffff"
+                fgColor="#1a1a2e"
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              Scan to connect — share your digital business card
+            </p>
+            <Button
+              variant="outline"
+              className="mt-3 min-h-[48px] gap-2"
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: `${name}'s Wayfare Profile`,
+                    url: `${window.location.origin}/profile/${userId}`,
+                  });
+                } else {
+                  navigator.clipboard.writeText(`${window.location.origin}/profile/${userId}`);
+                  haptic("tap");
+                  import("sonner").then(m => m.toast.success("Profile link copied!"));
+                }
+              }}
+            >
+              <Share2 className="h-4 w-4" /> Share Profile
+            </Button>
+          </div>
+
           <Button
             variant="outline"
             className="w-full min-h-[48px]"

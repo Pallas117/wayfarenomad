@@ -158,3 +158,49 @@
     background: linear-gradient(135deg, hsl(43 72% 52%), hsl(43 80% 60%));
   }
 }
+
+/* Krabi Launch Theme - Scoped to .krabi-theme */
+.krabi-theme {
+  --krabi-teal: 180 100% 25%;
+  --krabi-coral: 16 100% 65%;
+}
+
+.krabi-gradient {
+  background: linear-gradient(135deg, hsl(180 100% 25%), hsl(180 80% 35%));
+}
+
+.krabi-gradient-subtle {
+  background: linear-gradient(135deg, hsl(180 100% 25% / 0.1), hsl(16 100% 65% / 0.05));
+}
+
+.krabi-button-gradient {
+  background: linear-gradient(135deg, hsl(16 100% 65%), hsl(16 90% 55%));
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.krabi-button-gradient:hover {
+  background: linear-gradient(135deg, hsl(16 100% 60%), hsl(16 90% 50%));
+  transform: translateY(-1px);
+}
+
+.krabi-card {
+  background: hsl(225 50% 10% / 0.9);
+  border: 1px solid hsl(180 100% 25% / 0.2);
+}
+
+.text-krabi-teal {
+  color: hsl(180 100% 25%);
+}
+
+.text-krabi-coral {
+  color: hsl(16 100% 65%);
+}
+
+.bg-krabi-teal {
+  background-color: hsl(180 100% 25%);
+}
+
+.border-krabi-teal {
+  border-color: hsl(180 100% 25%);
+}
