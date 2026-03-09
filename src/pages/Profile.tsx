@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft, Star, Shield, ShieldCheck, MapPin, Calendar,
   MessageCircle, Send, Instagram, ExternalLink, CheckCircle2, Compass,
-  Heart, Zap, Users,
+  Heart, Zap, Users, QrCode, Share2,
 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
