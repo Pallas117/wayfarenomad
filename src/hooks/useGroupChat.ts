@@ -106,7 +106,7 @@ export function useGroupMessages(groupChatId: string | null) {
       // Fetch sender profiles
       const senderIds = [...new Set((messages ?? []).map((m) => m.sender_id))];
       const { data: profiles } = await supabase
-        .from("profiles")
+        .from("public_profiles" as any)
         .select("user_id, display_name")
         .in("user_id", senderIds);
 
@@ -152,7 +152,7 @@ export function useGroupMessages(groupChatId: string | null) {
           const msg = payload.new as GroupMessage;
           // Fetch sender profile
           const { data: profile } = await supabase
-            .from("profiles")
+            .from("public_profiles" as any)
             .select("display_name")
             .eq("user_id", msg.sender_id)
             .single();
@@ -222,7 +222,7 @@ export function useSendGroupMessage() {
           .single();
 
         const { data: profile } = await supabase
-          .from("profiles")
+          .from("public_profiles" as any)
           .select("display_name")
           .eq("user_id", senderId)
           .single();

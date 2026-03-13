@@ -81,7 +81,7 @@ export function ConversationList({ onSelectConversation }: ConversationListProps
       // Fetch profiles for conversation partners
       const partnerIds = Array.from(convMap.keys());
       const { data: profiles } = await supabase
-        .from("profiles")
+        .from("public_profiles" as any)
         .select("user_id, display_name, avatar_url")
         .in("user_id", partnerIds);
 

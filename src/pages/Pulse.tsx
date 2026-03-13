@@ -145,7 +145,7 @@ function useKarmaPulses() {
 
       // Fetch profiles for all users
       const { data: profiles } = await supabase
-        .from("profiles")
+        .from("public_profiles" as any)
         .select("user_id, display_name, leaderboard_anonymous")
         .in("user_id", Array.from(userIds));
 

@@ -24,7 +24,7 @@ export default function Leaderboard() {
   useEffect(() => {
     const fetchLeaders = async () => {
       const { data, error } = await supabase
-        .from("profiles")
+        .from("public_profiles" as any)
         .select("display_name, current_city, stardust_points, avatar_url, leaderboard_anonymous")
         .order("stardust_points", { ascending: false })
         .limit(25);

@@ -47,7 +47,7 @@ export function useHangouts(city?: string) {
       // Fetch creator profiles
       const creatorIds = [...new Set(hangouts.map((h) => h.creator_id))];
       const { data: profiles } = await supabase
-        .from("profiles")
+        .from("public_profiles" as any)
         .select("user_id, display_name, avatar_url")
         .in("user_id", creatorIds);
 
@@ -136,7 +136,7 @@ export function useJoinHangout() {
 
       if (hangout && hangout.creator_id !== userId) {
         const { data: profile } = await supabase
-          .from("profiles")
+          .from("public_profiles" as any)
           .select("display_name")
           .eq("user_id", userId)
           .single();

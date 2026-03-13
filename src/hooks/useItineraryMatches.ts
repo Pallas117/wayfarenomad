@@ -87,7 +87,7 @@ export function useItineraryMatches() {
       // Get profiles for matched users
       const userIds = [...new Set(allItineraries.map(i => i.user_id))];
       const { data: profiles } = await supabase
-        .from("profiles")
+        .from("public_profiles" as any)
         .select("user_id, display_name, bio, teaches, learns, stardust_points")
         .in("user_id", userIds);
 
