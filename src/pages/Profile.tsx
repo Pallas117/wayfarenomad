@@ -82,7 +82,7 @@ export default function Profile() {
       const [profileRes, rankRes] = await Promise.all([
         isOwn
           ? supabase.from("profiles").select("*").eq("user_id", userId).single()
-          : supabase.from("public_profiles" as any).select("*").eq("user_id", userId).single(),
+          : supabase.from("public_profiles").select("*").eq("user_id", userId).single(),
         supabase.rpc("get_user_rank", { _user_id: userId }),
       ]);
 

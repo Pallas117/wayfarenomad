@@ -136,7 +136,7 @@ export function useJoinHangout() {
 
       if (hangout && hangout.creator_id !== userId) {
         const { data: profile } = await supabase
-          .from("public_profiles" as any)
+          .from("public_profiles")
           .select("display_name")
           .eq("user_id", userId)
           .single();
@@ -145,7 +145,7 @@ export function useJoinHangout() {
           body: {
             type: "hangout_join",
             receiver_id: hangout.creator_id,
-            sender_name: profile?.display_name || "A traveler",
+            sender_name: (profile as any)?.display_name || "A traveler",
             hangout_title: hangout.title,
           },
         }).catch(console.error);

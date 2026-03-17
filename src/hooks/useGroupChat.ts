@@ -222,7 +222,7 @@ export function useSendGroupMessage() {
           .single();
 
         const { data: profile } = await supabase
-          .from("public_profiles" as any)
+          .from("public_profiles")
           .select("display_name")
           .eq("user_id", senderId)
           .single();
@@ -231,7 +231,7 @@ export function useSendGroupMessage() {
           body: {
             type: "group_message",
             receiver_ids: members.map((m) => m.user_id),
-            sender_name: profile?.display_name || "Someone",
+            sender_name: (profile as any)?.display_name || "Someone",
             group_name: group?.name || "Group Chat",
           },
         }).catch(console.error);

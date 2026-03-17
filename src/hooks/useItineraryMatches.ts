@@ -110,7 +110,7 @@ export function useItineraryMatches() {
           if (overlap <= 0) continue;
           seen.add(theirIt.user_id);
 
-          const profile = profileMap.get(theirIt.user_id);
+          const profile = profileMap.get(theirIt.user_id) as any;
           const theirTeaches = profile?.teaches || [];
           const theirLearns = profile?.learns || [];
 
