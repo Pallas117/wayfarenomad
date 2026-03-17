@@ -47,12 +47,12 @@ export function useHangouts(city?: string) {
       // Fetch creator profiles
       const creatorIds = [...new Set(hangouts.map((h) => h.creator_id))];
       const { data: profiles } = await supabase
-        .from("public_profiles" as any)
+        .from("public_profiles")
         .select("user_id, display_name, avatar_url")
         .in("user_id", creatorIds);
 
       const profileMap = new Map(
-        (profiles ?? []).map((p) => [p.user_id, p])
+        (profiles ?? []).map((p: any) => [p.user_id, p])
       );
 
       const countMap = new Map<string, number>();
@@ -63,7 +63,7 @@ export function useHangouts(city?: string) {
       });
 
       return hangouts.map((h) => {
-        const profile = profileMap.get(h.creator_id);
+        const profile = profileMap.get(h.creator_id) as any;
         return {
           ...h,
           attendee_count: countMap.get(h.id) ?? 0,
@@ -136,7 +136,7 @@ export function useJoinHangout() {
 
       if (hangout && hangout.creator_id !== userId) {
         const { data: profile } = await supabase
-          .from("public_profiles" as any)
+          .from("public_profiles")
           .select("display_name")
           .eq("user_id", userId)
           .single();
@@ -145,7 +145,7 @@ export function useJoinHangout() {
           body: {
             type: "hangout_join",
             receiver_id: hangout.creator_id,
-            sender_name: profile?.display_name || "A traveler",
+            sender_name: (profile as any)?.display_name || "A traveler",
             hangout_title: hangout.title,
           },
         }).catch(console.error);

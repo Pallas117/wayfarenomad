@@ -106,12 +106,12 @@ export function useGroupMessages(groupChatId: string | null) {
       // Fetch sender profiles
       const senderIds = [...new Set((messages ?? []).map((m) => m.sender_id))];
       const { data: profiles } = await supabase
-        .from("public_profiles" as any)
+        .from("public_profiles")
         .select("user_id, display_name")
         .in("user_id", senderIds);
 
       const profileMap = new Map(
-        (profiles ?? []).map((p) => [p.user_id, p])
+        (profiles ?? []).map((p: any) => [p.user_id, p])
       );
 
       return (messages ?? []).map((m) => {
@@ -152,12 +152,12 @@ export function useGroupMessages(groupChatId: string | null) {
           const msg = payload.new as GroupMessage;
           // Fetch sender profile
           const { data: profile } = await supabase
-            .from("public_profiles" as any)
+            .from("public_profiles")
             .select("display_name")
             .eq("user_id", msg.sender_id)
             .single();
 
-          const name = profile?.display_name ?? "Nomad";
+           const name = (profile as any)?.display_name ?? "Nomad";
           setRealtimeMessages((prev) => [
             ...prev,
             {
@@ -222,7 +222,7 @@ export function useSendGroupMessage() {
           .single();
 
         const { data: profile } = await supabase
-          .from("public_profiles" as any)
+          .from("public_profiles")
           .select("display_name")
           .eq("user_id", senderId)
           .single();
@@ -231,7 +231,7 @@ export function useSendGroupMessage() {
           body: {
             type: "group_message",
             receiver_ids: members.map((m) => m.user_id),
-            sender_name: profile?.display_name || "Someone",
+            sender_name: (profile as any)?.display_name || "Someone",
             group_name: group?.name || "Group Chat",
           },
         }).catch(console.error);

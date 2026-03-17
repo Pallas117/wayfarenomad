@@ -87,11 +87,11 @@ export function useItineraryMatches() {
       // Get profiles for matched users
       const userIds = [...new Set(allItineraries.map(i => i.user_id))];
       const { data: profiles } = await supabase
-        .from("public_profiles" as any)
+        .from("public_profiles")
         .select("user_id, display_name, bio, teaches, learns, stardust_points")
         .in("user_id", userIds);
 
-      const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
+      const profileMap = new Map((profiles as any[])?.map((p: any) => [p.user_id, p]) || []);
 
       // Calculate matches
       const matches: ItineraryMatch[] = [];
@@ -110,7 +110,7 @@ export function useItineraryMatches() {
           if (overlap <= 0) continue;
           seen.add(theirIt.user_id);
 
-          const profile = profileMap.get(theirIt.user_id);
+          const profile = profileMap.get(theirIt.user_id) as any;
           const theirTeaches = profile?.teaches || [];
           const theirLearns = profile?.learns || [];
 

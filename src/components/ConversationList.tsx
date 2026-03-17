@@ -81,12 +81,12 @@ export function ConversationList({ onSelectConversation }: ConversationListProps
       // Fetch profiles for conversation partners
       const partnerIds = Array.from(convMap.keys());
       const { data: profiles } = await supabase
-        .from("public_profiles" as any)
+        .from("public_profiles")
         .select("user_id, display_name, avatar_url")
         .in("user_id", partnerIds);
 
       const profileMap = new Map(
-        (profiles ?? []).map((p) => [p.user_id, p])
+        (profiles ?? []).map((p: any) => [p.user_id, p])
       );
 
       const convList: Conversation[] = partnerIds
