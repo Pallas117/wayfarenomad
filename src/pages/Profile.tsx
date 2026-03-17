@@ -87,7 +87,7 @@ export default function Profile() {
       ]);
 
       if (profileRes.data) {
-        setProfile(profileRes.data as ProfileData);
+        setProfile(profileRes.data as unknown as ProfileData);
       }
 
       const r = (rankRes.data as number) ?? 0;
