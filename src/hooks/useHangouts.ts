@@ -63,7 +63,7 @@ export function useHangouts(city?: string) {
       });
 
       return hangouts.map((h) => {
-        const profile = profileMap.get(h.creator_id);
+        const profile = profileMap.get(h.creator_id) as any;
         return {
           ...h,
           attendee_count: countMap.get(h.id) ?? 0,
