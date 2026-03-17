@@ -106,12 +106,12 @@ export function useGroupMessages(groupChatId: string | null) {
       // Fetch sender profiles
       const senderIds = [...new Set((messages ?? []).map((m) => m.sender_id))];
       const { data: profiles } = await supabase
-        .from("public_profiles" as any)
+        .from("public_profiles")
         .select("user_id, display_name")
         .in("user_id", senderIds);
 
       const profileMap = new Map(
-        (profiles ?? []).map((p) => [p.user_id, p])
+        (profiles ?? []).map((p: any) => [p.user_id, p])
       );
 
       return (messages ?? []).map((m) => {
