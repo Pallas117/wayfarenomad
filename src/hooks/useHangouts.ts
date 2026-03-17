@@ -47,12 +47,12 @@ export function useHangouts(city?: string) {
       // Fetch creator profiles
       const creatorIds = [...new Set(hangouts.map((h) => h.creator_id))];
       const { data: profiles } = await supabase
-        .from("public_profiles" as any)
+        .from("public_profiles")
         .select("user_id, display_name, avatar_url")
         .in("user_id", creatorIds);
 
       const profileMap = new Map(
-        (profiles ?? []).map((p) => [p.user_id, p])
+        (profiles ?? []).map((p: any) => [p.user_id, p])
       );
 
       const countMap = new Map<string, number>();
