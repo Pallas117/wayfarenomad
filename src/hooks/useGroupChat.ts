@@ -152,12 +152,12 @@ export function useGroupMessages(groupChatId: string | null) {
           const msg = payload.new as GroupMessage;
           // Fetch sender profile
           const { data: profile } = await supabase
-            .from("public_profiles" as any)
+            .from("public_profiles")
             .select("display_name")
             .eq("user_id", msg.sender_id)
             .single();
 
-          const name = profile?.display_name ?? "Nomad";
+           const name = (profile as any)?.display_name ?? "Nomad";
           setRealtimeMessages((prev) => [
             ...prev,
             {
