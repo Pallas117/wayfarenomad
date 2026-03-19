@@ -473,6 +473,17 @@ export default function Pulse() {
             <Button variant="outline" size="icon" onClick={handleScrape} disabled={scraping} className="h-8 w-8">
               {scraping ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
             </Button>
+            {isSteward && (
+              <Button
+                variant={showLuma ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowLuma(!showLuma)}
+                className="h-8 text-[10px] gap-1"
+              >
+                <CalendarDays className="h-3.5 w-3.5" />
+                Luma
+              </Button>
+            )}
           </div>
         </div>
 
