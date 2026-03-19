@@ -1,13 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Send, Shield, Lock } from "lucide-react";
+import { ArrowLeft, Send, Shield, Lock, CalendarRange } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEncryptedChat, type ChatMessage } from "@/hooks/useEncryptedChat";
 import { useAuth } from "@/hooks/useAuth";
 import { ShieldPulse } from "@/components/animations/ShieldPulse";
+import { ChatOverlapBanner } from "@/components/ChatOverlapBanner";
+import { ItineraryShareCard, decodeItineraryMessage, encodeItineraryMessage, type ItineraryCardData } from "@/components/ItineraryShareCard";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 
 interface ChatViewProps {
   recipientId: string;
