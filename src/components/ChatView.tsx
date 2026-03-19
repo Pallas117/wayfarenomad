@@ -231,6 +231,8 @@ function MessageBubble({
   isMine: boolean;
   showTimestamp: boolean;
 }) {
+  const itineraryData = decodeItineraryMessage(message.content);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -243,16 +245,20 @@ function MessageBubble({
           {format(new Date(message.createdAt), "h:mm a")}
         </span>
       )}
-      <div
-        className={cn(
-          "max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
-          isMine
-            ? "gradient-gold text-primary-foreground rounded-br-md"
-            : "bg-secondary/60 text-foreground rounded-bl-md"
-        )}
-      >
-        {message.content}
-      </div>
+      {itineraryData ? (
+        <ItineraryShareCard data={itineraryData} isMine={isMine} />
+      ) : (
+        <div
+          className={cn(
+            "max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
+            isMine
+              ? "gradient-gold text-primary-foreground rounded-br-md"
+              : "bg-secondary/60 text-foreground rounded-bl-md"
+          )}
+        >
+          {message.content}
+        </div>
+      )}
     </motion.div>
   );
 }
