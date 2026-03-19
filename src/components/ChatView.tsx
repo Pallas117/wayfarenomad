@@ -28,6 +28,28 @@ export function ChatView({ recipientId, recipientName, recipientAvatar, onBack }
   const [shieldDone, setShieldDone] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Fetch user's itineraries for sharing
+  const { data: myItineraries } = useQuery({
+    queryKey: ["my-itineraries", user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data } = await supabase.from("itineraries").select("*").eq("user_id", user.id);
+      return data || [];
+    },
+    enabled: !!user,
+  });
+
+  // Fetch user's profile for teaches/learns
+  const { data: myProfile } = useQuery({
+    queryKey: ["my-profile-skills", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data } = await supabase.from("profiles").select("teaches, learns").eq("user_id", user.id).single();
+      return data;
+    },
+    enabled: !!user,
+  });
+
   // Auto-dismiss shield after delay
   useEffect(() => {
     const timer = setTimeout(() => setShowShield(false), 2000);
