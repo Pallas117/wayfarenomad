@@ -70,6 +70,20 @@ export function ChatView({ recipientId, recipientName, recipientAvatar, onBack }
     await sendMessage(text);
   };
 
+  const handleShareItinerary = async () => {
+    if (!myItineraries?.length) return;
+    // Share the first/most relevant itinerary
+    const it = myItineraries[0];
+    const cardData: ItineraryCardData = {
+      city: it.city_name,
+      arrivalDate: it.arrival_date,
+      departureDate: it.departure_date,
+      teaches: myProfile?.teaches || [],
+      learns: myProfile?.learns || [],
+    };
+    await sendMessage(encodeItineraryMessage(cardData));
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
