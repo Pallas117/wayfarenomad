@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.create-donation]
 verify_jwt = false
+
+[functions.scrape-luma]
+verify_jwt = false

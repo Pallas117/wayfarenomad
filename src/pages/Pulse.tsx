@@ -22,6 +22,7 @@ import { useEventReactions } from "@/hooks/useEventReactions";
 import { catStyle, catIconStyle } from "@/lib/categoryColors";
 import { useItineraryMatches } from "@/hooks/useItineraryMatches";
 import { PerfOverlay } from "@/components/PerfOverlay";
+import { LumaCalendarEmbed } from "@/components/LumaCalendarEmbed";
 
 const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
 
@@ -233,6 +234,7 @@ export default function Pulse() {
   const [loading, setLoading] = useState(true);
   const [scraping, setScraping] = useState(false);
   const [intrepidMode, setIntrepidMode] = useState(() => localStorage.getItem("intrepid") === "1");
+  const [showLuma, setShowLuma] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sortMode, setSortMode] = useState<"trending" | "newest">("trending");
   const [focusedEventId, setFocusedEventId] = useState<string | null>(null);
@@ -304,6 +306,22 @@ export default function Pulse() {
       await loadEvents();
     } catch (err) {
       toast({ title: "Scrape Failed", description: String(err), variant: "destructive" });
+    }
+    setScraping(false);
+  };
+
+  const handleLumaScrape = async () => {
+    setScraping(true);
+    try {
+      const lumaUrl = localStorage.getItem("wayfare_luma_url") || "";
+      const { data, error } = await supabase.functions.invoke("scrape-luma", {
+        body: { lumaUrl, city: activeCity !== "all" ? activeCity : "Kuala Lumpur" },
+      });
+      if (error) throw error;
+      toast({ title: "Luma Sync Complete", description: `Imported ${data?.inserted || 0} events from Luma` });
+      await loadEvents();
+    } catch (err) {
+      toast({ title: "Luma Sync Failed", description: String(err), variant: "destructive" });
     }
     setScraping(false);
   };
@@ -455,6 +473,17 @@ export default function Pulse() {
             <Button variant="outline" size="icon" onClick={handleScrape} disabled={scraping} className="h-8 w-8">
               {scraping ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
             </Button>
+            {isSteward && (
+              <Button
+                variant={showLuma ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowLuma(!showLuma)}
+                className="h-8 text-[10px] gap-1"
+              >
+                <CalendarDays className="h-3.5 w-3.5" />
+                Luma
+              </Button>
+            )}
           </div>
         </div>
 
@@ -501,7 +530,26 @@ export default function Pulse() {
             </Button>
           ))}
         </div>
-      </div>
+        </div>
+
+        {/* Luma Calendar Embed Panel */}
+        {showLuma && (
+          <div className="space-y-2">
+            <LumaCalendarEmbed />
+            {isSteward && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLumaScrape}
+                disabled={scraping}
+                className="w-full h-8 text-[10px] gap-1 bg-background/80 backdrop-blur-md"
+              >
+                {scraping ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+                Sync Luma Events to Pulse Feed
+              </Button>
+            )}
+          </div>
+        )}
 
       {/* Floating action buttons */}
       <div className="absolute bottom-4 right-4 z-[1000] flex flex-col gap-2">

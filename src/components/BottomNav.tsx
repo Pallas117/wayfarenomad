@@ -14,7 +14,6 @@ interface NavTab {
 }
 
 const tabs: NavTab[] = [
-  { to: "/marketplace", icon: null, travelIcon: SailboatIcon, label: "Market" },
   { to: "/social", icon: null, travelIcon: CompassRose, label: "Social" },
   { to: "/messages", icon: MessageSquare, label: "Chat" },
   { to: "/pulse", icon: null, travelIcon: WeatherSunIcon, label: "Pulse" },
