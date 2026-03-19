@@ -41,7 +41,7 @@ const App = () => (
               <Route index element={<Navigate to="/pulse" replace />} />
               <Route path="social" element={<Social />} />
               <Route path="pulse" element={<Pulse />} />
-              <Route path="marketplace" element={<Marketplace />} />
+              {/* marketplace archived */}
               <Route path="safety" element={<Safety />} />
               <Route path="leaderboard" element={<Leaderboard />} />
               <Route path="messages" element={<Messages />} />
