@@ -310,6 +310,22 @@ export default function Pulse() {
     setScraping(false);
   };
 
+  const handleLumaScrape = async () => {
+    setScraping(true);
+    try {
+      const lumaUrl = localStorage.getItem("wayfare_luma_url") || "";
+      const { data, error } = await supabase.functions.invoke("scrape-luma", {
+        body: { lumaUrl, city: activeCity !== "all" ? activeCity : "Kuala Lumpur" },
+      });
+      if (error) throw error;
+      toast({ title: "Luma Sync Complete", description: `Imported ${data?.inserted || 0} events from Luma` });
+      await loadEvents();
+    } catch (err) {
+      toast({ title: "Luma Sync Failed", description: String(err), variant: "destructive" });
+    }
+    setScraping(false);
+  };
+
   const handleCommunityVerify = async (eventId: string) => {
     if (!user) return;
     const { error } = await supabase.from("community_verifications" as any).insert({ event_id: eventId, user_id: user.id, is_accurate: true });
