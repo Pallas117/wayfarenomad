@@ -120,6 +120,9 @@ export function ChatView({ recipientId, recipientName, recipientAvatar, onBack }
         </div>
       </motion.div>
 
+      {/* Itinerary overlap banner */}
+      <ChatOverlapBanner recipientId={recipientId} />
+
       {/* Messages area */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
         {/* E2E notice */}
