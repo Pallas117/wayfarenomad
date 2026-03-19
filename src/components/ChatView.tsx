@@ -197,6 +197,17 @@ export function ChatView({ recipientId, recipientName, recipientAvatar, onBack }
             placeholder="Type a message..."
             className="flex-1 bg-secondary/50 border-border min-h-[44px]"
           />
+          {myItineraries && myItineraries.length > 0 && (
+            <Button
+              onClick={handleShareItinerary}
+              variant="outline"
+              className="min-h-[44px] w-11 shrink-0"
+              size="icon"
+              title="Share itinerary"
+            >
+              <CalendarRange className="h-4 w-4 text-primary" />
+            </Button>
+          )}
           <Button
             onClick={handleSend}
             disabled={!input.trim()}
