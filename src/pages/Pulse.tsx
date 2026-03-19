@@ -234,6 +234,7 @@ export default function Pulse() {
   const [loading, setLoading] = useState(true);
   const [scraping, setScraping] = useState(false);
   const [intrepidMode, setIntrepidMode] = useState(() => localStorage.getItem("intrepid") === "1");
+  const [showLuma, setShowLuma] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sortMode, setSortMode] = useState<"trending" | "newest">("trending");
   const [focusedEventId, setFocusedEventId] = useState<string | null>(null);
