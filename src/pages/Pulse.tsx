@@ -530,7 +530,26 @@ export default function Pulse() {
             </Button>
           ))}
         </div>
-      </div>
+        </div>
+
+        {/* Luma Calendar Embed Panel */}
+        {showLuma && (
+          <div className="space-y-2">
+            <LumaCalendarEmbed />
+            {isSteward && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLumaScrape}
+                disabled={scraping}
+                className="w-full h-8 text-[10px] gap-1 bg-background/80 backdrop-blur-md"
+              >
+                {scraping ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+                Sync Luma Events to Pulse Feed
+              </Button>
+            )}
+          </div>
+        )}
 
       {/* Floating action buttons */}
       <div className="absolute bottom-4 right-4 z-[1000] flex flex-col gap-2">
