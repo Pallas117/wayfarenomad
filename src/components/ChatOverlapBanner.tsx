@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Calendar, Sparkles, X, Clock } from "lucide-react";
+import { MapPin, Calendar, Sparkles, X, Clock, Bug, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { format, addDays } from "date-fns";
 
@@ -13,6 +13,25 @@ interface OverlapInfo {
   overlapDays: number;
   overlapStart: string;
   overlapEnd: string;
+}
+
+interface PairDebug {
+  mineCity: string;
+  theirsCity: string;
+  mineRange: string;
+  theirsRange: string;
+  cityMatch: boolean;
+  overlapDays: number;
+  matched: boolean;
+}
+
+interface OverlapResult {
+  overlap: OverlapInfo | null;
+  debug: {
+    mineCount: number;
+    theirsCount: number;
+    pairs: PairDebug[];
+  };
 }
 
 function calculateOverlapDetails(
@@ -36,30 +55,45 @@ function calculateOverlapDetails(
 export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
   const { user } = useAuth();
   const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [dismissed, setDismissed] = useState(false);
   const [scheduling, setScheduling] = useState(false);
+  const [debugOpen, setDebugOpen] = useState(false);
 
-  const { data: overlap } = useQuery({
+  const { data } = useQuery({
     queryKey: ["chat-overlap", user?.id, recipientId],
-    queryFn: async (): Promise<OverlapInfo | null> => {
-      if (!user) return null;
+    queryFn: async (): Promise<OverlapResult> => {
+      const empty: OverlapResult = { overlap: null, debug: { mineCount: 0, theirsCount: 0, pairs: [] } };
+      if (!user) return empty;
       const [myRes, theirRes] = await Promise.all([
         supabase.from("itineraries").select("*").eq("user_id", user.id),
         supabase.from("itineraries").select("*").eq("user_id", recipientId),
       ]);
-      if (!myRes.data?.length || !theirRes.data?.length) return null;
+      const mine = myRes.data ?? [];
+      const theirs = theirRes.data ?? [];
+      const debug = { mineCount: mine.length, theirsCount: theirs.length, pairs: [] as PairDebug[] };
+      let found: OverlapInfo | null = null;
 
-      for (const mine of myRes.data) {
-        for (const theirs of theirRes.data) {
-          if (mine.city_name.toLowerCase() !== theirs.city_name.toLowerCase()) continue;
-          const result = calculateOverlapDetails(
-            mine.arrival_date, mine.departure_date,
-            theirs.arrival_date, theirs.departure_date
-          );
-          if (result && result.days > 0) {
-            return {
-              city: mine.city_name,
+      for (const m of mine) {
+        for (const t of theirs) {
+          const cityMatch = m.city_name.toLowerCase() === t.city_name.toLowerCase();
+          const result = cityMatch ? calculateOverlapDetails(
+            m.arrival_date, m.departure_date,
+            t.arrival_date, t.departure_date
+          ) : null;
+          const days = result?.days ?? 0;
+          const matched = cityMatch && days > 0;
+          debug.pairs.push({
+            mineCity: m.city_name,
+            theirsCity: t.city_name,
+            mineRange: `${m.arrival_date} → ${m.departure_date}`,
+            theirsRange: `${t.arrival_date} → ${t.departure_date}`,
+            cityMatch,
+            overlapDays: days,
+            matched,
+          });
+          if (matched && result && !found) {
+            found = {
+              city: m.city_name,
               overlapDays: result.days,
               overlapStart: result.start.toISOString(),
               overlapEnd: result.end.toISOString(),
@@ -67,11 +101,15 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
           }
         }
       }
-      return null;
+      return { overlap: found, debug };
     },
     enabled: !!user,
     staleTime: 60000,
   });
+
+  const overlap = data?.overlap ?? null;
+  const debug = data?.debug;
+  const showDebug = import.meta.env.DEV;
 
   const createMeetup = useMutation({
     mutationFn: async () => {
@@ -98,10 +136,42 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
     },
   });
 
-  if (!overlap || dismissed) return null;
+  // Debug-only panel renders even when no overlap (dev mode)
+  const debugPanel = showDebug && debug && (
+    <div className="border-b border-dashed border-amber-500/40 bg-amber-500/5 text-amber-200">
+      <button
+        onClick={() => setDebugOpen(o => !o)}
+        className="flex items-center gap-1.5 w-full px-4 py-1.5 text-[10px] font-mono"
+      >
+        <Bug className="h-3 w-3" />
+        <span className="font-semibold">overlap debug</span>
+        <span className="opacity-70">
+          mine={debug.mineCount} · theirs={debug.theirsCount} · pairs={debug.pairs.length} · matched={debug.pairs.filter(p => p.matched).length}
+        </span>
+        {debugOpen ? <ChevronUp className="h-3 w-3 ml-auto" /> : <ChevronDown className="h-3 w-3 ml-auto" />}
+      </button>
+      {debugOpen && (
+        <div className="px-4 pb-2 space-y-1 font-mono text-[10px]">
+          {debug.pairs.length === 0 && <div className="opacity-60">No itinerary pairs to compare.</div>}
+          {debug.pairs.map((p, i) => (
+            <div key={i} className={`rounded px-2 py-1 ${p.matched ? "bg-emerald-500/10 text-emerald-200" : "bg-muted/40"}`}>
+              <div>mine: {p.mineCity} [{p.mineRange}]</div>
+              <div>them: {p.theirsCity} [{p.theirsRange}]</div>
+              <div>
+                cityMatch={String(p.cityMatch)} · overlapDays={p.overlapDays} · matched={String(p.matched)}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  if (!overlap || dismissed) return <>{debugPanel}</>;
 
   return (
     <AnimatePresence>
+      {debugPanel}
       <motion.div
         initial={{ opacity: 0, height: 0 }}
         animate={{ opacity: 1, height: "auto" }}
