@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Calendar, Sparkles, X, Clock } from "lucide-react";
+import { MapPin, Calendar, Sparkles, X, Clock, Bug, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +13,25 @@ interface OverlapInfo {
   overlapDays: number;
   overlapStart: string;
   overlapEnd: string;
+}
+
+interface PairDebug {
+  mineCity: string;
+  theirsCity: string;
+  mineRange: string;
+  theirsRange: string;
+  cityMatch: boolean;
+  overlapDays: number;
+  matched: boolean;
+}
+
+interface OverlapResult {
+  overlap: OverlapInfo | null;
+  debug: {
+    mineCount: number;
+    theirsCount: number;
+    pairs: PairDebug[];
+  };
 }
 
 function calculateOverlapDetails(
@@ -39,27 +58,43 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
   const queryClient = useQueryClient();
   const [dismissed, setDismissed] = useState(false);
   const [scheduling, setScheduling] = useState(false);
+  const [debugOpen, setDebugOpen] = useState(false);
 
-  const { data: overlap } = useQuery({
+  const { data } = useQuery({
     queryKey: ["chat-overlap", user?.id, recipientId],
-    queryFn: async (): Promise<OverlapInfo | null> => {
-      if (!user) return null;
+    queryFn: async (): Promise<OverlapResult> => {
+      const empty: OverlapResult = { overlap: null, debug: { mineCount: 0, theirsCount: 0, pairs: [] } };
+      if (!user) return empty;
       const [myRes, theirRes] = await Promise.all([
         supabase.from("itineraries").select("*").eq("user_id", user.id),
         supabase.from("itineraries").select("*").eq("user_id", recipientId),
       ]);
-      if (!myRes.data?.length || !theirRes.data?.length) return null;
+      const mine = myRes.data ?? [];
+      const theirs = theirRes.data ?? [];
+      const debug = { mineCount: mine.length, theirsCount: theirs.length, pairs: [] as PairDebug[] };
+      let found: OverlapInfo | null = null;
 
-      for (const mine of myRes.data) {
-        for (const theirs of theirRes.data) {
-          if (mine.city_name.toLowerCase() !== theirs.city_name.toLowerCase()) continue;
-          const result = calculateOverlapDetails(
-            mine.arrival_date, mine.departure_date,
-            theirs.arrival_date, theirs.departure_date
-          );
-          if (result && result.days > 0) {
-            return {
-              city: mine.city_name,
+      for (const m of mine) {
+        for (const t of theirs) {
+          const cityMatch = m.city_name.toLowerCase() === t.city_name.toLowerCase();
+          const result = cityMatch ? calculateOverlapDetails(
+            m.arrival_date, m.departure_date,
+            t.arrival_date, t.departure_date
+          ) : null;
+          const days = result?.days ?? 0;
+          const matched = cityMatch && days > 0;
+          debug.pairs.push({
+            mineCity: m.city_name,
+            theirsCity: t.city_name,
+            mineRange: `${m.arrival_date} → ${m.departure_date}`,
+            theirsRange: `${t.arrival_date} → ${t.departure_date}`,
+            cityMatch,
+            overlapDays: days,
+            matched,
+          });
+          if (matched && result && !found) {
+            found = {
+              city: m.city_name,
               overlapDays: result.days,
               overlapStart: result.start.toISOString(),
               overlapEnd: result.end.toISOString(),
@@ -67,10 +102,30 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
           }
         }
       }
-      return null;
+      return { overlap: found, debug };
     },
     enabled: !!user,
     staleTime: 60000,
+  });
+
+  // (legacy comparator preserved for diff symmetry — unused)
+  const _legacy = () => calculateOverlapDetails;
+  void _legacy;
+
+  const overlap = data?.overlap ?? null;
+  const debug = data?.debug;
+  const showDebug = import.meta.env.DEV;
+
+  // legacy result kept for backwards-compat references
+  void (() => {
+    const _ = (
+      mine: { arrival_date: string; departure_date: string },
+      theirs: { arrival_date: string; departure_date: string }
+    ) => calculateOverlapDetails(
+            mine.arrival_date, mine.departure_date,
+            theirs.arrival_date, theirs.departure_date
+    );
+    void _;
   });
 
   const createMeetup = useMutation({
