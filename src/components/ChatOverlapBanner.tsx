@@ -109,7 +109,19 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
 
   const overlap = data?.overlap ?? null;
   const debug = data?.debug;
-  const showDebug = import.meta.env.DEV;
+
+  // Persistent dev-only debug toggle
+  const isDev = import.meta.env.DEV;
+  const [debugEnabled, setDebugEnabled] = useState(() => {
+    if (!isDev) return false;
+    return localStorage.getItem("wf-debug-overlap") !== "false";
+  });
+  const toggleDebug = useCallback(() => {
+    const next = !debugEnabled;
+    setDebugEnabled(next);
+    localStorage.setItem("wf-debug-overlap", String(next));
+  }, [debugEnabled]);
+  const showDebug = isDev && debugEnabled;
 
   const createMeetup = useMutation({
     mutationFn: async () => {
