@@ -205,9 +205,11 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
   if (!overlap || dismissed) return <>{debugToggleBar}{debugPanel}</>;
 
   return (
-    <AnimatePresence>
-      {debugPanel}
-      <motion.div
+    <>
+      {debugToggleBar}
+      <AnimatePresence>
+        {debugPanel}
+        <motion.div
         initial={{ opacity: 0, height: 0 }}
         animate={{ opacity: 1, height: "auto" }}
         exit={{ opacity: 0, height: 0 }}
