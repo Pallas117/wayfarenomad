@@ -213,14 +213,14 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
         initial={{ opacity: 0, height: 0 }}
         animate={{ opacity: 1, height: "auto" }}
         exit={{ opacity: 0, height: 0 }}
-        className="border-b border-border"
+        className="border-b border-ink/30 paper-grain"
       >
-        <div className="flex items-center gap-2 px-4 py-2.5 bg-primary/5">
-          <Sparkles className="h-4 w-4 text-primary shrink-0" />
+        <div className="flex items-center gap-2 px-4 py-2.5 gradient-ink-subtle">
+          <Sparkles className="h-4 w-4 text-ink-glow shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium">
-              You'll both be in <span className="text-primary font-semibold">{overlap.city}</span> for{" "}
-              <span className="text-primary font-semibold">{overlap.overlapDays} days</span>!
+              You'll both be in <span className="text-ink-glow font-semibold ink-bleed">{overlap.city}</span> for{" "}
+              <span className="text-ink-glow font-semibold ink-bleed">{overlap.overlapDays} days</span>!
             </p>
             <p className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
               <Calendar className="h-2.5 w-2.5" />
