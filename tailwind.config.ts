@@ -62,6 +62,12 @@ export default {
           light: "hsl(var(--navy-light))",
           lighter: "hsl(var(--navy-lighter))",
         },
+        ink: {
+          DEFAULT: "hsl(var(--ink))",
+          glow: "hsl(var(--ink-glow))",
+          deep: "hsl(var(--ink-deep))",
+          foreground: "hsl(var(--ink-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
