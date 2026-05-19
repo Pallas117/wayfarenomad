@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Calendar, Sparkles, X, Clock, Bug, ChevronDown, ChevronUp } from "lucide-react";
+import { MapPin, Calendar, Sparkles, X, Clock, Bug, ChevronDown, ChevronUp, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
