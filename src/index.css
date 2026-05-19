@@ -34,7 +34,13 @@
     --input: 225 25% 18%;
     --ring: 43 72% 52%;
 
-    --radius: 0.75rem;
+    --radius: 0.375rem;
+
+    /* Ink Blue — third theme accent (fountain-pen / cyanotype) */
+    --ink: 215 70% 42%;
+    --ink-glow: 210 85% 60%;
+    --ink-deep: 220 75% 22%;
+    --ink-foreground: 40 10% 96%;
 
     --sidebar-background: 225 55% 9%;
     --sidebar-foreground: 40 10% 96%;
@@ -80,12 +86,13 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', 'IBM Plex Sans', sans-serif;
+    font-feature-settings: "onum", "liga", "kern";
     transition: background-color 2s ease, color 0.5s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Cinzel', serif;
-    text-shadow: 0 0 20px hsl(43 72% 52% / 0.15);
+    text-shadow: 0 0 14px hsl(215 70% 42% / 0.18), 0 1px 0 hsl(35 30% 8% / 0.4);
   }
 
   /* Subheading utility */
@@ -127,6 +134,79 @@
   .text-glow-gold {
     text-shadow: 0 0 12px hsl(43 72% 52% / 0.4), 0 0 30px hsl(43 72% 52% / 0.15);
   }
+
+  /* ===== Ink Blue utilities ===== */
+  .gradient-ink {
+    background: linear-gradient(135deg, hsl(var(--ink)), hsl(var(--ink-glow)));
+  }
+  .gradient-ink-subtle {
+    background: linear-gradient(135deg, hsl(var(--ink) / 0.18), hsl(var(--ink-glow) / 0.06));
+  }
+  .glow-ink {
+    box-shadow: 0 0 18px hsl(var(--ink) / 0.35), 0 0 40px hsl(var(--ink) / 0.12);
+  }
+  .text-glow-ink {
+    text-shadow: 0 0 10px hsl(var(--ink) / 0.45), 0 0 24px hsl(var(--ink) / 0.18);
+  }
+  .ink-bleed {
+    text-shadow: 0 0 8px hsl(var(--ink) / 0.5), 0 1px 0 hsl(var(--ink-deep) / 0.6);
+  }
+
+  /* ===== Analogue texture utilities ===== */
+  .paper-grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .paper-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.88  0 0 0 0 0.82  0 0 0 0.8 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 160px 160px;
+    z-index: 0;
+  }
+  .paper-grain > * { position: relative; z-index: 1; }
+
+  .letterpress {
+    box-shadow:
+      inset 0 1px 0 hsl(40 10% 96% / 0.08),
+      inset 0 -1px 0 hsl(35 30% 8% / 0.5),
+      0 1px 0 hsl(35 30% 8% / 0.4);
+  }
+  .letterpress:active {
+    box-shadow:
+      inset 0 2px 4px hsl(35 30% 8% / 0.55),
+      inset 0 -1px 0 hsl(40 10% 96% / 0.04);
+    transform: translateY(1px);
+  }
+
+  .halftone {
+    background-image: radial-gradient(hsl(var(--ink) / 0.35) 1px, transparent 1.2px);
+    background-size: 8px 8px;
+  }
+
+  .deckled-edge {
+    -webkit-mask-image: radial-gradient(120% 100% at 50% 50%, #000 96%, transparent 100%);
+            mask-image: radial-gradient(120% 100% at 50% 50%, #000 96%, transparent 100%);
+  }
+
+  .shadow-sepia {
+    box-shadow: 0 6px 24px -8px hsl(35 30% 8% / 0.55), 0 2px 6px -2px hsl(35 30% 8% / 0.35);
+  }
+
+  .handset {
+    font-family: 'Cormorant Garamond', serif;
+    font-feature-settings: "onum", "liga", "dlig";
+    letter-spacing: 0.005em;
+  }
+
+  .text-ink { color: hsl(var(--ink)); }
+  .text-ink-glow { color: hsl(var(--ink-glow)); }
+  .bg-ink { background-color: hsl(var(--ink)); }
+  .border-ink { border-color: hsl(var(--ink)); }
 
   .glass-card {
     background: hsl(225 50% 10% / 0.8);
