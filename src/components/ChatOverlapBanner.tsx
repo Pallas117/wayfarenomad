@@ -269,5 +269,6 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
         </div>
       </motion.div>
     </AnimatePresence>
+    </>
   );
 }
