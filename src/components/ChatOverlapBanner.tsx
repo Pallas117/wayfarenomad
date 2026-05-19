@@ -148,20 +148,43 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
     },
   });
 
+  // Dev-only re-enable bar (visible when debug is off)
+  const debugToggleBar = isDev && !debugEnabled && (
+    <div className="flex justify-end px-4 py-0.5">
+      <button
+        onClick={toggleDebug}
+        className="flex items-center gap-1 text-[9px] font-mono text-amber-500/40 hover:text-amber-400 transition-colors"
+        title="Show overlap debug panel"
+      >
+        <Eye className="h-2.5 w-2.5" />
+        show debug
+      </button>
+    </div>
+  );
+
   // Debug-only panel renders even when no overlap (dev mode)
   const debugPanel = showDebug && debug && (
     <div className="border-b border-dashed border-amber-500/40 bg-amber-500/5 text-amber-200">
-      <button
-        onClick={() => setDebugOpen(o => !o)}
-        className="flex items-center gap-1.5 w-full px-4 py-1.5 text-[10px] font-mono"
-      >
-        <Bug className="h-3 w-3" />
-        <span className="font-semibold">overlap debug</span>
-        <span className="opacity-70">
-          mine={debug.mineCount} · theirs={debug.theirsCount} · pairs={debug.pairs.length} · matched={debug.pairs.filter(p => p.matched).length}
-        </span>
-        {debugOpen ? <ChevronUp className="h-3 w-3 ml-auto" /> : <ChevronDown className="h-3 w-3 ml-auto" />}
-      </button>
+      <div className="flex items-center gap-1.5 w-full px-4 py-1.5">
+        <button
+          onClick={() => setDebugOpen(o => !o)}
+          className="flex items-center gap-1.5 flex-1 text-left text-[10px] font-mono"
+        >
+          <Bug className="h-3 w-3 shrink-0" />
+          <span className="font-semibold">overlap debug</span>
+          <span className="opacity-70">
+            mine={debug.mineCount} · theirs={debug.theirsCount} · pairs={debug.pairs.length} · matched={debug.pairs.filter(p => p.matched).length}
+          </span>
+          {debugOpen ? <ChevronUp className="h-3 w-3 ml-1" /> : <ChevronDown className="h-3 w-3 ml-1" />}
+        </button>
+        <button
+          onClick={toggleDebug}
+          className="shrink-0 text-amber-500/50 hover:text-amber-300 transition-colors"
+          title="Hide debug panel"
+        >
+          <EyeOff className="h-3 w-3" />
+        </button>
+      </div>
       {debugOpen && (
         <div className="px-4 pb-2 space-y-1 font-mono text-[10px]">
           {debug.pairs.length === 0 && <div className="opacity-60">No itinerary pairs to compare.</div>}
@@ -179,7 +202,7 @@ export function ChatOverlapBanner({ recipientId }: { recipientId: string }) {
     </div>
   );
 
-  if (!overlap || dismissed) return <>{debugPanel}</>;
+  if (!overlap || dismissed) return <>{debugToggleBar}{debugPanel}</>;
 
   return (
     <AnimatePresence>
