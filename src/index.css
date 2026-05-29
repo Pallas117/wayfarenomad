@@ -170,6 +170,18 @@
   }
   .paper-grain > * { position: relative; z-index: 1; }
 
+  /* Smaller screens: scale the grain down — at phone DPR the 160px tile
+     reads as harsh static. Lower opacity + larger tile = subtler texture. */
+  @media (max-width: 640px) {
+    .paper-grain::after {
+      opacity: 0.035;
+      background-size: 220px 220px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce), (prefers-contrast: more) {
+    .paper-grain::after { opacity: 0.025; }
+  }
+
   .letterpress {
     box-shadow:
       inset 0 1px 0 hsl(40 10% 96% / 0.08),
@@ -182,10 +194,28 @@
       inset 0 -1px 0 hsl(40 10% 96% / 0.04);
     transform: translateY(1px);
   }
+  /* Soften the letterpress bevel on small screens — at phone scale the
+     dark inset edge competes with text and tap targets. */
+  @media (max-width: 640px) {
+    .letterpress {
+      box-shadow:
+        inset 0 1px 0 hsl(40 10% 96% / 0.05),
+        inset 0 -1px 0 hsl(35 30% 8% / 0.3),
+        0 1px 0 hsl(35 30% 8% / 0.25);
+    }
+  }
 
   .halftone {
     background-image: radial-gradient(hsl(var(--ink) / 0.35) 1px, transparent 1.2px);
     background-size: 8px 8px;
+  }
+  /* Larger dot pitch + lower contrast on phones so the halftone reads
+     as a printed divider rather than dense noise. */
+  @media (max-width: 640px) {
+    .halftone {
+      background-image: radial-gradient(hsl(var(--ink) / 0.22) 1px, transparent 1.2px);
+      background-size: 12px 12px;
+    }
   }
 
   .deckled-edge {
