@@ -24,7 +24,7 @@ import { useItineraryMatches } from "@/hooks/useItineraryMatches";
 import { PerfOverlay } from "@/components/PerfOverlay";
 import { LumaCalendarEmbed } from "@/components/LumaCalendarEmbed";
 
-const LazyMapView = lazy(() => import("@/components/MapView").then(m => ({ default: m.MapView })));
+const LazyMapView = lazy(() => import("@/components/MapView"));
 
 const categories = [
   { id: "all", label: "All", icon: Radio },
