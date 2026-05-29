@@ -12,8 +12,11 @@ const buttonVariants = cva(
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-[hsl(var(--ink))] text-[hsl(var(--ink-foreground))] hover:bg-[hsl(var(--ink-glow))]",
-        ink: "bg-[hsl(var(--ink))] text-[hsl(var(--ink-foreground))] hover:bg-[hsl(var(--ink-glow))] glow-ink",
+        // Hover deepens to --ink-deep (not --ink-glow) so the near-white
+        // foreground keeps a ≥4.5:1 contrast ratio. ink-glow as a bg would
+        // drop contrast against white text to ~2.8:1 and fail WCAG AA.
+        secondary: "bg-[hsl(var(--ink))] text-[hsl(var(--ink-foreground))] hover:bg-[hsl(var(--ink-deep))]",
+        ink: "bg-[hsl(var(--ink))] text-[hsl(var(--ink-foreground))] hover:bg-[hsl(var(--ink-deep))] glow-ink",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
