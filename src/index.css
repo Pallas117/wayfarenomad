@@ -203,10 +203,15 @@
     letter-spacing: 0.005em;
   }
 
-  .text-ink { color: hsl(var(--ink)); }
+  /* WCAG: --ink (215 70% 42%) fails AA as text on the dark background.
+     Route .text-ink through the brighter --ink-glow so any body text
+     using this utility stays above 4.5:1 against bg/card surfaces.
+     Use .bg-ink / .border-ink for surfaces — those don't need text contrast. */
+  .text-ink { color: hsl(var(--ink-glow)); }
   .text-ink-glow { color: hsl(var(--ink-glow)); }
   .bg-ink { background-color: hsl(var(--ink)); }
   .border-ink { border-color: hsl(var(--ink)); }
+  .border-ink-strong { border-color: hsl(var(--ink-glow)); }
 
   .glass-card {
     background: hsl(225 50% 10% / 0.8);
