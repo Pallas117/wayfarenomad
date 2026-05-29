@@ -118,3 +118,5 @@ export function MapView({ pins, center = [3.139, 101.6869], zoom = 10, className
     </MapContainer>
   );
 }
+
+export default MapView;
