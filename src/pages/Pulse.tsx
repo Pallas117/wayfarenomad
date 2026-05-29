@@ -454,7 +454,7 @@ export default function Pulse() {
       {/* Floating top controls */}
       <div className="absolute top-0 left-0 right-0 z-[1000] p-3 space-y-2">
         {/* Header bar */}
-        <div className="flex items-center justify-between glass-card rounded-xl px-3 py-2">
+        <div className="flex items-center justify-between glass-card paper-grain rounded-xl px-3 py-2">
           <div className="flex items-center gap-2">
             <WeatherSunIcon className="h-5 w-5 text-primary" />
             <h1 className="text-sm font-display font-bold">Pulse</h1>
