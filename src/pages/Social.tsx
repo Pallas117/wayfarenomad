@@ -342,7 +342,7 @@ function SocialContent() {
   const [tab, setTab] = useState<SocialTab>("discover");
 
   return (
-    <div className="p-6 max-w-lg mx-auto pb-24">
+    <div className="p-6 max-w-lg mx-auto pb-24 paper-grain">
       <motion.div className="relative flex items-center justify-between mb-6" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <FloatingTravelBadges />
         <div className="flex items-center gap-3">
