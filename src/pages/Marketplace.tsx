@@ -39,7 +39,7 @@ function MarketplaceContent() {
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <div className="p-6 max-w-lg mx-auto pb-24">
+    <div className="p-6 max-w-lg mx-auto pb-24 paper-grain">
       <motion.div
         className="flex items-center justify-between mb-6"
         initial={{ opacity: 0, y: -10 }}
@@ -130,7 +130,7 @@ function MarketplaceContent() {
           >
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-2">
-                <Wifi className="h-4 w-4 text-primary" />
+                <Wifi className="h-4 w-4 text-ink-glow" />
                 <h3 className="font-display font-semibold">{provider.name}</h3>
               </div>
               <ExternalLink className="h-4 w-4 text-muted-foreground" />
