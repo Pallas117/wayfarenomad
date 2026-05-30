@@ -1,8 +1,10 @@
 import { Outlet } from "react-router-dom";
 import { BottomNav } from "./BottomNav";
 import { HubIndicator } from "./CitySync";
+import { useRouteBreadcrumb } from "@/hooks/useBreadcrumb";
 
 export function AppLayout() {
+  useRouteBreadcrumb();
   return (
     <div className="min-h-screen bg-background transition-colors duration-[2000ms]">
       {/* Hub indicator header */}
