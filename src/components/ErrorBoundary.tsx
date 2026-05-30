@@ -1,4 +1,5 @@
 import { Component, type ReactNode, type ErrorInfo } from "react";
+import { formatBreadcrumbs, getBreadcrumbs, pushBreadcrumb } from "@/lib/breadcrumbs";
 
 interface Props {
   children: ReactNode;
@@ -17,6 +18,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
+    pushBreadcrumb("event", `crash: ${error.name}: ${error.message}`);
     // Log full component stack so the offending import/component is visible
     // even when the error itself is opaque (e.g. "undefined is not an object").
     // eslint-disable-next-line no-console
@@ -25,16 +27,28 @@ export class ErrorBoundary extends Component<Props, State> {
       message: error.message,
       stack: error.stack,
       componentStack: info.componentStack,
+      breadcrumbs: getBreadcrumbs(),
     });
     this.setState({ info });
   }
 
   render() {
     if (this.state.error) {
+      const trail = formatBreadcrumbs();
       return (
         <div className="min-h-screen flex items-center justify-center bg-background p-6">
           <div className="max-w-2xl w-full space-y-4">
             <h1 className="text-xl font-semibold text-foreground">Something broke while rendering.</h1>
+            {trail && (
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
+                  Last activity
+                </p>
+                <pre className="text-xs text-foreground whitespace-pre-wrap bg-muted/40 p-3 rounded-md overflow-auto max-h-40">
+                  {trail}
+                </pre>
+              </div>
+            )}
             <pre className="text-xs text-muted-foreground whitespace-pre-wrap bg-muted/40 p-4 rounded-md overflow-auto max-h-64">
               {this.state.error.message}
               {"\n\n"}

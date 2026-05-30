@@ -24,6 +24,7 @@ import { useItineraryMatches } from "@/hooks/useItineraryMatches";
 import { PerfOverlay } from "@/components/PerfOverlay";
 import { LumaCalendarEmbed } from "@/components/LumaCalendarEmbed";
 import { MapView as LazyMapView } from "@/components/MapView";
+import { useSectionBreadcrumb } from "@/hooks/useBreadcrumb";
 
 const categories = [
   { id: "all", label: "All", icon: Radio },
@@ -222,6 +223,7 @@ function useKarmaPulses() {
 }
 
 export default function Pulse() {
+  useSectionBreadcrumb("Pulse");
   const { user } = useAuth();
   const { isSteward } = useUserRank();
   const { toast } = useToast();
