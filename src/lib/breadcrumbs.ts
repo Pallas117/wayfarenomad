@@ -9,7 +9,30 @@ export type Breadcrumb = {
 };
 
 const MAX = 20;
-const trail: Breadcrumb[] = [];
+const STORAGE_KEY = "lovable.breadcrumbs.v1";
+
+function load(): Breadcrumb[] {
+  if (typeof sessionStorage === "undefined") return [];
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as Breadcrumb[];
+    return Array.isArray(parsed) ? parsed.slice(-MAX) : [];
+  } catch {
+    return [];
+  }
+}
+
+function save() {
+  if (typeof sessionStorage === "undefined") return;
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(trail));
+  } catch {
+    // quota or disabled storage — ignore
+  }
+}
+
+const trail: Breadcrumb[] = load();
 const listeners = new Set<() => void>();
 
 export function pushBreadcrumb(kind: Breadcrumb["kind"], label: string) {
@@ -17,11 +40,18 @@ export function pushBreadcrumb(kind: Breadcrumb["kind"], label: string) {
   if (last && last.kind === kind && last.label === label) return;
   trail.push({ ts: Date.now(), kind, label });
   if (trail.length > MAX) trail.shift();
+  save();
   listeners.forEach((l) => l());
 }
 
 export function getBreadcrumbs(): readonly Breadcrumb[] {
   return trail;
+}
+
+export function clearBreadcrumbs() {
+  trail.length = 0;
+  save();
+  listeners.forEach((l) => l());
 }
 
 export function formatBreadcrumbs(): string {
