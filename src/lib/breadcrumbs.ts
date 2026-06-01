@@ -9,6 +9,8 @@ export type Breadcrumb = {
 };
 
 const MAX = 20;
+/** Breadcrumbs older than this window are dropped on read/load. */
+const TTL_MS = 15 * 60 * 1000; // 15 minutes
 const STORAGE_KEY = "lovable.breadcrumbs.v1";
 const CHANNEL_NAME = "lovable.breadcrumbs.v1";
 
@@ -20,13 +22,31 @@ type SyncMessage =
 const channel: BroadcastChannel | null =
   typeof BroadcastChannel !== "undefined" ? new BroadcastChannel(CHANNEL_NAME) : null;
 
+function isFresh(b: Breadcrumb, now = Date.now()): boolean {
+  return now - b.ts <= TTL_MS;
+}
+
+/** Drop expired entries in-place. Returns true if anything changed. */
+function pruneExpired(): boolean {
+  const now = Date.now();
+  let removed = 0;
+  while (trail.length && !isFresh(trail[0], now)) {
+    trail.shift();
+    removed++;
+  }
+  if (removed > 0) save();
+  return removed > 0;
+}
+
 function load(): Breadcrumb[] {
   if (typeof sessionStorage === "undefined") return [];
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as Breadcrumb[];
-    return Array.isArray(parsed) ? parsed.slice(-MAX) : [];
+    if (!Array.isArray(parsed)) return [];
+    const now = Date.now();
+    return parsed.filter((b) => b && typeof b.ts === "number" && isFresh(b, now)).slice(-MAX);
   } catch {
     return [];
   }
@@ -54,6 +74,7 @@ function applyPush(crumb: Breadcrumb) {
 }
 
 export function pushBreadcrumb(kind: Breadcrumb["kind"], label: string) {
+  pruneExpired();
   const last = trail[trail.length - 1];
   if (last && last.kind === kind && last.label === label) return;
   const crumb: Breadcrumb = { ts: Date.now(), kind, label };
@@ -65,6 +86,7 @@ export function pushBreadcrumb(kind: Breadcrumb["kind"], label: string) {
 }
 
 export function getBreadcrumbs(): readonly Breadcrumb[] {
+  if (pruneExpired()) listeners.forEach((l) => l());
   return trail;
 }
 
@@ -76,6 +98,7 @@ export function clearBreadcrumbs() {
 }
 
 export function formatBreadcrumbs(): string {
+  pruneExpired();
   const now = Date.now();
   return trail
     .map((b) => {
