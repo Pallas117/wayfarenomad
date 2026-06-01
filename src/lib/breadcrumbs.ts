@@ -9,8 +9,11 @@ export type Breadcrumb = {
 };
 
 const MAX = 20;
-/** Breadcrumbs older than this window are dropped on read/load. */
-const TTL_MS = 15 * 60 * 1000; // 15 minutes
+/** Default auto-clear window. Overridable at runtime via setBreadcrumbTTL()
+ *  or persistently via localStorage["lovable.breadcrumbs.ttlMs"]. */
+const DEFAULT_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const TTL_STORAGE_KEY = "lovable.breadcrumbs.ttlMs";
+const MIN_TTL_MS = 1000; // 1s floor to avoid pathological values
 const STORAGE_KEY = "lovable.breadcrumbs.v1";
 const CHANNEL_NAME = "lovable.breadcrumbs.v1";
 
@@ -22,8 +25,51 @@ type SyncMessage =
 const channel: BroadcastChannel | null =
   typeof BroadcastChannel !== "undefined" ? new BroadcastChannel(CHANNEL_NAME) : null;
 
+function loadTTL(): number {
+  if (typeof localStorage === "undefined") return DEFAULT_TTL_MS;
+  try {
+    const raw = localStorage.getItem(TTL_STORAGE_KEY);
+    if (!raw) return DEFAULT_TTL_MS;
+    const n = Number(raw);
+    if (!Number.isFinite(n) || n < MIN_TTL_MS) return DEFAULT_TTL_MS;
+    return n;
+  } catch {
+    return DEFAULT_TTL_MS;
+  }
+}
+
+let ttlMs = loadTTL();
+
+/** Current TTL in milliseconds. */
+export function getBreadcrumbTTL(): number {
+  return ttlMs;
+}
+
+/** Update the TTL window. Pass null to reset to the default. Persists in localStorage. */
+export function setBreadcrumbTTL(ms: number | null) {
+  if (ms === null) {
+    ttlMs = DEFAULT_TTL_MS;
+    try {
+      localStorage?.removeItem(TTL_STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  } else {
+    if (!Number.isFinite(ms) || ms < MIN_TTL_MS) {
+      throw new Error(`breadcrumb TTL must be a finite number >= ${MIN_TTL_MS}ms`);
+    }
+    ttlMs = ms;
+    try {
+      localStorage?.setItem(TTL_STORAGE_KEY, String(ms));
+    } catch {
+      /* ignore */
+    }
+  }
+  if (pruneExpired()) listeners.forEach((l) => l());
+}
+
 function isFresh(b: Breadcrumb, now = Date.now()): boolean {
-  return now - b.ts <= TTL_MS;
+  return now - b.ts <= ttlMs;
 }
 
 /** Drop expired entries in-place. Returns true if anything changed. */
