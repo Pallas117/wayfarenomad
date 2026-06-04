@@ -9,7 +9,6 @@ import { CitySyncProvider } from "./components/CitySync";
 import { ScanningTheStars } from "./components/CitySync";
 import { PowerProvider } from "./components/PowerProvider";
 import { MOUAgreement } from "./components/MOUAgreement";
-import Auth from "./pages/Auth";
 import Social from "./pages/Social";
 import Pulse from "./pages/Pulse";
 // Marketplace archived — replaced by Luma integration in Pulse
@@ -42,7 +41,7 @@ const App = () => (
         <BrowserRouter>
           <RouteTracker />
           <Routes>
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<Navigate to="/pulse" replace />} />
             <Route path="/vision-quest" element={<VisionQuest />} />
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Navigate to="/pulse" replace />} />

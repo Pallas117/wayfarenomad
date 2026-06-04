@@ -11,12 +11,23 @@ export const RANK_LABELS: Record<UserRank, string> = {
   3: "Admin",
 };
 
+// Alpha tester mock mode — keep in sync with useAuth.ALPHA_MOCK_AUTH.
+// Grants Steward access so testers can explore gated features.
+const ALPHA_MOCK_RANK: UserRank = 1;
+const ALPHA_MOCK_AUTH = true;
+
 export function useUserRank() {
   const { user } = useAuth();
   const [rank, setRank] = useState<UserRank>(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (ALPHA_MOCK_AUTH) {
+      setRank(ALPHA_MOCK_RANK);
+      setLoading(false);
+      return;
+    }
+
     if (!user) {
       setRank(0);
       setLoading(false);
