@@ -74,11 +74,14 @@ export function CommunityPhotoBoard() {
       return;
     }
 
-    const { data: urlData } = supabase.storage.from("community-photos").getPublicUrl(path);
+    // Generate a long-lived signed URL (bucket is private for security)
+    const { data: signed } = await supabase.storage
+      .from("community-photos")
+      .createSignedUrl(path, 60 * 60 * 24 * 365);
 
     const { error: dbError } = await supabase.from("community_photos" as any).insert({
       user_id: user.id,
-      image_url: urlData.publicUrl,
+      image_url: signed?.signedUrl ?? "",
       caption: caption.trim() || null,
       event_title: eventTitle.trim() || null,
       city,
