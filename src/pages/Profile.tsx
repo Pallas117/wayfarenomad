@@ -79,15 +79,20 @@ export default function Profile() {
 
       const isOwn = user?.id === userId;
 
-      const [profileRes, rankRes] = await Promise.all([
-        isOwn
-          ? supabase.from("profiles").select("*").eq("user_id", userId).single()
-          : supabase.from("public_profiles").select("*").eq("user_id", userId).single(),
+      const [profileRes, rankRes, privRes] = await Promise.all([
+        supabase.from("public_profiles").select("*").eq("user_id", userId).single(),
         supabase.rpc("get_user_rank", { _user_id: userId }),
+        isOwn ? supabase.rpc("get_my_private_profile" as any) : Promise.resolve({ data: null }),
       ]);
 
       if (profileRes.data) {
-        setProfile(profileRes.data as unknown as ProfileData);
+        const priv: any = Array.isArray(privRes.data) ? privRes.data[0] : privRes.data;
+        setProfile({
+          ...(profileRes.data as any),
+          instagram_handle: priv?.instagram_handle ?? null,
+          telegram_handle: priv?.telegram_handle ?? null,
+          whatsapp_number: priv?.whatsapp_number ?? null,
+        } as ProfileData);
       }
 
       const r = (rankRes.data as number) ?? 0;

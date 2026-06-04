@@ -1151,6 +1151,15 @@ export type Database = {
         Args: { _group_chat_id: string; _user_id: string }
         Returns: boolean
       }
+      get_my_private_profile: {
+        Args: never
+        Returns: {
+          encrypted_private_key: string
+          instagram_handle: string
+          telegram_handle: string
+          whatsapp_number: string
+        }[]
+      }
       get_user_rank: { Args: { _user_id: string }; Returns: number }
       has_min_rank: {
         Args: { _min_rank: number; _user_id: string }
@@ -1173,6 +1182,14 @@ export type Database = {
       }
       promote_to_captain: { Args: { _user_id: string }; Returns: undefined }
       promote_to_steward: { Args: { _user_id: string }; Returns: undefined }
+      update_my_private_profile: {
+        Args: {
+          _instagram_handle?: string
+          _telegram_handle?: string
+          _whatsapp_number?: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "steward"
