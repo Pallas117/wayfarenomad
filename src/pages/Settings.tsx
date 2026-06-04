@@ -190,12 +190,25 @@ function VerificationStatusCard() {
 
   useEffect(() => {
     if (!user) return;
-    supabase
-      .from("profiles")
-      .select("vision_completed, quiz_completed, social_verified, instagram_handle, telegram_handle, whatsapp_number, substack_url")
-      .eq("user_id", user.id)
-      .single()
-      .then(({ data }) => { if (data) setProfile(data); });
+    (async () => {
+      const [pubRes, privRes] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("vision_completed, quiz_completed, social_verified, substack_url")
+          .eq("user_id", user.id)
+          .single(),
+        supabase.rpc("get_my_private_profile" as any),
+      ]);
+      const priv: any = Array.isArray(privRes.data) ? privRes.data[0] : privRes.data;
+      if (pubRes.data) {
+        setProfile({
+          ...(pubRes.data as any),
+          instagram_handle: priv?.instagram_handle ?? null,
+          telegram_handle: priv?.telegram_handle ?? null,
+          whatsapp_number: priv?.whatsapp_number ?? null,
+        });
+      }
+    })();
   }, [user]);
 
   if (!profile) return null;

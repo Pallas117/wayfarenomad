@@ -31,22 +31,25 @@ export function SocialProfileLinks() {
 
   useEffect(() => {
     if (!user?.id) return;
-    supabase
-      .from("profiles")
-      .select("instagram_handle, telegram_handle, whatsapp_number, substack_url, social_verified")
-      .eq("user_id", user.id)
-      .single()
-      .then(({ data }) => {
-        if (data) {
-          setValues({
-            instagram_handle: (data as any).instagram_handle || "",
-            telegram_handle: (data as any).telegram_handle || "",
-            whatsapp_number: (data as any).whatsapp_number || "",
-            substack_url: (data as any).substack_url || "",
-          });
-          setVerified((data as any).social_verified || false);
-        }
+    (async () => {
+      const [publicRes, privateRes] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("substack_url, social_verified")
+          .eq("user_id", user.id)
+          .single(),
+        supabase.rpc("get_my_private_profile" as any),
+      ]);
+      const pub = publicRes.data as any;
+      const priv = Array.isArray(privateRes.data) ? privateRes.data[0] : privateRes.data;
+      setValues({
+        instagram_handle: priv?.instagram_handle || "",
+        telegram_handle: priv?.telegram_handle || "",
+        whatsapp_number: priv?.whatsapp_number || "",
+        substack_url: pub?.substack_url || "",
       });
+      setVerified(!!pub?.social_verified);
+    })();
   }, [user?.id]);
 
   const filledCount = Object.values(values).filter(v => v.trim().length > 0).length;
@@ -70,10 +73,15 @@ export function SocialProfileLinks() {
     }
     setSaving(true);
     const shouldVerify = isVerifiable && !verified;
-    const { error } = await supabase
+    const { error: privErr } = await supabase.rpc("update_my_private_profile" as any, {
+      _instagram_handle: values.instagram_handle || null,
+      _telegram_handle: values.telegram_handle || null,
+      _whatsapp_number: values.whatsapp_number || null,
+    });
+    const { error } = privErr ? { error: privErr } : await supabase
       .from("profiles")
       .update({
-        ...values,
+        substack_url: values.substack_url,
         ...(shouldVerify ? { social_verified: true } : {}),
       } as any)
       .eq("user_id", user.id);
