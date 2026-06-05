@@ -91,60 +91,70 @@ export function OnboardingTour() {
   const Icon = s.icon;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-background/85 backdrop-blur-sm p-4">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -16 }}
-          transition={{ duration: 0.28 }}
-          className="w-full max-w-md rounded-2xl border border-primary/30 bg-card p-6 shadow-2xl"
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
+          className="relative w-full max-w-md border border-primary bg-card p-1"
         >
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-[10px] font-semibold tracking-widest uppercase text-primary/80">
-              {s.badge}
-            </span>
-            <button
-              onClick={finish}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Skip onboarding tour"
+          {/* Corner brackets */}
+          <span aria-hidden className="absolute -top-px -left-px w-3 h-3 border-t-2 border-l-2 border-primary" />
+          <span aria-hidden className="absolute -top-px -right-px w-3 h-3 border-t-2 border-r-2 border-primary" />
+          <span aria-hidden className="absolute -bottom-px -left-px w-3 h-3 border-b-2 border-l-2 border-primary" />
+          <span aria-hidden className="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-primary" />
+
+          <div className="border border-primary/20 p-6 flex flex-col items-center text-center">
+            <div className="w-full flex items-center justify-between mb-5">
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary/60">
+                Entry No. {String(step + 1).padStart(3, "0")} · {s.badge}
+              </span>
+              <button
+                onClick={finish}
+                className="font-mono text-[10px] uppercase tracking-widest text-primary/50 hover:text-primary transition-colors"
+                aria-label="Skip onboarding tour"
+              >
+                Skip
+              </button>
+            </div>
+
+            <div className="w-14 h-14 border border-primary flex items-center justify-center mb-6 relative">
+              <span aria-hidden className="absolute inset-1 border border-primary/20" />
+              <Icon className="h-6 w-6 text-primary" strokeWidth={1.5} />
+            </div>
+
+            <h2 className="font-display text-xl font-bold tracking-[0.12em] uppercase text-foreground mb-3">
+              {s.title}
+            </h2>
+            <p className="text-xs leading-relaxed text-muted-foreground max-w-[260px] mb-7">
+              {s.description}
+            </p>
+
+            <div className="flex gap-1.5 mb-7" role="progressbar" aria-valuenow={step + 1} aria-valuemin={1} aria-valuemax={STEPS.length}>
+              {STEPS.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1 transition-all duration-200 ${
+                    i === step ? "w-8 bg-primary" : i < step ? "w-4 bg-primary/60" : "w-4 bg-primary/20"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <Button
+              onClick={next}
+              className="w-full min-h-[44px] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 font-display font-bold uppercase tracking-[0.2em] text-xs gap-2 active:scale-[0.98] transition-transform"
             >
-              Skip
-            </button>
+              {step < STEPS.length - 1 ? (
+                <>Next <ArrowRight className="h-4 w-4" strokeWidth={2.5} /></>
+              ) : (
+                <>Begin Your Journey <Sparkles className="h-4 w-4" strokeWidth={2} /></>
+              )}
+            </Button>
           </div>
-
-          <div className="flex flex-col items-center text-center">
-            <motion.div
-              className="w-16 h-16 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center mb-4 glow-gold"
-              initial={{ scale: 0.7 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 240 }}
-            >
-              <Icon className="h-7 w-7 text-primary" />
-            </motion.div>
-            <h2 className="font-display text-2xl text-foreground mb-2">{s.title}</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">{s.description}</p>
-          </div>
-
-          <div className="flex justify-center gap-1.5 mt-6">
-            {STEPS.map((_, i) => (
-              <div
-                key={i}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === step ? "w-6 bg-primary" : "w-1.5 bg-muted"
-                }`}
-              />
-            ))}
-          </div>
-
-          <Button onClick={next} className="w-full mt-6 min-h-[48px] gap-2">
-            {step < STEPS.length - 1 ? (
-              <>Next <ArrowRight className="h-4 w-4" /></>
-            ) : (
-              <>Begin Your Journey <Sparkles className="h-4 w-4" /></>
-            )}
-          </Button>
         </motion.div>
       </AnimatePresence>
     </div>
