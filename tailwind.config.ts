@@ -17,6 +17,7 @@ export default {
         sans: ["Inter", "IBM Plex Sans", "sans-serif"],
         display: ["Cinzel", "serif"],
         vision: ["Cormorant Garamond", "serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",

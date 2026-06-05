@@ -455,10 +455,15 @@ export default function Pulse() {
       {/* Floating top controls */}
       <div className="absolute top-0 left-0 right-0 z-[1000] p-3 space-y-2">
         {/* Header bar */}
-        <div className="flex items-center justify-between glass-card paper-grain rounded-xl px-3 py-2">
+        <div className="flex items-center justify-between bg-background/85 backdrop-blur-md border border-primary/30 px-3 py-2">
           <div className="flex items-center gap-2">
-            <WeatherSunIcon className="h-5 w-5 text-primary" />
-            <h1 className="text-sm font-display font-bold">Pulse</h1>
+            <div className="w-5 h-5 border border-primary flex items-center justify-center">
+              <WeatherSunIcon className="h-3 w-3 text-primary" />
+            </div>
+            <h1 className="text-sm font-display font-bold tracking-[0.2em] uppercase">Pulse</h1>
+            <span className="hidden sm:inline-block font-mono text-[9px] uppercase tracking-widest text-primary/50 pl-2 border-l border-primary/20 ml-1">
+              Sys · Live
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <CulturalEar />
@@ -466,12 +471,12 @@ export default function Pulse() {
               variant={intrepidMode ? "default" : "outline"}
               size="sm"
               onClick={toggleIntrepid}
-              className="h-8 text-[10px] gap-1"
+              className="h-8 rounded-none text-[10px] gap-1 font-mono uppercase tracking-widest"
             >
               <Mountain className="h-3.5 w-3.5" />
               {intrepidMode ? "Intrepid" : "Standard"}
             </Button>
-            <Button variant="outline" size="icon" onClick={handleScrape} disabled={scraping} className="h-8 w-8">
+            <Button variant="outline" size="icon" onClick={handleScrape} disabled={scraping} className="h-8 w-8 rounded-none">
               {scraping ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
             </Button>
             {isSteward && (
@@ -479,7 +484,7 @@ export default function Pulse() {
                 variant={showLuma ? "default" : "outline"}
                 size="sm"
                 onClick={() => setShowLuma(!showLuma)}
-                className="h-8 text-[10px] gap-1"
+                className="h-8 rounded-none text-[10px] gap-1 font-mono uppercase tracking-widest"
               >
                 <CalendarDays className="h-3.5 w-3.5" />
                 Luma
@@ -490,10 +495,19 @@ export default function Pulse() {
 
         {/* City tabs */}
         <Tabs value={activeCity} onValueChange={setActiveCity}>
-          <TabsList className="w-full bg-background/80 backdrop-blur-md h-8">
-            <TabsTrigger value="all" className="flex-1 text-[10px] h-7"><Globe className="h-3 w-3 mr-0.5" />All</TabsTrigger>
+          <TabsList className="w-full bg-background/85 backdrop-blur-md h-9 rounded-none border border-primary/20 p-0 gap-0">
+            <TabsTrigger
+              value="all"
+              className="flex-1 h-full text-[10px] rounded-none border-r border-primary/10 font-mono uppercase tracking-widest data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-b-primary data-[state=active]:shadow-none data-[state=active]:font-bold"
+            >
+              <Globe className="h-3 w-3 mr-1" />All
+            </TabsTrigger>
             {CITIES.map(city => (
-              <TabsTrigger key={city} value={city} className="flex-1 text-[10px] h-7">
+              <TabsTrigger
+                key={city}
+                value={city}
+                className="flex-1 h-full text-[10px] rounded-none border-r last:border-r-0 border-primary/10 font-mono uppercase tracking-widest data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-b-primary data-[state=active]:shadow-none data-[state=active]:font-bold"
+              >
                 {city === "Kuala Lumpur" ? "KL" : city}
               </TabsTrigger>
             ))}
@@ -510,7 +524,7 @@ export default function Pulse() {
                 key={c.id}
                 variant={isActive ? "default" : "outline"}
                 size="sm"
-                className={`h-7 text-[10px] px-2.5 backdrop-blur-md shrink-0 transition-all ${isActive ? "border shadow-sm" : "bg-background/80"}`}
+                className={`h-7 rounded-none text-[10px] px-2.5 backdrop-blur-md shrink-0 uppercase tracking-wider font-medium transition-none ${isActive ? "border border-primary shadow-none" : "bg-background/85 border-primary/30"}`}
                 style={style}
                 onClick={() => setActiveCategory(c.id)}
               >
@@ -518,13 +532,13 @@ export default function Pulse() {
               </Button>
             );
           })}
-          <div className="w-px h-7 bg-border shrink-0" />
+          <div className="w-px h-7 bg-primary/30 shrink-0" />
           {resourceFilters.map((r) => (
             <Button
               key={r.id}
               variant={activeResources.includes(r.id) ? "default" : "outline"}
               size="sm"
-              className="h-7 text-[10px] px-2 bg-background/80 backdrop-blur-md shrink-0"
+              className={`h-7 rounded-none text-[10px] px-2 backdrop-blur-md shrink-0 uppercase tracking-wider font-medium transition-none ${activeResources.includes(r.id) ? "border border-primary" : "bg-background/85 border-primary/30"}`}
               onClick={() => toggleResource(r.id)}
             >
               <r.icon className="h-3 w-3 mr-0.5" />{r.label}
@@ -560,11 +574,11 @@ export default function Pulse() {
 
       {/* Bottom drawer trigger */}
       <Button
-        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] gradient-gold text-primary-foreground shadow-lg rounded-full px-5 h-10 text-xs font-display"
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] bg-background border border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-none px-5 h-10 text-[10px] font-mono uppercase tracking-[0.25em] font-bold gap-2 transition-colors"
         onClick={() => setDrawerOpen(true)}
       >
-        <Radio className="h-3.5 w-3.5 mr-1.5" />
-        {filtered.length} Events
+        <span className="w-1.5 h-1.5 bg-primary animate-pulse" aria-hidden />
+        {filtered.length} Events Detected
       </Button>
 
       {/* Bottom drawer for event list */}
