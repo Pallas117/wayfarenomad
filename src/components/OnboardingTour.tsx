@@ -123,7 +123,7 @@ export function OnboardingTour() {
 
             <div className="w-14 h-14 border border-primary flex items-center justify-center mb-6 relative">
               <span aria-hidden className="absolute inset-1 border border-primary/20" />
-              <Icon className="h-6 w-6 text-primary" strokeWidth={1.5} />
+              <Icon className="h-6 w-6 text-primary" />
             </div>
 
             <h2 className="font-display text-xl font-bold tracking-[0.12em] uppercase text-foreground mb-3">
