@@ -11,6 +11,9 @@ import { PowerProvider } from "./components/PowerProvider";
 import { MOUAgreement } from "./components/MOUAgreement";
 import Social from "./pages/Social";
 import Pulse from "./pages/Pulse";
+import BulletinBoard from "./pages/retro/BulletinBoard";
+import Logbook from "./pages/retro/Logbook";
+import TicketCounter from "./pages/retro/TicketCounter";
 // Marketplace archived — replaced by Luma integration in Pulse
 import Safety from "./pages/Safety";
 import Leaderboard from "./pages/Leaderboard";
@@ -44,7 +47,10 @@ const App = () => (
             <Route path="/auth" element={<Navigate to="/pulse" replace />} />
             <Route path="/vision-quest" element={<VisionQuest />} />
             <Route path="/" element={<AppLayout />}>
-              <Route index element={<Navigate to="/pulse" replace />} />
+              <Route index element={<Navigate to="/board" replace />} />
+              <Route path="board" element={<BulletinBoard />} />
+              <Route path="logbook" element={<Logbook />} />
+              <Route path="tickets" element={<TicketCounter />} />
               <Route path="social" element={<Social />} />
               <Route path="pulse" element={<Pulse />} />
               {/* marketplace archived */}
