@@ -355,7 +355,6 @@
 @layer utilities {
   .no-text-shadow, .no-text-shadow * { text-shadow: none !important; }
 }
-}
 
 /* Krabi Launch Theme - Scoped to .krabi-theme */
 .krabi-theme {
