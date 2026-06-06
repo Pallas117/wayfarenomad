@@ -352,10 +352,9 @@
   font-family: 'Cinzel', serif;
 }
 
-/* Hide global hub indicator on retro views (handled inline) */
-.retro-view + * { display: none; }
 @layer utilities {
   .no-text-shadow, .no-text-shadow * { text-shadow: none !important; }
+}
 }
 
 /* Krabi Launch Theme - Scoped to .krabi-theme */
