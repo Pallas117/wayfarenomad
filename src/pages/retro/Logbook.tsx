@@ -7,11 +7,8 @@ import { mockNomads } from "@/data/mockNomads";
 const FILTERS = ["All", "Active Now", "Recently Arrived"] as const;
 
 export default function Logbook() {
-  let cityName = "Lisbon";
-  try {
-    const ctx = useCitySync?.() as any;
-    cityName = ctx?.city?.name || ctx?.cityName || cityName;
-  } catch { /* fallback */ }
+  const { currentCity } = useCitySync();
+  const cityName = currentCity?.trim() || "Lisbon";
 
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
 
