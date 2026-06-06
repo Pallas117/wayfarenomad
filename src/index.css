@@ -280,6 +280,82 @@
   .gradient-coral {
     background: linear-gradient(135deg, hsl(43 72% 52%), hsl(43 80% 60%));
   }
+
+  /* ===== Analogue Retro-Tech utilities ===== */
+  .shadow-stamp {
+    box-shadow: 4px 4px 0 0 hsl(var(--foreground));
+  }
+  .shadow-stamp-sm {
+    box-shadow: 2px 2px 0 0 hsl(var(--foreground));
+  }
+  .shadow-stamp-lg {
+    box-shadow: 6px 6px 0 0 hsl(var(--foreground));
+  }
+  .press {
+    transition: transform 80ms ease, box-shadow 80ms ease;
+  }
+  .press:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 0 hsl(var(--foreground)) !important;
+  }
+  .ink-border {
+    border: 2px solid hsl(var(--foreground));
+  }
+  .ink-border-thin {
+    border: 1px solid hsl(var(--foreground));
+  }
+  .led-dot {
+    width: 8px; height: 8px; border-radius: 9999px;
+    background: hsl(var(--led-green));
+    box-shadow: 0 0 6px hsl(var(--led-green) / 0.9), 0 0 12px hsl(var(--led-green) / 0.5);
+    animation: led-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+  .font-mono-retro {
+    font-family: 'JetBrains Mono', 'Courier Prime', ui-monospace, monospace;
+  }
+  .font-typewriter {
+    font-family: 'Courier Prime', 'JetBrains Mono', ui-monospace, monospace;
+  }
+  .corkboard {
+    background-color: #c9a779;
+    background-image:
+      radial-gradient(hsl(30 35% 35% / 0.25) 1px, transparent 1.5px),
+      radial-gradient(hsl(30 45% 25% / 0.18) 1px, transparent 1.5px),
+      linear-gradient(135deg, #c9a779 0%, #b8945f 100%);
+    background-size: 5px 5px, 9px 9px, 100% 100%;
+    background-position: 0 0, 2px 2px, 0 0;
+  }
+  .perforated-edge {
+    --p: 8px;
+    -webkit-mask:
+      radial-gradient(var(--p) at var(--p) 50%, #0000 98%, #000) calc(-1 * var(--p)) 0 / 100% 100%;
+            mask:
+      radial-gradient(var(--p) at var(--p) 50%, #0000 98%, #000) calc(-1 * var(--p)) 0 / 100% 100%;
+  }
+  .tape-label-yellow {
+    background: linear-gradient(180deg, #f5c842 0%, #e8a82b 100%);
+    color: #1A1A1A;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 1px 1px 0 hsl(var(--foreground) / 0.6), inset 0 -2px 0 hsl(30 30% 25% / 0.25);
+  }
+}
+
+/* === Retro typography overrides === */
+.font-cinzel-allowed h1, .font-cinzel-allowed h2, .font-cinzel-allowed h3 {
+  font-family: 'Cinzel', serif;
+}
+
+/* Hide global hub indicator on retro views (handled inline) */
+.retro-view + * { display: none; }
+@layer utilities {
+  .no-text-shadow, .no-text-shadow * { text-shadow: none !important; }
 }
 
 /* Krabi Launch Theme - Scoped to .krabi-theme */
