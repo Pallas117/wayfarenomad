@@ -119,16 +119,16 @@ export function ScanningTheStars() {
   const { isScanning, scanComplete, nodesFound, currentCity, theme } = useCitySync();
   const power = usePower();
 
-  if (!isScanning) return null;
-
   return (
     <AnimatePresence>
+      {isScanning && (
       <motion.div
+        key="scanning"
         className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
         style={{ background: `hsl(${theme.background})` }}
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.45 }}
       >
         {/* 3D Globe — skip in saver/critical mode */}
         <div className="w-64 h-64 relative">
@@ -217,6 +217,7 @@ export function ScanningTheStars() {
           ))}
         </div>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 }
