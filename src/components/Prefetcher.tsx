@@ -66,19 +66,13 @@ export function Prefetcher() {
       staleTime: 60_000,
     });
 
-    // ── Social: itinerary matches ──
+    // ── Social: itinerary matches (warm network only; shape differs from
+    // hook's queryKey so we don't seed that cache with the wrong shape) ──
     if (user?.id) {
-      queryClient.prefetchQuery({
-        queryKey: ["itinerary-matches", user.id],
-        queryFn: async () => {
-          const { data: myItineraries } = await supabase
-            .from("itineraries")
-            .select("*")
-            .eq("user_id", user.id);
-          return myItineraries ?? [];
-        },
-        staleTime: 60_000,
-      });
+      void Promise.all([
+        supabase.from("itineraries").select("*").eq("user_id", user.id),
+        supabase.from("itineraries").select("*").neq("user_id", user.id),
+      ]).catch(() => {});
     }
 
     // ── Marketplace: expeditions (warms network/cache) ──
