@@ -4,9 +4,10 @@ import { Pinned } from "@/components/retro/Pinned";
 import { StampButton } from "@/components/retro/StampButton";
 import { LeaveNoteModal } from "@/components/retro/LeaveNoteModal";
 import { mockBoardPosts, type BoardPost } from "@/data/mockBoard";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 
-const TAGS = ["All", "Meetups", "Wifi Spots", "Housing", "General Chaos"] as const;
+const TAGS = ["Meetups", "Wifi Spots", "Housing", "General Chaos"] as const;
+type Tag = (typeof TAGS)[number];
 
 const colorMap: Record<BoardPost["color"], string> = {
   yellow: "bg-[#fdf6c9]",
@@ -17,13 +18,27 @@ const colorMap: Record<BoardPost["color"], string> = {
 
 export default function BulletinBoard() {
   const [posts, setPosts] = useState<BoardPost[]>(mockBoardPosts);
-  const [filter, setFilter] = useState<(typeof TAGS)[number]>("All");
+  const [active, setActive] = useState<Set<Tag>>(new Set());
   const [modalOpen, setModalOpen] = useState(false);
 
+  const counts = useMemo(() => {
+    const c: Record<string, number> = {};
+    for (const p of posts) c[p.tag] = (c[p.tag] || 0) + 1;
+    return c;
+  }, [posts]);
+
   const filtered = useMemo(
-    () => (filter === "All" ? posts : posts.filter((p) => p.tag === filter)),
-    [posts, filter],
+    () => (active.size === 0 ? posts : posts.filter((p) => active.has(p.tag as Tag))),
+    [posts, active],
   );
+
+  const toggle = (t: Tag) => {
+    setActive((prev) => {
+      const next = new Set(prev);
+      next.has(t) ? next.delete(t) : next.add(t);
+      return next;
+    });
+  };
 
   return (
     <div className="corkboard min-h-[calc(100vh-8rem)] p-4 sm:p-8 relative">
@@ -45,14 +60,28 @@ export default function BulletinBoard() {
         {TAGS.map((t, i) => (
           <TapeLabel
             key={t}
-            active={filter === t}
+            active={active.has(t)}
             tilt={i % 2 === 0 ? -2 : 2}
-            onClick={() => setFilter(t)}
+            onClick={() => toggle(t)}
           >
-            {t}
+            {t} <span className="ml-1 opacity-60">{counts[t] || 0}</span>
           </TapeLabel>
         ))}
+        {active.size > 0 && (
+          <button
+            onClick={() => setActive(new Set())}
+            className="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-mono-retro uppercase tracking-wider ink-border-thin bg-[hsl(var(--background))] press"
+          >
+            <X className="h-3 w-3" strokeWidth={3} /> Clear
+          </button>
+        )}
       </div>
+
+      {filtered.length === 0 && (
+        <div className="ink-border-thin bg-[hsl(var(--background))]/90 p-6 text-center font-mono-retro text-xs uppercase tracking-widest text-[hsl(var(--foreground))]/70">
+          No notes match these filters.
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map((p) => (
