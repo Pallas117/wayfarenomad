@@ -242,10 +242,25 @@ async function reverseGeocode(lat: number, lng: number): Promise<string> {
 
 // ─── Provider ───
 export function CitySyncProvider({ children }: { children: ReactNode }) {
-  const [currentHub, setCurrentHub] = useState("default");
-  const [currentCity, setCurrentCity] = useState("");
-  const [isScanning, setIsScanning] = useState(true);
-  const [scanComplete, setScanComplete] = useState(false);
+  // Hydrate from cache synchronously so revisits skip the scan entirely.
+  const cachedHub =
+    (typeof window !== "undefined" && localStorage.getItem("nomad-hub")) || "default";
+  const cachedCity =
+    (typeof window !== "undefined" && localStorage.getItem("nomad-city")) || "";
+  const lastScanAt =
+    typeof window !== "undefined" ? Number(localStorage.getItem("nomad-scan-at") || 0) : 0;
+  const SCAN_TTL_MS = 1000 * 60 * 60 * 24; // 24h
+  const shouldSkipScan = lastScanAt && Date.now() - lastScanAt < SCAN_TTL_MS;
+
+  if (typeof window !== "undefined" && REGIONAL_THEMES[cachedHub]) {
+    // Apply immediately to avoid a flash of default theme on first paint.
+    applyTheme(REGIONAL_THEMES[cachedHub]);
+  }
+
+  const [currentHub, setCurrentHub] = useState(cachedHub);
+  const [currentCity, setCurrentCity] = useState(cachedCity);
+  const [isScanning, setIsScanning] = useState(!shouldSkipScan);
+  const [scanComplete, setScanComplete] = useState(!!shouldSkipScan);
   const [nodesFound, setNodesFound] = useState<string[]>([]);
 
   const theme = REGIONAL_THEMES[currentHub] || REGIONAL_THEMES.default;
@@ -275,18 +290,20 @@ export function CitySyncProvider({ children }: { children: ReactNode }) {
 
     // Simulate progressive node discovery
     for (let i = 0; i < nodes.length; i++) {
-      await new Promise((r) => setTimeout(r, 600 + Math.random() * 400));
+      await new Promise((r) => setTimeout(r, 220 + Math.random() * 140));
       setNodesFound((prev) => [...prev, nodes[i]]);
       haptic("typewriterTick");
     }
 
     // Final city resolution
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 180));
 
     if (detectedCity) {
       setCurrentCity(detectedCity);
+      localStorage.setItem("nomad-city", detectedCity);
       const hub = resolveHub(detectedCity);
       setCurrentHub(hub);
+      localStorage.setItem("nomad-hub", hub);
       applyTheme(REGIONAL_THEMES[hub] || REGIONAL_THEMES.default);
     } else {
       // Check localStorage for previously set hub
@@ -301,15 +318,18 @@ export function CitySyncProvider({ children }: { children: ReactNode }) {
 
     haptic("success");
     setScanComplete(true);
+    localStorage.setItem("nomad-scan-at", String(Date.now()));
 
-    // Keep scanning screen for a moment, then hide
-    await new Promise((r) => setTimeout(r, 1200));
+    // Brief reveal, then hide
+    await new Promise((r) => setTimeout(r, 500));
     setIsScanning(false);
   }, []);
 
   useEffect(() => {
+    if (shouldSkipScan) return; // cached — no loading screen on revisit
     performScan();
-  }, [performScan]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const setHubManually = useCallback((hubId: string) => {
     if (REGIONAL_THEMES[hubId]) {
