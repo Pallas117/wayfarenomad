@@ -4,7 +4,7 @@ import { Pinned } from "@/components/retro/Pinned";
 import { StampButton } from "@/components/retro/StampButton";
 import { LeaveNoteModal } from "@/components/retro/LeaveNoteModal";
 import { mockBoardPosts, type BoardPost } from "@/data/mockBoard";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Search } from "lucide-react";
 
 const TAGS = ["Meetups", "Wifi Spots", "Housing", "General Chaos"] as const;
 type Tag = (typeof TAGS)[number];
@@ -19,6 +19,7 @@ const colorMap: Record<BoardPost["color"], string> = {
 export default function BulletinBoard() {
   const [posts, setPosts] = useState<BoardPost[]>(mockBoardPosts);
   const [active, setActive] = useState<Set<Tag>>(new Set());
+  const [query, setQuery] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
 
   const counts = useMemo(() => {
@@ -27,10 +28,19 @@ export default function BulletinBoard() {
     return c;
   }, [posts]);
 
-  const filtered = useMemo(
-    () => (active.size === 0 ? posts : posts.filter((p) => active.has(p.tag as Tag))),
-    [posts, active],
-  );
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return posts.filter((p) => {
+      if (active.size > 0 && !active.has(p.tag as Tag)) return false;
+      if (!q) return true;
+      return (
+        p.title.toLowerCase().includes(q) ||
+        p.author.toLowerCase().includes(q) ||
+        p.body.toLowerCase().includes(q) ||
+        p.tag.toLowerCase().includes(q)
+      );
+    });
+  }, [posts, active, query]);
 
   const toggle = (t: Tag) => {
     setActive((prev) => {
@@ -57,6 +67,25 @@ export default function BulletinBoard() {
       </header>
 
       <div className="mb-6 flex flex-wrap gap-2">
+        <div className="relative flex items-center w-full sm:w-72 mr-auto">
+          <Search className="absolute left-2 h-3.5 w-3.5 text-[hsl(var(--foreground))]/60" strokeWidth={3} />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="SEARCH NOTES…"
+            className="w-full pl-7 pr-7 py-1.5 bg-[hsl(var(--background))] ink-border-thin font-mono-retro text-xs uppercase tracking-wider placeholder:text-[hsl(var(--foreground))]/40 focus:outline-none focus:shadow-stamp"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              className="absolute right-2 text-[hsl(var(--foreground))]/60 hover:text-[hsl(var(--foreground))]"
+              aria-label="Clear search"
+            >
+              <X className="h-3.5 w-3.5" strokeWidth={3} />
+            </button>
+          )}
+        </div>
         {TAGS.map((t, i) => (
           <TapeLabel
             key={t}
