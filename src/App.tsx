@@ -9,6 +9,7 @@ import { CitySyncProvider } from "./components/CitySync";
 import { ScanningTheStars } from "./components/CitySync";
 import { PowerProvider } from "./components/PowerProvider";
 import { MOUAgreement } from "./components/MOUAgreement";
+import { Prefetcher } from "./components/Prefetcher";
 import Social from "./pages/Social";
 import Pulse from "./pages/Pulse";
 import BulletinBoard from "./pages/retro/BulletinBoard";
@@ -41,6 +42,7 @@ const App = () => (
         <Sonner />
         <ScanningTheStars />
         <MOUAgreement />
+        <Prefetcher />
         <BrowserRouter>
           <RouteTracker />
           <Routes>
