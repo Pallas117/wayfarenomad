@@ -4,20 +4,22 @@ import { Scroll, Shield, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { haptic } from "@/lib/haptics";
+import { useCitySync } from "@/components/CitySync/CitySyncProvider";
 
 const MOU_KEY = "nomad-mou-accepted";
 
 export function MOUAgreement() {
   const { user } = useAuth();
+  const { isScanning } = useCitySync();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || isScanning) return;
     const accepted = localStorage.getItem(`${MOU_KEY}-${user.id}`);
     if (!accepted) {
       setVisible(true);
     }
-  }, [user]);
+  }, [user, isScanning]);
 
   const handleAccept = () => {
     if (!user) return;
