@@ -15,8 +15,13 @@ export function Prefetcher() {
   useEffect(() => {
     if (loading) return;
 
+    // Prefetches are best-effort. Any failure (offline, RLS, transient
+    // network error) must NOT prevent the actual pages from fetching
+    // fresh data on mount. react-query's prefetchQuery rejects on error,
+    // so we swallow rejections here and let each page's own hook retry.
+
     // ── Social: hangouts ──
-    queryClient.prefetchQuery({
+    void queryClient.prefetchQuery({
       queryKey: ["hangouts", undefined],
       queryFn: async () => {
         const { data: hangouts, error } = await supabase
@@ -64,6 +69,9 @@ export function Prefetcher() {
         });
       },
       staleTime: 60_000,
+      retry: false,
+    }).catch((err) => {
+      console.warn("[Prefetcher] hangouts prefetch failed (non-fatal)", err);
     });
 
     // ── Social: itinerary matches (warm network only; shape differs from
@@ -76,7 +84,7 @@ export function Prefetcher() {
     }
 
     // ── Marketplace: expeditions (warms network/cache) ──
-    queryClient.prefetchQuery({
+    void queryClient.prefetchQuery({
       queryKey: ["expeditions", "all"],
       queryFn: async () => {
         const { data, error } = await supabase
@@ -87,6 +95,9 @@ export function Prefetcher() {
         return data ?? [];
       },
       staleTime: 60_000,
+      retry: false,
+    }).catch((err) => {
+      console.warn("[Prefetcher] expeditions prefetch failed (non-fatal)", err);
     });
   }, [queryClient, user?.id, loading]);
 
