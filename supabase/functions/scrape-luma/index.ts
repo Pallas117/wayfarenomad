@@ -46,32 +46,29 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         url: targetUrl,
-        formats: [
-          'markdown',
-          {
-            type: 'json',
-            schema: {
-              type: 'object',
-              properties: {
-                events: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      title: { type: 'string' },
-                      date: { type: 'string' },
-                      venue: { type: 'string' },
-                      description: { type: 'string' },
-                      url: { type: 'string' },
-                      category: { type: 'string' },
-                    },
+        formats: ['markdown', 'json'],
+        jsonOptions: {
+          schema: {
+            type: 'object',
+            properties: {
+              events: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    title: { type: 'string' },
+                    date: { type: 'string' },
+                    venue: { type: 'string' },
+                    description: { type: 'string' },
+                    url: { type: 'string' },
+                    category: { type: 'string' },
                   },
                 },
               },
             },
-            prompt: 'Extract all events from this Luma page. For each event, get the title, date (as ISO string or readable date), venue/location name, a short description, the event URL, and categorize it as one of: culture, entertainment, nightlife, fitness, creative, wellbeing, adventure, festival, event, singles, nature, shopping.',
           },
-        ],
+          prompt: 'Extract all events from this Luma page. For each event, get the title, date (as ISO string or readable date), venue/location name, a short description, the event URL, and categorize it as one of: culture, entertainment, nightlife, fitness, creative, wellbeing, adventure, festival, event, singles, nature, shopping.',
+        },
         waitFor: 3000,
       }),
     });

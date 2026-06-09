@@ -773,6 +773,10 @@ export type Database = {
           display_name: string | null
           encrypted_private_key: string | null
           full_name: string | null
+          google_guide_level: number | null
+          google_guide_points: number | null
+          google_guide_reviews: number | null
+          google_guide_url: string | null
           id: string
           instagram_handle: string | null
           leaderboard_anonymous: boolean
@@ -800,6 +804,10 @@ export type Database = {
           display_name?: string | null
           encrypted_private_key?: string | null
           full_name?: string | null
+          google_guide_level?: number | null
+          google_guide_points?: number | null
+          google_guide_reviews?: number | null
+          google_guide_url?: string | null
           id?: string
           instagram_handle?: string | null
           leaderboard_anonymous?: boolean
@@ -827,6 +835,10 @@ export type Database = {
           display_name?: string | null
           encrypted_private_key?: string | null
           full_name?: string | null
+          google_guide_level?: number | null
+          google_guide_points?: number | null
+          google_guide_reviews?: number | null
+          google_guide_url?: string | null
           id?: string
           instagram_handle?: string | null
           leaderboard_anonymous?: boolean
