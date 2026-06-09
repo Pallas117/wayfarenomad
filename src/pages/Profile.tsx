@@ -301,6 +301,39 @@ export default function Profile() {
           )}
         </div>
 
+        {(profile.google_guide_level || profile.google_guide_points || profile.google_guide_url) && (
+          <a
+            href={profile.google_guide_url ?? "https://www.google.com/maps/contrib"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-2.5 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/30 hover:from-primary/20 transition-colors border border-primary/20"
+          >
+            <MapPin className="h-4 w-4 text-primary shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-display font-semibold">Google Local Guide</span>
+                {profile.google_guide_level != null && (
+                  <Badge className="text-[10px] bg-primary/20 text-primary border-primary/30 px-1.5">
+                    Lvl {profile.google_guide_level}
+                  </Badge>
+                )}
+              </div>
+              {(profile.google_guide_points != null || profile.google_guide_reviews != null) && (
+                <p className="text-[11px] text-muted-foreground mt-0.5">
+                  {profile.google_guide_points != null && (
+                    <>{profile.google_guide_points.toLocaleString()} pts</>
+                  )}
+                  {profile.google_guide_points != null && profile.google_guide_reviews != null && " · "}
+                  {profile.google_guide_reviews != null && (
+                    <>{profile.google_guide_reviews.toLocaleString()} reviews</>
+                  )}
+                </p>
+              )}
+            </div>
+            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+          </a>
+        )}
+
         {socialCount === 0 ? (
           <p className="text-xs text-muted-foreground">No social accounts linked yet.</p>
         ) : (
