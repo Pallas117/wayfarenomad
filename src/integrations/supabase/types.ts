@@ -1101,6 +1101,10 @@ export type Database = {
           created_at: string | null
           current_city: string | null
           display_name: string | null
+          google_guide_level: number | null
+          google_guide_points: number | null
+          google_guide_reviews: number | null
+          google_guide_url: string | null
           leaderboard_anonymous: boolean | null
           learns: string[] | null
           quiz_completed: boolean | null
@@ -1120,6 +1124,10 @@ export type Database = {
           created_at?: string | null
           current_city?: string | null
           display_name?: string | null
+          google_guide_level?: number | null
+          google_guide_points?: number | null
+          google_guide_reviews?: number | null
+          google_guide_url?: string | null
           leaderboard_anonymous?: boolean | null
           learns?: string[] | null
           quiz_completed?: boolean | null
@@ -1139,6 +1147,10 @@ export type Database = {
           created_at?: string | null
           current_city?: string | null
           display_name?: string | null
+          google_guide_level?: number | null
+          google_guide_points?: number | null
+          google_guide_reviews?: number | null
+          google_guide_url?: string | null
           leaderboard_anonymous?: boolean | null
           learns?: string[] | null
           quiz_completed?: boolean | null
