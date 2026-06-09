@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { SocialProfileLinks } from "@/components/SocialProfileLinks";
+import { GoogleGuideLinks } from "@/components/GoogleGuideLinks";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { AvatarUpload } from "@/components/AvatarUpload";
 import { supabase } from "@/integrations/supabase/client";
@@ -512,6 +513,11 @@ export default function SettingsPage() {
       {/* Social Profile Links */}
       <div className="mb-6">
         <SocialProfileLinks />
+      </div>
+
+      {/* Google Local Guides */}
+      <div className="mb-6">
+        <GoogleGuideLinks />
       </div>
 
       {/* Haptic Identity Section */}

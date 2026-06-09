@@ -38,6 +38,10 @@ interface ProfileData {
   travel_end: string | null;
   vision_statement: string | null;
   bridge: string | null;
+  google_guide_url: string | null;
+  google_guide_level: number | null;
+  google_guide_points: number | null;
+  google_guide_reviews: number | null;
 }
 
 interface UserRankData {
